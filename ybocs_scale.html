@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yale-Brown Obsessive Compulsive Scale (Y-BOCS)</title>
+    <style>
+        :root {
+            --primary: #2c5282;
+            --primary-light: #ebf4ff;
+            --accent: #3182ce;
+            --success: #276749;
+            --warning: #c05621;
+            --danger: #c53030;
+            --extreme: #7b341e;
+            --gray-50: #f7fafc;
+            --gray-100: #edf2f7;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e0;
+            --gray-600: #718096;
+            --gray-700: #4a5568;
+            --gray-800: #2d3748;
+            --gray-900: #1a202c;
+            --border-radius: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary), #1a365d);
+            color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .header h1 { font-size: 1.6em; margin-bottom: 6px; }
+        .header p { opacity: 0.9; font-size: 0.95em; }
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        /* Patient info */
+        .patient-info { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .patient-info label { display: block; font-weight: 500; margin-bottom: 4px; font-size: 0.9em; color: var(--gray-700); }
+        .patient-info input, .patient-info select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+        .patient-info input:focus, .patient-info select:focus {
+            outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(49,130,206,0.15);
+        }
+        .full-width { grid-column: 1 / -1; }
+
+        /* Symptom checklist */
+        .checklist-section { margin-bottom: 18px; }
+        .checklist-section h4 {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            margin-bottom: 8px;
+            padding: 6px 10px;
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 16px;
+            padding: 4px 0;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.88em;
+            cursor: pointer;
+        }
+        .checklist-item:hover { background: var(--gray-100); }
+        .checklist-item input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+
+        /* Target symptoms */
+        .target-list textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 0.9em;
+            resize: vertical;
+            min-height: 50px;
+            font-family: inherit;
+        }
+        .target-list textarea:focus {
+            outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(49,130,206,0.15);
+        }
+        .target-label { font-weight: 500; font-size: 0.9em; color: var(--gray-700); margin: 10px 0 4px; }
+
+        /* Severity items */
+        .section-header {
+            background: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            font-weight: 600;
+            font-size: 1.05em;
+            margin-bottom: 0;
+        }
+        .section-body {
+            background: white;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        .item-block {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .item-block:last-child { border-bottom: none; }
+        .item-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        .item-title { font-weight: 600; color: var(--gray-900); font-size: 1em; }
+        .item-question {
+            font-style: italic;
+            color: var(--gray-600);
+            font-size: 0.88em;
+            margin: 8px 0 12px;
+            padding-left: 38px;
+        }
+        .radio-group { padding-left: 38px; }
+        .radio-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .radio-option:hover { background: var(--gray-100); }
+        .radio-option input[type="radio"] {
+            accent-color: var(--accent);
+            width: 18px; height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .radio-label { font-size: 0.9em; }
+        .radio-label strong { color: var(--gray-900); }
+
+        .subtotal-bar {
+            background: var(--primary-light);
+            padding: 12px 24px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1em;
+            text-align: right;
+            border-top: 2px solid var(--accent);
+        }
+
+        /* Investigational items */
+        .invest-header {
+            background: var(--gray-700);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+        .invest-note {
+            background: #fefcbf;
+            border: 1px solid #ecc94b;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.85em;
+            color: #744210;
+            margin: 12px 24px;
+        }
+
+        /* Buttons */
+        .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 24px 0; }
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #1a365d; }
+        .btn-secondary { background: var(--gray-200); color: var(--gray-700); }
+        .btn-secondary:hover { background: var(--gray-300); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #22543d; }
+
+        /* Report */
+        #reportSection { display: none; }
+        .report-container {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 24px;
+        }
+        .report-header {
+            text-align: center;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        .report-header h2 { color: var(--primary); font-size: 1.4em; }
+        .report-header p { color: var(--gray-600); font-size: 0.9em; }
+        .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .report-field label { font-size: 0.8em; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-600); }
+        .report-field span { display: block; font-weight: 500; font-size: 0.95em; }
+
+        .score-display {
+            text-align: center;
+            padding: 24px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+        }
+        .score-display .score-number { font-size: 3em; font-weight: 700; }
+        .score-display .score-label { font-size: 1.2em; font-weight: 600; margin-top: 4px; }
+        .score-display .score-range { font-size: 0.85em; opacity: 0.8; }
+
+        .severity-subclinical { background: #f0fff4; color: #276749; border: 2px solid #9ae6b4; }
+        .severity-mild { background: #fefcbf; color: #744210; border: 2px solid #ecc94b; }
+        .severity-moderate { background: #feebc8; color: #c05621; border: 2px solid #f6ad55; }
+        .severity-severe { background: #fed7d7; color: #c53030; border: 2px solid #fc8181; }
+        .severity-extreme { background: #fff5f5; color: #7b341e; border: 2px solid #e53e3e; }
+
+        .subscale-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .subscale-box {
+            padding: 16px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+        }
+        .subscale-box .sub-score { font-size: 2em; font-weight: 700; color: var(--primary); }
+        .subscale-box .sub-label { font-size: 0.85em; color: var(--gray-600); }
+
+        .report-section { margin-bottom: 16px; }
+        .report-section h4 { color: var(--primary); font-size: 0.95em; margin-bottom: 6px; border-bottom: 1px solid var(--gray-200); padding-bottom: 4px; }
+        .report-section p, .report-section ul { font-size: 0.9em; color: var(--gray-700); }
+        .report-section ul { padding-left: 20px; }
+        .report-section li { margin-bottom: 4px; }
+
+        .item-breakdown { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88em; }
+        .item-breakdown th { background: var(--primary-light); color: var(--primary); padding: 8px 12px; text-align: left; font-weight: 600; }
+        .item-breakdown td { padding: 7px 12px; border-bottom: 1px solid var(--gray-200); }
+        .item-breakdown tr:hover td { background: var(--gray-50); }
+
+        .severity-bar-container { margin: 16px 0; }
+        .severity-bar-bg {
+            background: var(--gray-200);
+            border-radius: 10px;
+            height: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+        .severity-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+        .severity-bar-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+        .severity-marker {
+            position: absolute;
+            top: -2px;
+            width: 4px;
+            height: 28px;
+            background: var(--gray-800);
+            border-radius: 2px;
+            z-index: 2;
+        }
+
+        .disclaimer {
+            background: #ebf8ff;
+            border: 1px solid #90cdf4;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 0.82em;
+            color: #2a4365;
+            margin-top: 16px;
+        }
+
+        .collapsible-trigger {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .collapsible-trigger::before {
+            content: '\25B6';
+            font-size: 0.7em;
+            transition: transform 0.2s;
+        }
+        .collapsible-trigger.open::before { transform: rotate(90deg); }
+        .collapsible-content { display: none; }
+        .collapsible-content.open { display: block; }
+
+        .progress-bar-top {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 10px;
+        }
+        .progress-track {
+            background: var(--gray-200);
+            border-radius: 6px;
+            height: 8px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            border-radius: 6px;
+            transition: width 0.3s;
+        }
+        .progress-text { font-size: 0.8em; color: var(--gray-600); text-align: center; margin-top: 4px; }
+
+        @media (max-width: 600px) {
+            .patient-info { grid-template-columns: 1fr; }
+            .checklist-grid { grid-template-columns: 1fr; }
+            .report-grid { grid-template-columns: 1fr; }
+            .subscale-row { grid-template-columns: 1fr; }
+            .item-question { padding-left: 0; }
+            .radio-group { padding-left: 0; }
+        }
+
+        @media print {
+            body { background: white; }
+            .no-print { display: none !important; }
+            .container { max-width: 100%; padding: 0; }
+            .report-container { border: 1px solid #333; box-shadow: none; }
+            .score-display { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Yale-Brown Obsessive Compulsive Scale (Y-BOCS)</h1>
+        <p>Goodman WK, Price LH, Rasmussen SA et al. (1989) &mdash; Clinician-Rated Semi-Structured Interview</p>
+    </div>
+
+    <div class="progress-bar-top no-print" id="progressBar">
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="progress-text" id="progressText">0 of 10 core items rated</div>
+    </div>
+
+    <!-- PATIENT INFO -->
+    <div class="card">
+        <div class="card-title">Patient Information</div>
+        <div class="patient-info">
+            <div><label>Patient Name</label><input type="text" id="patientName" placeholder="Enter patient name"></div>
+            <div><label>Patient ID</label><input type="text" id="patientId" placeholder="Enter patient ID"></div>
+            <div><label>Date of Assessment</label><input type="date" id="assessmentDate"></div>
+            <div><label>Clinician / Rater</label><input type="text" id="raterName" placeholder="Enter clinician name"></div>
+        </div>
+    </div>
+
+    <!-- DEFINITIONS -->
+    <div class="card">
+        <div class="card-title collapsible-trigger open" onclick="toggleCollapse(this)">Definitions &amp; Instructions</div>
+        <div class="collapsible-content open">
+            <p style="font-size:0.9em; margin-bottom:10px;">Rate symptom severity during the <strong>prior week</strong> up to and including the time of interview. Scores should reflect the average occurrence for the entire week.</p>
+            <p style="font-size:0.9em; margin-bottom:8px;"><strong>OBSESSIONS</strong> are unwelcome and distressing ideas, thoughts, images or impulses that repeatedly enter your mind. They may seem to occur against your will. They may be repugnant to you, you may recognise them as senseless, and they may not fit your personality.</p>
+            <p style="font-size:0.9em; margin-bottom:8px;"><strong>COMPULSIONS</strong> are behaviours or acts that you feel driven to perform although you may recognise them as senseless or excessive. At times, you may try to resist doing them but this may prove difficult. You may experience anxiety that does not diminish until the behaviour is completed.</p>
+        </div>
+    </div>
+
+    <!-- SYMPTOM CHECKLIST -->
+    <div class="card">
+        <div class="card-title collapsible-trigger" onclick="toggleCollapse(this)">Y-BOCS Symptom Checklist (optional &mdash; click to expand)</div>
+        <div class="collapsible-content" id="symptomChecklist">
+
+            <div class="checklist-section">
+                <h4>Aggressive Obsessions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear might harm self</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear might harm others</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Violent or horrific images</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear of blurting out obscenities</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear of doing something embarrassing</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear will act on unwanted impulses</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear will steal things</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear of harm due to not being careful enough</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear of being responsible for something terrible</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Contamination Obsessions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Concerns with bodily waste or secretions</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Concern with dirt or germs</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Excessive concern with environmental contaminants</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Excessive concern with household items</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Excessive concern with animals/insects</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Bothered by sticky substances or residues</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Concerned will get ill because of contaminant</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Concerned will get others ill by spreading contaminant</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Sexual Obsessions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Forbidden or perverse sexual thoughts/images</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Content involves children or incest</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Content involves homosexuality</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Sexual behaviour toward others (aggressive)</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Hoarding / Saving Obsessions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Hoarding/saving obsessions</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Religious Obsessions (Scrupulosity)</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Concerned with sacrilege and blasphemy</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Excess concern with right/wrong, morality</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Obsession with Need for Symmetry or Exactness</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Accompanied by magical thinking</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Not accompanied by magical thinking</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Miscellaneous Obsessions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Need to know or remember</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear of saying certain things</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear of not saying just the right thing</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Fear of losing things</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Intrusive (non-violent) images</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Intrusive nonsense sounds, words, or music</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Lucky/unlucky numbers</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Superstitious fears</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Somatic Obsessions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Concern with illness or disease</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Excessive concern with body part or appearance</label>
+                </div>
+            </div>
+
+            <hr style="margin:16px 0; border:none; border-top:2px solid var(--gray-200);">
+
+            <div class="checklist-section">
+                <h4>Cleaning / Washing Compulsions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Excessive or ritualised handwashing</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Excessive showering, bathing, grooming, or toilet routine</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Cleaning of household items or inanimate objects</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Other measures to prevent/remove contaminants</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Checking Compulsions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Checking locks, stove, appliances, etc.</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Checking did not/will not harm others</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Checking did not/will not harm self</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Checking nothing terrible did/will happen</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Checking did not make mistake</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Checking tied to somatic obsessions</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Repeating Rituals</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Re-reading or re-writing</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Need to repeat routine activities</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Counting / Ordering / Hoarding Compulsions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Counting compulsions</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Ordering/arranging compulsions</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Hoarding/collecting compulsions</label>
+                </div>
+            </div>
+            <div class="checklist-section">
+                <h4>Miscellaneous Compulsions</h4>
+                <div class="checklist-grid">
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Mental rituals (other than checking/counting)</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Excessive listmaking</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Need to tell, ask, or confess</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Need to touch, tap, or rub</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Rituals involving blinking or staring</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Measures to prevent harm to self/others</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Ritualised eating behaviours</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Superstitious behaviours</label>
+                    <label class="checklist-item"><input type="checkbox" name="checklist"> Trichotillomania</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TARGET SYMPTOMS -->
+    <div class="card">
+        <div class="card-title">Target Symptoms</div>
+        <div class="target-list">
+            <div class="target-label">Target Obsessions:</div>
+            <textarea id="targetObsessions" rows="2" placeholder="List the patient's principal obsessions..."></textarea>
+            <div class="target-label">Target Compulsions:</div>
+            <textarea id="targetCompulsions" rows="2" placeholder="List the patient's principal compulsions..."></textarea>
+            <div class="target-label">Avoidance Behaviours:</div>
+            <textarea id="targetAvoidance" rows="2" placeholder="List any avoidance behaviours..."></textarea>
+        </div>
+    </div>
+
+    <!-- ====== OBSESSION SEVERITY ITEMS 1-5 ====== -->
+    <div class="section-header">Obsessions (Items 1&ndash;5)</div>
+    <div class="section-body" id="obsessionSection">
+
+        <!-- Item 1 -->
+        <div class="item-block">
+            <span class="item-number">1</span><span class="item-title">Time Occupied by Obsessive Thoughts</span>
+            <div class="item-question">How much of your time is occupied by obsessive thoughts? How frequently do the obsessive thoughts occur?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item1" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item1" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash; Mild:</strong> Less than 1 hr/day or occasional intrusion.</span></label>
+                <label class="radio-option"><input type="radio" name="item1" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash; Moderate:</strong> 1 to 3 hrs/day or frequent intrusion.</span></label>
+                <label class="radio-option"><input type="radio" name="item1" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash; Severe:</strong> Greater than 3 and up to 8 hrs/day or very frequent intrusion.</span></label>
+                <label class="radio-option"><input type="radio" name="item1" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash; Extreme:</strong> Greater than 8 hrs/day or near constant intrusion.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="item-block">
+            <span class="item-number">2</span><span class="item-title">Interference Due to Obsessive Thoughts</span>
+            <div class="item-question">How much do your obsessive thoughts interfere with your social or work (or role) functioning? Is there anything that you don't do because of them?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item2" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item2" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash; Mild:</strong> Slight interference with social or occupational activities, but overall performance not impaired.</span></label>
+                <label class="radio-option"><input type="radio" name="item2" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash; Moderate:</strong> Definite interference with social or occupational performance, but still manageable.</span></label>
+                <label class="radio-option"><input type="radio" name="item2" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash; Severe:</strong> Causes substantial impairment in social or occupational performance.</span></label>
+                <label class="radio-option"><input type="radio" name="item2" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash; Extreme:</strong> Incapacitating.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="item-block">
+            <span class="item-number">3</span><span class="item-title">Distress Associated with Obsessive Thoughts</span>
+            <div class="item-question">How much distress do your obsessive thoughts cause you?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item3" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item3" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash; Mild:</strong> Not too disturbing.</span></label>
+                <label class="radio-option"><input type="radio" name="item3" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash; Moderate:</strong> Disturbing, but still manageable.</span></label>
+                <label class="radio-option"><input type="radio" name="item3" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash; Severe:</strong> Very disturbing.</span></label>
+                <label class="radio-option"><input type="radio" name="item3" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash; Extreme:</strong> Near constant and disabling distress.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="item-block">
+            <span class="item-number">4</span><span class="item-title">Resistance Against Obsessions</span>
+            <div class="item-question">How much of an effort do you make to resist the obsessive thoughts? How often do you try to disregard or turn your attention away from these thoughts as they enter your mind?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item4" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash;</strong> Makes an effort to always resist, or symptoms so minimal doesn't need to actively resist.</span></label>
+                <label class="radio-option"><input type="radio" name="item4" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash;</strong> Tries to resist most of the time.</span></label>
+                <label class="radio-option"><input type="radio" name="item4" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash;</strong> Makes some effort to resist.</span></label>
+                <label class="radio-option"><input type="radio" name="item4" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash;</strong> Yields to all obsessions without attempting to control them, but does so with some reluctance.</span></label>
+                <label class="radio-option"><input type="radio" name="item4" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash;</strong> Completely and willingly yields to all obsessions.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="item-block">
+            <span class="item-number">5</span><span class="item-title">Degree of Control Over Obsessive Thoughts</span>
+            <div class="item-question">How much control do you have over your obsessive thoughts? How successful are you in stopping or diverting your obsessive thinking? Can you dismiss them?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item5" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash; Complete control.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item5" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash; Much control:</strong> Usually able to stop or divert obsessions with some effort and concentration.</span></label>
+                <label class="radio-option"><input type="radio" name="item5" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash; Moderate control:</strong> Sometimes able to stop or divert obsessions.</span></label>
+                <label class="radio-option"><input type="radio" name="item5" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash; Little control:</strong> Rarely successful in stopping or dismissing obsessions, can only divert attention with difficulty.</span></label>
+                <label class="radio-option"><input type="radio" name="item5" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash; No control:</strong> Experienced as completely involuntary, rarely able to even momentarily alter obsessive thinking.</span></label>
+            </div>
+        </div>
+
+        <div class="subtotal-bar">Obsession Subtotal (Items 1&ndash;5): <span id="obsessionSubtotal">—</span> / 20</div>
+    </div>
+
+    <!-- ====== COMPULSION SEVERITY ITEMS 6-10 ====== -->
+    <div class="section-header">Compulsions (Items 6&ndash;10)</div>
+    <div class="section-body" id="compulsionSection">
+
+        <!-- Item 6 -->
+        <div class="item-block">
+            <span class="item-number">6</span><span class="item-title">Time Spent Performing Compulsive Behaviours</span>
+            <div class="item-question">How much time do you spend performing compulsive behaviours? How frequently do you perform compulsions?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item6" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item6" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash; Mild:</strong> Spends less than 1 hr/day performing compulsions, or occasional performance.</span></label>
+                <label class="radio-option"><input type="radio" name="item6" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash; Moderate:</strong> Spends 1 to 3 hrs/day performing compulsions, or frequent performance.</span></label>
+                <label class="radio-option"><input type="radio" name="item6" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash; Severe:</strong> Spends more than 3 and up to 8 hrs/day performing compulsions, or very frequent performance.</span></label>
+                <label class="radio-option"><input type="radio" name="item6" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash; Extreme:</strong> Spends more than 8 hrs/day performing compulsions, or near constant performance.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 7 -->
+        <div class="item-block">
+            <span class="item-number">7</span><span class="item-title">Interference Due to Compulsive Behaviours</span>
+            <div class="item-question">How much do your compulsive behaviours interfere with your social or work (or role) functioning? Is there anything that you don't do because of the compulsions?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item7" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item7" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash; Mild:</strong> Slight interference with social or occupational activities, but overall performance not impaired.</span></label>
+                <label class="radio-option"><input type="radio" name="item7" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash; Moderate:</strong> Definite interference with social or occupational performance, but still manageable.</span></label>
+                <label class="radio-option"><input type="radio" name="item7" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash; Severe:</strong> Causes substantial impairment in social or occupational performance.</span></label>
+                <label class="radio-option"><input type="radio" name="item7" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash; Extreme:</strong> Incapacitating.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 8 -->
+        <div class="item-block">
+            <span class="item-number">8</span><span class="item-title">Distress Associated with Compulsive Behaviour</span>
+            <div class="item-question">How would you feel if prevented from performing your compulsion(s)? How anxious would you become?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item8" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item8" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash; Mild:</strong> Only slightly anxious if compulsions prevented, or only slight anxiety during performance.</span></label>
+                <label class="radio-option"><input type="radio" name="item8" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash; Moderate:</strong> Anxiety would mount but remain manageable if compulsions prevented.</span></label>
+                <label class="radio-option"><input type="radio" name="item8" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash; Severe:</strong> Prominent and very disturbing increase in anxiety if compulsions interrupted.</span></label>
+                <label class="radio-option"><input type="radio" name="item8" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash; Extreme:</strong> Incapacitating anxiety from any intervention aimed at modifying activity.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 9 -->
+        <div class="item-block">
+            <span class="item-number">9</span><span class="item-title">Resistance Against Compulsions</span>
+            <div class="item-question">How much of an effort do you make to resist the compulsions?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item9" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash;</strong> Makes an effort to always resist, or symptoms so minimal doesn't need to actively resist.</span></label>
+                <label class="radio-option"><input type="radio" name="item9" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash;</strong> Tries to resist most of the time.</span></label>
+                <label class="radio-option"><input type="radio" name="item9" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash;</strong> Makes some effort to resist.</span></label>
+                <label class="radio-option"><input type="radio" name="item9" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash;</strong> Yields to almost all compulsions without attempting to control them, but does so with some reluctance.</span></label>
+                <label class="radio-option"><input type="radio" name="item9" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash;</strong> Completely and willingly yields to all compulsions.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 10 -->
+        <div class="item-block">
+            <span class="item-number">10</span><span class="item-title">Degree of Control Over Compulsive Behaviour</span>
+            <div class="item-question">How strong is the drive to perform the compulsive behaviour? How much control do you have over the compulsions?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item10" value="0" onchange="updateScores()"><span class="radio-label"><strong>0 &mdash; Complete control.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item10" value="1" onchange="updateScores()"><span class="radio-label"><strong>1 &mdash; Much control:</strong> Experiences pressure to perform the behaviour but usually able to exercise voluntary control over it.</span></label>
+                <label class="radio-option"><input type="radio" name="item10" value="2" onchange="updateScores()"><span class="radio-label"><strong>2 &mdash; Moderate control:</strong> Strong pressure to perform behaviour, can control it only with difficulty.</span></label>
+                <label class="radio-option"><input type="radio" name="item10" value="3" onchange="updateScores()"><span class="radio-label"><strong>3 &mdash; Little control:</strong> Very strong drive to perform behaviour, must be carried to completion, can only delay with difficulty.</span></label>
+                <label class="radio-option"><input type="radio" name="item10" value="4" onchange="updateScores()"><span class="radio-label"><strong>4 &mdash; No control:</strong> Drive to perform behaviour experienced as completely involuntary and overpowering, rarely able to even momentarily delay activity.</span></label>
+            </div>
+        </div>
+
+        <div class="subtotal-bar">Compulsion Subtotal (Items 6&ndash;10): <span id="compulsionSubtotal">—</span> / 20</div>
+    </div>
+
+    <!-- ====== INVESTIGATIONAL ITEMS 11-19 ====== -->
+    <div class="invest-header">Investigational &amp; Global Items (Items 11&ndash;19) &mdash; Not included in total score</div>
+    <div class="section-body">
+        <div class="invest-note">&#9432; Items 11&ndash;16 are investigational and items 17&ndash;19 are global/reliability ratings. These are <strong>not</strong> included in the Y-BOCS total score but provide clinically useful supplementary information.</div>
+
+        <!-- Item 11 -->
+        <div class="item-block">
+            <span class="item-number" style="background:var(--gray-700)">11</span><span class="item-title">Insight into Obsessions and Compulsions</span>
+            <div class="item-question">Do you think your concerns or behaviours are reasonable? What do you think would happen if you did not perform the compulsion(s)?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item11" value="0"><span class="radio-label"><strong>0 &mdash; Excellent insight,</strong> fully rational.</span></label>
+                <label class="radio-option"><input type="radio" name="item11" value="1"><span class="radio-label"><strong>1 &mdash; Good insight.</strong> Readily acknowledges absurdity or excessiveness but has lingering doubts.</span></label>
+                <label class="radio-option"><input type="radio" name="item11" value="2"><span class="radio-label"><strong>2 &mdash; Fair insight.</strong> Reluctantly admits thoughts seem unreasonable, but wavers. May have some unrealistic fears.</span></label>
+                <label class="radio-option"><input type="radio" name="item11" value="3"><span class="radio-label"><strong>3 &mdash; Poor insight.</strong> Maintains thoughts are not unreasonable but acknowledges validity of contrary evidence (overvalued ideas).</span></label>
+                <label class="radio-option"><input type="radio" name="item11" value="4"><span class="radio-label"><strong>4 &mdash; Lacks insight, delusional.</strong> Definitely convinced concerns and behaviour are reasonable, unresponsive to contrary evidence.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 12 -->
+        <div class="item-block">
+            <span class="item-number" style="background:var(--gray-700)">12</span><span class="item-title">Avoidance</span>
+            <div class="item-question">Have you been avoiding doing anything, going any place, or being with anyone because of your obsessional thoughts or out of concern you will perform compulsions?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item12" value="0"><span class="radio-label"><strong>0 &mdash;</strong> No deliberate avoidance.</span></label>
+                <label class="radio-option"><input type="radio" name="item12" value="1"><span class="radio-label"><strong>1 &mdash; Mild,</strong> minimal avoidance.</span></label>
+                <label class="radio-option"><input type="radio" name="item12" value="2"><span class="radio-label"><strong>2 &mdash; Moderate,</strong> some avoidance; clearly present.</span></label>
+                <label class="radio-option"><input type="radio" name="item12" value="3"><span class="radio-label"><strong>3 &mdash; Severe,</strong> much avoidance; avoidance prominent.</span></label>
+                <label class="radio-option"><input type="radio" name="item12" value="4"><span class="radio-label"><strong>4 &mdash; Extreme,</strong> very extensive avoidance; patient does almost everything to avoid triggering symptoms.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 13 -->
+        <div class="item-block">
+            <span class="item-number" style="background:var(--gray-700)">13</span><span class="item-title">Degree of Indecisiveness</span>
+            <div class="item-question">Do you have trouble making decisions about little things that other people might not think twice about?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item13" value="0"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item13" value="1"><span class="radio-label"><strong>1 &mdash; Mild,</strong> some trouble making decisions about minor things.</span></label>
+                <label class="radio-option"><input type="radio" name="item13" value="2"><span class="radio-label"><strong>2 &mdash; Moderate,</strong> significant trouble making decisions others would not think twice about.</span></label>
+                <label class="radio-option"><input type="radio" name="item13" value="3"><span class="radio-label"><strong>3 &mdash; Severe,</strong> continual weighing of pros and cons about non-essentials.</span></label>
+                <label class="radio-option"><input type="radio" name="item13" value="4"><span class="radio-label"><strong>4 &mdash; Extreme,</strong> unable to make any decisions. Disabling.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 14 -->
+        <div class="item-block">
+            <span class="item-number" style="background:var(--gray-700)">14</span><span class="item-title">Overvalued Sense of Responsibility</span>
+            <div class="item-question">Do you feel very responsible for the consequences of your actions? Do you blame yourself for the outcome of events not completely in your control?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item14" value="0"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item14" value="1"><span class="radio-label"><strong>1 &mdash; Mild,</strong> slight sense of over-responsibility.</span></label>
+                <label class="radio-option"><input type="radio" name="item14" value="2"><span class="radio-label"><strong>2 &mdash; Moderate,</strong> significant sense of over-responsibility for events outside reasonable control.</span></label>
+                <label class="radio-option"><input type="radio" name="item14" value="3"><span class="radio-label"><strong>3 &mdash; Severe,</strong> ideas prominent and pervasive; deeply concerned about responsibility for events clearly outside control.</span></label>
+                <label class="radio-option"><input type="radio" name="item14" value="4"><span class="radio-label"><strong>4 &mdash; Extreme,</strong> delusional sense of responsibility.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 15 -->
+        <div class="item-block">
+            <span class="item-number" style="background:var(--gray-700)">15</span><span class="item-title">Pervasive Slowness / Disturbance of Inertia</span>
+            <div class="item-question">Do you have difficulty starting or finishing tasks? Do many routine activities take longer than they should?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item15" value="0"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item15" value="1"><span class="radio-label"><strong>1 &mdash; Mild,</strong> occasional delay in starting or finishing.</span></label>
+                <label class="radio-option"><input type="radio" name="item15" value="2"><span class="radio-label"><strong>2 &mdash; Moderate,</strong> frequent prolongation of routine activities but tasks usually completed.</span></label>
+                <label class="radio-option"><input type="radio" name="item15" value="3"><span class="radio-label"><strong>3 &mdash; Severe,</strong> pervasive and marked difficulty initiating and completing routine tasks.</span></label>
+                <label class="radio-option"><input type="radio" name="item15" value="4"><span class="radio-label"><strong>4 &mdash; Extreme,</strong> unable to start or complete routine tasks without full assistance.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 16 -->
+        <div class="item-block">
+            <span class="item-number" style="background:var(--gray-700)">16</span><span class="item-title">Pathological Doubting</span>
+            <div class="item-question">After you complete an activity do you doubt whether you performed it correctly? Do you doubt whether you did it at all?</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item16" value="0"><span class="radio-label"><strong>0 &mdash; None.</strong></span></label>
+                <label class="radio-option"><input type="radio" name="item16" value="1"><span class="radio-label"><strong>1 &mdash; Mild,</strong> slight pathological doubt.</span></label>
+                <label class="radio-option"><input type="radio" name="item16" value="2"><span class="radio-label"><strong>2 &mdash; Moderate,</strong> significant pathological doubt. Some effect on performance but still manageable.</span></label>
+                <label class="radio-option"><input type="radio" name="item16" value="3"><span class="radio-label"><strong>3 &mdash; Severe,</strong> uncertainty about perceptions or memory prominent; frequently affects performance.</span></label>
+                <label class="radio-option"><input type="radio" name="item16" value="4"><span class="radio-label"><strong>4 &mdash; Extreme,</strong> uncertainty about perceptions constantly present; substantially affects almost all activities.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 17 -->
+        <div class="item-block">
+            <span class="item-number" style="background:var(--gray-700)">17</span><span class="item-title">Global Severity (CGI-adapted)</span>
+            <div class="item-question">Interviewer's judgement of the overall severity of the patient's illness. Consider distress, symptoms observed, and functional impairment.</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item17" value="0"><span class="radio-label"><strong>0 &mdash;</strong> No illness.</span></label>
+                <label class="radio-option"><input type="radio" name="item17" value="1"><span class="radio-label"><strong>1 &mdash;</strong> Illness slight, doubtful, transient; no functional impairment.</span></label>
+                <label class="radio-option"><input type="radio" name="item17" value="2"><span class="radio-label"><strong>2 &mdash;</strong> Mild symptoms, little functional impairment.</span></label>
+                <label class="radio-option"><input type="radio" name="item17" value="3"><span class="radio-label"><strong>3 &mdash;</strong> Moderate symptoms, functions with effort.</span></label>
+                <label class="radio-option"><input type="radio" name="item17" value="4"><span class="radio-label"><strong>4 &mdash;</strong> Moderate–Severe symptoms, limited functioning.</span></label>
+                <label class="radio-option"><input type="radio" name="item17" value="5"><span class="radio-label"><strong>5 &mdash;</strong> Severe symptoms, functions mainly with assistance.</span></label>
+                <label class="radio-option"><input type="radio" name="item17" value="6"><span class="radio-label"><strong>6 &mdash;</strong> Extremely severe symptoms, completely nonfunctional.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 18 -->
+        <div class="item-block">
+            <span class="item-number" style="background:var(--gray-700)">18</span><span class="item-title">Global Improvement (CGI-adapted)</span>
+            <div class="item-question">Rate total overall improvement since the initial rating, whether or not it is due to treatment.</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item18" value="0"><span class="radio-label"><strong>0 &mdash;</strong> Very much worse.</span></label>
+                <label class="radio-option"><input type="radio" name="item18" value="1"><span class="radio-label"><strong>1 &mdash;</strong> Much worse.</span></label>
+                <label class="radio-option"><input type="radio" name="item18" value="2"><span class="radio-label"><strong>2 &mdash;</strong> Minimally worse.</span></label>
+                <label class="radio-option"><input type="radio" name="item18" value="3"><span class="radio-label"><strong>3 &mdash;</strong> No change.</span></label>
+                <label class="radio-option"><input type="radio" name="item18" value="4"><span class="radio-label"><strong>4 &mdash;</strong> Minimally improved.</span></label>
+                <label class="radio-option"><input type="radio" name="item18" value="5"><span class="radio-label"><strong>5 &mdash;</strong> Much improved.</span></label>
+                <label class="radio-option"><input type="radio" name="item18" value="6"><span class="radio-label"><strong>6 &mdash;</strong> Very much improved.</span></label>
+            </div>
+        </div>
+
+        <!-- Item 19 -->
+        <div class="item-block">
+            <span class="item-number" style="background:var(--gray-700)">19</span><span class="item-title">Reliability</span>
+            <div class="item-question">Rate the overall reliability of the rating scores obtained.</div>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="item19" value="0"><span class="radio-label"><strong>0 &mdash; Excellent,</strong> no reason to suspect data unreliable.</span></label>
+                <label class="radio-option"><input type="radio" name="item19" value="1"><span class="radio-label"><strong>1 &mdash; Good,</strong> factor(s) present that may adversely affect reliability.</span></label>
+                <label class="radio-option"><input type="radio" name="item19" value="2"><span class="radio-label"><strong>2 &mdash; Fair,</strong> factor(s) present that definitely reduce reliability.</span></label>
+                <label class="radio-option"><input type="radio" name="item19" value="3"><span class="radio-label"><strong>3 &mdash; Poor,</strong> very low reliability.</span></label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clinician Notes -->
+    <div class="card">
+        <div class="card-title">Clinician Notes</div>
+        <textarea id="clinicianNotes" rows="4" style="width:100%;padding:10px;border:1px solid var(--gray-300);border-radius:6px;font-family:inherit;font-size:0.9em;resize:vertical;" placeholder="Enter any additional clinical observations, formulation notes, or treatment considerations..."></textarea>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row no-print">
+        <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+        <button class="btn btn-secondary" onclick="resetForm()">Reset Form</button>
+    </div>
+
+    <!-- REPORT OUTPUT -->
+    <div id="reportSection">
+        <div class="report-container" id="reportContent">
+            <div class="report-header">
+                <h2>Yale-Brown Obsessive Compulsive Scale (Y-BOCS)</h2>
+                <p>Clinical Assessment Report</p>
+            </div>
+
+            <div class="report-grid" id="reportPatientInfo"></div>
+
+            <div id="reportTargetSymptoms"></div>
+
+            <div class="score-display" id="reportScoreDisplay">
+                <div class="score-number" id="reportTotalScore"></div>
+                <div class="score-label" id="reportSeverityLabel"></div>
+                <div class="score-range" id="reportScoreRange"></div>
+            </div>
+
+            <div class="severity-bar-container" id="reportSeverityBar">
+                <div class="severity-bar-bg">
+                    <div class="severity-bar-fill" id="reportBarFill"></div>
+                    <div class="severity-marker" id="reportBarMarker"></div>
+                </div>
+                <div class="severity-bar-labels">
+                    <span>0 Subclinical</span><span>8 Mild</span><span>16 Moderate</span><span>24 Severe</span><span>32 Extreme 40</span>
+                </div>
+            </div>
+
+            <div class="subscale-row">
+                <div class="subscale-box">
+                    <div class="sub-score" id="reportObsScore"></div>
+                    <div class="sub-label">Obsession Subtotal (Items 1–5, max 20)</div>
+                </div>
+                <div class="subscale-box">
+                    <div class="sub-score" id="reportCompScore"></div>
+                    <div class="sub-label">Compulsion Subtotal (Items 6–10, max 20)</div>
+                </div>
+            </div>
+
+            <div class="report-section">
+                <h4>Item-by-Item Breakdown</h4>
+                <table class="item-breakdown" id="reportItemTable"></table>
+            </div>
+
+            <div class="report-section" id="reportInvestigational"></div>
+
+            <div class="report-section" id="reportChecklist"></div>
+
+            <div class="report-section" id="reportInterpretation"></div>
+
+            <div class="report-section" id="reportNotesSection"></div>
+
+            <div class="disclaimer">
+                <strong>Disclaimer:</strong> The Y-BOCS is a clinician-rated semi-structured interview instrument developed by Goodman WK, Price LH, Rasmussen SA et al. (1989). Total score is derived from items 1–10 only. Items 11–19 are supplementary. This form is intended as a clinical aid and does not replace clinical judgement. Interpretation should be made in the context of a comprehensive psychiatric evaluation. A clinically meaningful treatment response is typically defined as ≥35% reduction from baseline Y-BOCS score.
+            </div>
+        </div>
+
+        <div class="btn-row no-print">
+            <button class="btn btn-success" onclick="window.print()">Print Report</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('reportSection').style.display='none'; window.scrollTo(0,0);">Close Report</button>
+        </div>
+    </div>
+
+    <div style="text-align:center; padding:20px; color:var(--gray-600); font-size:0.8em;">
+        Y-BOCS &copy; 1986, 1989 Goodman, Rasmussen, Price. This digital form is for clinical use only.
+    </div>
+</div>
+
+<script>
+// Set today's date
+document.getElementById('assessmentDate').valueAsDate = new Date();
+
+function toggleCollapse(el) {
+    el.classList.toggle('open');
+    const content = el.nextElementSibling;
+    content.classList.toggle('open');
+}
+
+function getItemScore(name) {
+    const checked = document.querySelector('input[name="' + name + '"]:checked');
+    return checked ? parseInt(checked.value) : null;
+}
+
+function updateScores() {
+    let obsTotal = 0, compTotal = 0;
+    let obsCount = 0, compCount = 0;
+
+    for (let i = 1; i <= 5; i++) {
+        const v = getItemScore('item' + i);
+        if (v !== null) { obsTotal += v; obsCount++; }
+    }
+    for (let i = 6; i <= 10; i++) {
+        const v = getItemScore('item' + i);
+        if (v !== null) { compTotal += v; compCount++; }
+    }
+
+    document.getElementById('obsessionSubtotal').textContent = obsCount > 0 ? obsTotal : '—';
+    document.getElementById('compulsionSubtotal').textContent = compCount > 0 ? compTotal : '—';
+
+    // Update progress
+    const total = obsCount + compCount;
+    const pct = Math.round((total / 10) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = total + ' of 10 core items rated' + (total === 10 ? ' ✓' : '');
+}
+
+function getSeverityInfo(score) {
+    if (score <= 7) return { level: 'Subclinical', css: 'severity-subclinical', color: '#276749', barColor: '#48bb78', desc: 'Minimal or no OCD symptoms. Formal treatment for OCD may not be indicated at this time.' };
+    if (score <= 15) return { level: 'Mild', css: 'severity-mild', color: '#744210', barColor: '#ecc94b', desc: 'Noticeable OCD symptoms present but manageable. May benefit from CBT/ERP, psychoeducation, and monitoring.' };
+    if (score <= 23) return { level: 'Moderate', css: 'severity-moderate', color: '#c05621', barColor: '#ed8936', desc: 'Clear impairment in functioning due to OCD. Structured treatment with ERP and/or pharmacotherapy (SRI) is typically indicated.' };
+    if (score <= 31) return { level: 'Severe', css: 'severity-severe', color: '#c53030', barColor: '#fc8181', desc: 'Substantial interference in daily life. Combined ERP and pharmacotherapy strongly recommended. Consider SRI optimisation, augmentation strategies, or intensive outpatient programmes.' };
+    return { level: 'Extreme', css: 'severity-extreme', color: '#7b341e', barColor: '#e53e3e', desc: 'Severe symptoms causing significant distress and major functional impairment. May require intensive outpatient/inpatient care. Consider SRI augmentation, treatment-refractory protocols, and if score ≥28, neurosurgical intervention referral may be considered.' };
+}
+
+const coreItemNames = [
+    'Time Occupied by Obsessive Thoughts',
+    'Interference Due to Obsessive Thoughts',
+    'Distress Associated with Obsessive Thoughts',
+    'Resistance Against Obsessions',
+    'Degree of Control Over Obsessive Thoughts',
+    'Time Spent Performing Compulsive Behaviours',
+    'Interference Due to Compulsive Behaviours',
+    'Distress Associated with Compulsive Behaviour',
+    'Resistance Against Compulsions',
+    'Degree of Control Over Compulsive Behaviour'
+];
+
+const investItemNames = [
+    'Insight into Obsessions and Compulsions',
+    'Avoidance',
+    'Degree of Indecisiveness',
+    'Overvalued Sense of Responsibility',
+    'Pervasive Slowness / Disturbance of Inertia',
+    'Pathological Doubting',
+    'Global Severity',
+    'Global Improvement',
+    'Reliability'
+];
+
+function generateReport() {
+    // Validate core items
+    let allCoreRated = true;
+    for (let i = 1; i <= 10; i++) {
+        if (getItemScore('item' + i) === null) { allCoreRated = false; break; }
+    }
+    if (!allCoreRated) {
+        alert('Please rate all 10 core items (Items 1–10) before generating the report.');
+        return;
+    }
+
+    // Compute scores
+    let obsTotal = 0, compTotal = 0;
+    const coreScores = [];
+    for (let i = 1; i <= 5; i++) { const v = getItemScore('item' + i); obsTotal += v; coreScores.push(v); }
+    for (let i = 6; i <= 10; i++) { const v = getItemScore('item' + i); compTotal += v; coreScores.push(v); }
+    const totalScore = obsTotal + compTotal;
+    const sev = getSeverityInfo(totalScore);
+
+    // Patient info
+    const name = document.getElementById('patientName').value || 'Not specified';
+    const pid = document.getElementById('patientId').value || 'Not specified';
+    const date = document.getElementById('assessmentDate').value || 'Not specified';
+    const rater = document.getElementById('raterName').value || 'Not specified';
+
+    document.getElementById('reportPatientInfo').innerHTML =
+        '<div class="report-field"><label>Patient Name</label><span>' + escHtml(name) + '</span></div>' +
+        '<div class="report-field"><label>Patient ID</label><span>' + escHtml(pid) + '</span></div>' +
+        '<div class="report-field"><label>Date of Assessment</label><span>' + date + '</span></div>' +
+        '<div class="report-field"><label>Clinician / Rater</label><span>' + escHtml(rater) + '</span></div>';
+
+    // Target symptoms
+    const tObs = document.getElementById('targetObsessions').value;
+    const tComp = document.getElementById('targetCompulsions').value;
+    const tAvoid = document.getElementById('targetAvoidance').value;
+    let tsHtml = '';
+    if (tObs || tComp || tAvoid) {
+        tsHtml = '<div class="report-section"><h4>Target Symptoms</h4><ul>';
+        if (tObs) tsHtml += '<li><strong>Obsessions:</strong> ' + escHtml(tObs) + '</li>';
+        if (tComp) tsHtml += '<li><strong>Compulsions:</strong> ' + escHtml(tComp) + '</li>';
+        if (tAvoid) tsHtml += '<li><strong>Avoidance:</strong> ' + escHtml(tAvoid) + '</li>';
+        tsHtml += '</ul></div>';
+    }
+    document.getElementById('reportTargetSymptoms').innerHTML = tsHtml;
+
+    // Score display
+    const scoreDisplay = document.getElementById('reportScoreDisplay');
+    scoreDisplay.className = 'score-display ' + sev.css;
+    document.getElementById('reportTotalScore').textContent = totalScore;
+    document.getElementById('reportSeverityLabel').textContent = sev.level + ' OCD';
+    document.getElementById('reportScoreRange').textContent = 'Total Y-BOCS Score: ' + totalScore + ' / 40';
+
+    // Severity bar
+    const barPct = Math.min((totalScore / 40) * 100, 100);
+    document.getElementById('reportBarFill').style.width = barPct + '%';
+    document.getElementById('reportBarFill').style.background = 'linear-gradient(90deg, #48bb78, #ecc94b, #ed8936, #fc8181, #e53e3e)';
+    document.getElementById('reportBarMarker').style.left = 'calc(' + barPct + '% - 2px)';
+
+    // Subscales
+    document.getElementById('reportObsScore').textContent = obsTotal + ' / 20';
+    document.getElementById('reportCompScore').textContent = compTotal + ' / 20';
+
+    // Item table
+    const severityLabels = ['None', 'Mild', 'Moderate', 'Severe', 'Extreme'];
+    let tableHtml = '<thead><tr><th>Item</th><th>Domain</th><th>Score</th><th>Severity</th></tr></thead><tbody>';
+    for (let i = 0; i < 10; i++) {
+        const domain = i < 5 ? 'Obsessions' : 'Compulsions';
+        tableHtml += '<tr><td>' + (i + 1) + '. ' + coreItemNames[i] + '</td><td>' + domain + '</td><td style="text-align:center;font-weight:600;">' + coreScores[i] + '</td><td>' + severityLabels[coreScores[i]] + '</td></tr>';
+    }
+    tableHtml += '<tr style="font-weight:700;background:var(--primary-light);"><td colspan="2">Obsession Subtotal</td><td style="text-align:center;">' + obsTotal + '</td><td>/ 20</td></tr>';
+    tableHtml += '<tr style="font-weight:700;background:var(--primary-light);"><td colspan="2">Compulsion Subtotal</td><td style="text-align:center;">' + compTotal + '</td><td>/ 20</td></tr>';
+    tableHtml += '<tr style="font-weight:700;background:var(--primary);color:white;"><td colspan="2">Y-BOCS Total Score</td><td style="text-align:center;">' + totalScore + '</td><td>/ 40 — ' + sev.level + '</td></tr>';
+    tableHtml += '</tbody>';
+    document.getElementById('reportItemTable').innerHTML = tableHtml;
+
+    // Investigational items
+    let investHtml = '<h4>Supplementary Items (Not included in total score)</h4><table class="item-breakdown"><thead><tr><th>Item</th><th>Score</th></tr></thead><tbody>';
+    for (let i = 11; i <= 19; i++) {
+        const v = getItemScore('item' + i);
+        investHtml += '<tr><td>' + i + '. ' + investItemNames[i - 11] + '</td><td style="text-align:center;">' + (v !== null ? v : '—') + '</td></tr>';
+    }
+    investHtml += '</tbody></table>';
+    document.getElementById('reportInvestigational').innerHTML = investHtml;
+
+    // Checked symptoms
+    const checked = document.querySelectorAll('input[name="checklist"]:checked');
+    if (checked.length > 0) {
+        let clHtml = '<h4>Endorsed Symptom Checklist Items</h4><ul>';
+        checked.forEach(function(cb) {
+            clHtml += '<li>' + cb.parentElement.textContent.trim() + '</li>';
+        });
+        clHtml += '</ul>';
+        document.getElementById('reportChecklist').innerHTML = clHtml;
+    } else {
+        document.getElementById('reportChecklist').innerHTML = '';
+    }
+
+    // Interpretation
+    let interpHtml = '<h4>Interpretation &amp; Clinical Guidance</h4>';
+    interpHtml += '<p><strong>Severity Classification:</strong> ' + sev.level + ' (score ' + totalScore + '/40).</p>';
+    interpHtml += '<p>' + sev.desc + '</p>';
+
+    // Dominant domain
+    if (obsTotal > compTotal + 4) {
+        interpHtml += '<p><strong>Note:</strong> Obsession subscale score (' + obsTotal + ') is notably higher than compulsion subscale score (' + compTotal + '), suggesting obsessions are the predominant source of impairment.</p>';
+    } else if (compTotal > obsTotal + 4) {
+        interpHtml += '<p><strong>Note:</strong> Compulsion subscale score (' + compTotal + ') is notably higher than obsession subscale score (' + obsTotal + '), suggesting compulsive behaviours are the predominant source of impairment.</p>';
+    }
+
+    // Treatment response note
+    if (totalScore >= 16) {
+        const threshold35 = Math.round(totalScore * 0.65);
+        interpHtml += '<p><strong>Treatment Response Benchmark:</strong> A ≥35% reduction from this baseline score would correspond to a Y-BOCS total of ≤' + threshold35 + ', representing a clinically meaningful response (Goodman et al., 1989).</p>';
+    }
+
+    // Neurosurgical threshold
+    if (totalScore >= 28) {
+        interpHtml += '<p><strong>Note:</strong> Score of ≥28 meets the threshold criterion for consideration of neurosurgical interventions in treatment-refractory cases (where applicable).</p>';
+    }
+
+    // Insight note
+    const insightScore = getItemScore('item11');
+    if (insightScore !== null && insightScore >= 3) {
+        interpHtml += '<p><strong>Insight:</strong> Patient demonstrates poor insight (Item 11 = ' + insightScore + '), which may be associated with poorer treatment response and should be considered in treatment planning.</p>';
+    }
+
+    document.getElementById('reportInterpretation').innerHTML = interpHtml;
+
+    // Clinician notes
+    const notes = document.getElementById('clinicianNotes').value;
+    if (notes) {
+        document.getElementById('reportNotesSection').innerHTML = '<h4>Clinician Notes</h4><p>' + escHtml(notes).replace(/\n/g, '<br>') + '</p>';
+    } else {
+        document.getElementById('reportNotesSection').innerHTML = '';
+    }
+
+    // Show report
+    document.getElementById('reportSection').style.display = 'block';
+    document.getElementById('reportSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetForm() {
+    if (!confirm('Are you sure you want to reset all fields?')) return;
+    document.querySelectorAll('input[type="radio"]').forEach(function(r) { r.checked = false; });
+    document.querySelectorAll('input[type="checkbox"]').forEach(function(c) { c.checked = false; });
+    document.querySelectorAll('input[type="text"]').forEach(function(t) { t.value = ''; });
+    document.querySelectorAll('textarea').forEach(function(t) { t.value = ''; });
+    document.getElementById('assessmentDate').valueAsDate = new Date();
+    document.getElementById('obsessionSubtotal').textContent = '—';
+    document.getElementById('compulsionSubtotal').textContent = '—';
+    document.getElementById('reportSection').style.display = 'none';
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressText').textContent = '0 of 10 core items rated';
+    window.scrollTo(0, 0);
+}
+
+function escHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+</script>
+</body>
+</html>
