@@ -1,6 +1,6 @@
 Psychiatric Tool by Dr Benjamin Murrie
 
-[Full ADHD Assessment](adhd-assessment.html)
+[Full ADHD Assessment](ADHD_Assessment_2.html)
 This guides you through a very thorough assessment for ADHD. It generates a report thet can be added to the context section of Heidi or as a standalone assessment. It will calculate whether the patient meets criteria and if there are any requirements missing.
 
 [ADHD Handout Generator](ADHD_Handout_Generator.html)
