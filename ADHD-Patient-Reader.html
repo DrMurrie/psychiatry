@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding ADHD — Your Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* === TOKENS === */
+:root {
+  --font-body: 'Inter', sans-serif;
+  --font-reading: 'Lora', Georgia, serif;
+
+  --text-xs:   clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+  --space-4: 1rem;    --space-5: 1.25rem; --space-6: 1.5rem;
+  --space-8: 2rem;    --space-10: 2.5rem; --space-12: 3rem;
+  --space-16: 4rem;   --space-20: 5rem;
+
+  --radius-sm: 0.375rem; --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;  --radius-xl: 1rem; --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+  --transition: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Light mode - warmer, friendlier */
+  --bg:             #faf8f4;
+  --surface:        #ffffff;
+  --surface-2:      #f9f6f2;
+  --surface-hover:  #f3f0ec;
+  --border:         oklch(0.4 0.01 80 / 0.1);
+  --divider:        oklch(0.4 0.01 80 / 0.06);
+
+  --text:           #2a2520;
+  --text-muted:     #6e6a64;
+  --text-faint:     #b0ada8;
+  --text-inverse:   #faf8f4;
+
+  /* Colorful accents for tiles */
+  --teal:           #00a19c;
+  --teal-bg:        #e6f7f7;
+  --purple:         #8b5cf6;
+  --purple-bg:      #f3eeff;
+  --orange:         #f97316;
+  --orange-bg:      #fff4ed;
+  --pink:           #ec4899;
+  --pink-bg:        #fef1f8;
+  --blue:           #3b82f6;
+  --blue-bg:        #eff6ff;
+  --green:          #10b981;
+  --green-bg:       #ecfdf5;
+  --yellow:         #f59e0b;
+  --yellow-bg:      #fffbeb;
+  --indigo:         #6366f1;
+  --indigo-bg:      #eef2ff;
+  --red:            #ef4444;
+  --red-bg:         #fef2f2;
+  --emerald:        #059669;
+  --emerald-bg:     #d1fae5;
+
+  --shadow-sm: 0 1px 3px oklch(0.2 0.01 80 / 0.08);
+  --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / 0.1);
+  --shadow-lg: 0 8px 24px oklch(0.2 0.01 80 / 0.14);
+  --shadow-hover: 0 8px 24px oklch(0.2 0.01 80 / 0.16);
+
+  --header-h: 60px;
+}
+
+[data-theme="dark"] {
+  --bg:             #141210;
+  --surface:        #1c1a17;
+  --surface-2:      #222018;
+  --surface-hover:  #2a2720;
+  --border:         oklch(0.9 0.01 80 / 0.12);
+  --divider:        oklch(0.9 0.01 80 / 0.06);
+  --text:           #e6e3de;
+  --text-muted:     #9d9990;
+  --text-faint:     #5a5850;
+  --text-inverse:   #1c1a17;
+
+  --teal:           #14b8a6;
+  --teal-bg:        #1a2e2d;
+  --purple:         #a78bfa;
+  --purple-bg:      #261f3d;
+  --orange:         #fb923c;
+  --orange-bg:      #2e1e10;
+  --pink:           #f472b6;
+  --pink-bg:        #331625;
+  --blue:           #60a5fa;
+  --blue-bg:        #1e293b;
+  --green:          #34d399;
+  --green-bg:       #1a2e25;
+  --yellow:         #fbbf24;
+  --yellow-bg:      #2e2410;
+  --indigo:         #818cf8;
+  --indigo-bg:      #1f2237;
+  --red:            #f87171;
+  --red-bg:         #2e1818;
+  --emerald:        #10b981;
+  --emerald-bg:     #1a2e25;
+
+  --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.4);
+  --shadow-md: 0 4px 12px oklch(0 0 0 / 0.5);
+  --shadow-lg: 0 8px 24px oklch(0 0 0 / 0.6);
+  --shadow-hover: 0 12px 32px oklch(0 0 0 / 0.7);
+}
+
+/* === BASE === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + var(--space-4)); -webkit-text-size-adjust: none; }
+body { font-family: var(--font-body); font-size: var(--text-base); color: var(--text); background: var(--bg); min-height: 100dvh; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
+a { color: var(--teal); text-decoration: none; }
+a:hover { text-decoration: underline; }
+::selection { background: oklch(from var(--teal) l c h / 0.2); }
+:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: var(--radius-sm); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; } }
+
+/* === LAYOUT === */
+.app { display: flex; flex-direction: column; min-height: 100dvh; }
+
+/* Header */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  height: var(--header-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--space-4);
+}
+.header-logo {
+  display: flex; align-items: center; gap: var(--space-2);
+  font-weight: 700; font-size: var(--text-base);
+  color: var(--text); text-decoration: none;
+}
+.header-logo:hover { text-decoration: none; }
+.header-logo-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 1.1em;
+}
+.header-title { color: var(--text); }
+.header-actions { display: flex; align-items: center; gap: var(--space-2); }
+.icon-btn {
+  width: 40px; height: 40px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+.icon-btn:hover { background: var(--surface-hover); color: var(--text); transform: scale(1.05); }
+.icon-btn:active { transform: scale(0.97); }
+
+/* Main */
+.main { flex: 1; padding: var(--space-6) var(--space-4) var(--space-20); max-width: 1100px; margin: 0 auto; width: 100%; }
+@media (min-width: 768px) { .main { padding: var(--space-10) var(--space-8) var(--space-20); } }
+
+/* === WELCOME PAGE === */
+.welcome { animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.welcome-hero {
+  text-align: center; margin-bottom: var(--space-10);
+  padding: var(--space-6) 0;
+}
+.welcome-hero-icon {
+  font-size: 4em; margin-bottom: var(--space-4);
+  animation: bounce 2s ease infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.welcome-title {
+  font-size: var(--text-xl); font-weight: 800; color: var(--text);
+  margin-bottom: var(--space-3); line-height: 1.1;
+}
+.welcome-subtitle {
+  font-size: var(--text-base); color: var(--text-muted);
+  max-width: 42ch; margin: 0 auto var(--space-4);
+}
+.welcome-search {
+  max-width: 500px; margin: var(--space-6) auto 0; position: relative;
+}
+.welcome-search input {
+  width: 100%; padding: var(--space-3) var(--space-4) var(--space-3) 44px;
+  border: 2px solid var(--border); border-radius: var(--radius-full);
+  background: var(--surface); color: var(--text); font-size: var(--text-base);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.welcome-search input:focus {
+  outline: none; border-color: var(--teal);
+  box-shadow: 0 0 0 4px oklch(from var(--teal) l c h / 0.15);
+}
+.welcome-search input::placeholder { color: var(--text-faint); }
+.welcome-search svg {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none;
+}
+
+/* Section categories */
+.section-category { margin-bottom: var(--space-10); }
+.section-cat-header {
+  display: flex; align-items: center; gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.section-cat-icon { font-size: 1.5em; }
+.section-cat-title {
+  font-size: var(--text-lg); font-weight: 700; color: var(--text);
+}
+
+/* Tile grid - ADHD friendly! */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+  gap: var(--space-3);
+}
+@media (min-width: 500px) {
+  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr)); }
+}
+
+/* Individual tile */
+.tile {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 140px;
+}
+.tile::before {
+  content: '';
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity var(--transition);
+  border-radius: var(--radius-xl);
+}
+.tile:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-hover);
+  border-color: transparent;
+}
+.tile:hover::before { opacity: 1; }
+.tile:active { transform: translateY(-1px) scale(1.0); }
+
+/* Tile color variants */
+.tile-teal { border-color: var(--teal); }
+.tile-teal::before { background: var(--teal-bg); }
+.tile-teal:hover { box-shadow: 0 8px 24px oklch(from var(--teal) l c h / 0.25); }
+
+.tile-purple { border-color: var(--purple); }
+.tile-purple::before { background: var(--purple-bg); }
+.tile-purple:hover { box-shadow: 0 8px 24px oklch(from var(--purple) l c h / 0.25); }
+
+.tile-orange { border-color: var(--orange); }
+.tile-orange::before { background: var(--orange-bg); }
+.tile-orange:hover { box-shadow: 0 8px 24px oklch(from var(--orange) l c h / 0.25); }
+
+.tile-pink { border-color: var(--pink); }
+.tile-pink::before { background: var(--pink-bg); }
+.tile-pink:hover { box-shadow: 0 8px 24px oklch(from var(--pink) l c h / 0.25); }
+
+.tile-blue { border-color: var(--blue); }
+.tile-blue::before { background: var(--blue-bg); }
+.tile-blue:hover { box-shadow: 0 8px 24px oklch(from var(--blue) l c h / 0.25); }
+
+.tile-green { border-color: var(--green); }
+.tile-green::before { background: var(--green-bg); }
+.tile-green:hover { box-shadow: 0 8px 24px oklch(from var(--green) l c h / 0.25); }
+
+.tile-yellow { border-color: var(--yellow); }
+.tile-yellow::before { background: var(--yellow-bg); }
+.tile-yellow:hover { box-shadow: 0 8px 24px oklch(from var(--yellow) l c h / 0.25); }
+
+.tile-indigo { border-color: var(--indigo); }
+.tile-indigo::before { background: var(--indigo-bg); }
+.tile-indigo:hover { box-shadow: 0 8px 24px oklch(from var(--indigo) l c h / 0.25); }
+
+.tile-red { border-color: var(--red); }
+.tile-red::before { background: var(--red-bg); }
+.tile-red:hover { box-shadow: 0 8px 24px oklch(from var(--red) l c h / 0.25); }
+
+.tile-emerald { border-color: var(--emerald); }
+.tile-emerald::before { background: var(--emerald-bg); }
+.tile-emerald:hover { box-shadow: 0 8px 24px oklch(from var(--emerald) l c h / 0.25); }
+
+.tile-emoji {
+  font-size: 2.5em; margin-bottom: var(--space-2);
+  position: relative; z-index: 1;
+  transition: transform var(--transition);
+}
+.tile:hover .tile-emoji { transform: scale(1.1) rotate(5deg); }
+.tile-label {
+  font-size: var(--text-sm); font-weight: 600; color: var(--text);
+  line-height: 1.3; position: relative; z-index: 1;
+}
+.tile-hidden { display: none; }
+
+/* === ARTICLE VIEW === */
+.article { display: none; animation: fadeIn 0.3s ease; }
+.article.active { display: block; }
+
+.back-btn {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  color: var(--text-muted); font-size: var(--text-sm); font-weight: 500;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-6);
+  transition: background var(--transition), color var(--transition);
+}
+.back-btn:hover { background: var(--surface-hover); color: var(--text); text-decoration: none; }
+
+.article-header {
+  padding-bottom: var(--space-5); margin-bottom: var(--space-6);
+  border-bottom: 2px solid var(--border);
+}
+.article-title {
+  font-family: var(--font-reading); font-size: var(--text-xl);
+  color: var(--text); line-height: 1.2; margin-bottom: var(--space-4);
+}
+.article-actions {
+  display: flex; gap: var(--space-2); flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-2) var(--space-4); border-radius: var(--radius-full);
+  font-size: var(--text-sm); font-weight: 500;
+  transition: all var(--transition);
+  min-height: 36px;
+}
+.btn-ghost { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--surface-hover); color: var(--text); box-shadow: var(--shadow-sm); }
+
+/* Reading content */
+.reading-content {
+  font-family: var(--font-reading);
+  font-size: clamp(1.05rem, 1rem + 0.25vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--text);
+}
+.reading-content .rich-h1 {
+  font-family: var(--font-reading); font-size: var(--text-xl);
+  font-weight: 600; color: var(--teal); margin: var(--space-8) 0 var(--space-3);
+  padding-bottom: var(--space-2); border-bottom: 2px solid var(--teal-bg);
+  line-height: 1.2;
+}
+.reading-content .rich-h1:first-child { margin-top: 0; }
+.reading-content .rich-h2 {
+  font-family: var(--font-reading); font-size: var(--text-lg);
+  font-weight: 600; color: var(--text); margin: var(--space-6) 0 var(--space-2);
+}
+.reading-content .rich-h3 {
+  font-family: var(--font-body); font-size: var(--text-xs);
+  font-weight: 700; color: var(--text-muted); margin: var(--space-4) 0 var(--space-2);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.reading-content .rich-p {
+  margin-bottom: var(--space-4); max-width: 68ch;
+}
+.reading-content .rich-ul {
+  margin: 0 0 var(--space-5) var(--space-5);
+  list-style: none; padding: 0;
+}
+.reading-content .rich-ul li {
+  padding: var(--space-1) 0 var(--space-1) var(--space-5);
+  position: relative; max-width: 65ch;
+}
+.reading-content .rich-ul li::before {
+  content: ''; position: absolute; left: 0; top: 0.7em;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal);
+}
+.reading-content .rich-cite {
+  font-family: var(--font-body); font-size: var(--text-xs);
+  color: var(--text-faint); font-style: italic; margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-2); border-radius: var(--radius-md);
+  border-left: 3px solid var(--border);
+}
+.reading-content .rich-warn {
+  background: var(--orange-bg); border-left: 3px solid var(--orange);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  padding: var(--space-3) var(--space-4); margin: var(--space-4) 0;
+  color: var(--orange); font-weight: 600; font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+.reading-content table.rich-tit {
+  width: 100%; border-collapse: collapse; margin: var(--space-4) 0;
+  font-family: var(--font-body); font-size: var(--text-sm);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.reading-content table.rich-tit th {
+  background: var(--teal-bg); color: var(--teal);
+  padding: var(--space-2) var(--space-3); text-align: left;
+  font-weight: 600; font-size: var(--text-xs);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.reading-content table.rich-tit td {
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border); vertical-align: top;
+}
+.reading-content table.rich-tit tr:nth-child(even) td { background: var(--surface-2); }
+.reading-content strong { font-weight: 600; }
+.reading-content em { font-style: italic; }
+
+/* Prev/Next */
+.article-footer {
+  display: flex; gap: var(--space-3); margin-top: var(--space-10);
+  padding-top: var(--space-6); border-top: 2px solid var(--border);
+  flex-wrap: wrap;
+}
+.prev-next-btn {
+  flex: 1; min-width: 200px;
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius-lg); font-size: var(--text-sm);
+  transition: all var(--transition);
+}
+.prev-next-btn:hover {
+  background: var(--surface-hover); box-shadow: var(--shadow-md);
+  border-color: var(--teal); transform: translateY(-2px);
+}
+.pn-content { flex: 1; }
+.pn-label { font-size: var(--text-xs); color: var(--text-faint); display: block; margin-bottom: 2px; }
+.pn-title { font-size: var(--text-sm); font-weight: 600; color: var(--text); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: var(--space-6); right: var(--space-6);
+  background: var(--text); color: var(--bg);
+  padding: var(--space-3) var(--space-5); border-radius: var(--radius-full);
+  font-size: var(--text-sm); font-weight: 600;
+  opacity: 0; transition: opacity var(--transition); pointer-events: none; z-index: 400;
+  box-shadow: var(--shadow-lg);
+}
+.toast.show { opacity: 1; }
+
+/* Progress indicator */
+.progress-bar {
+  height: 3px; background: linear-gradient(90deg, var(--teal), var(--blue));
+  position: fixed; top: 0; left: 0; z-index: 300;
+  transition: width 0.3s ease;
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+}
+
+/* Print */
+@media print {
+  .header, .back-btn, .article-actions, .article-footer, .progress-bar { display: none !important; }
+  .main { padding: 0; max-width: 100%; }
+  .reading-content { font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar" style="width:0"></div>
+
+<div class="app">
+  <header class="header">
+    <a href="#" class="header-logo" onclick="showWelcome(); return false;">
+      <div class="header-logo-icon">🧠</div>
+      <span class="header-title">ADHD Guide</span>
+    </a>
+    <div class="header-actions">
+      <button class="icon-btn" id="themeToggle" data-theme-toggle title="Toggle dark mode">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="icon-btn" onclick="window.print()" title="Print">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="main" id="main">
+    <!-- Welcome -->
+    <div class="welcome" id="welcomeScreen">
+      <div class="welcome-hero">
+        <div class="welcome-hero-icon">🧠✨</div>
+        <h1 class="welcome-title">Your ADHD Guide</h1>
+        <p class="welcome-subtitle">Quick answers. Real strategies. Made for ADHD brains (that's you!)</p>
+        <div class="welcome-search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="welcomeSearch" placeholder="Search for anything…" oninput="filterTiles(this.value)">
+        </div>
+      </div>
+
+      <div id="tileCategories"></div>
+    </div>
+
+    <!-- Article -->
+    <div class="article" id="articleView">
+      <button class="back-btn" onclick="showWelcome()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to topics
+      </button>
+      <div class="article-header">
+        <h1 class="article-title" id="articleTitle"></h1>
+        <div class="article-actions">
+          <button class="btn btn-ghost" onclick="copyArticle()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy text
+          </button>
+        </div>
+      </div>
+      <div class="reading-content" id="articleContent"></div>
+      <div class="article-footer" id="articleFooter"></div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== DATA ==========
+const SECTIONS = [
+  { id:'s_what',    label:'What Is ADHD?' },
+  { id:'s_brain',   label:'What Is Happening in the Brain' },
+  { id:'s_core',    label:'Core Symptoms' },
+  { id:'s_down',    label:'What Else Does It Generate?' },
+  { id:'s_impact',  label:'The Real-World Impact (with stats)' },
+  { id:'s_treat',   label:'Treatment Is Lifesaving' },
+  { id:'s_feels',   label:'What Treatment Actually Feels Like' },
+  { id:'s_myths',   label:'Myths — What the Evidence Says' },
+  { id:'s_faq',     label:'Commonly Asked Questions' },
+  { id:'s_supports', label:'Accessing Supports &amp; Services', excludedByDefault: true },
+  { id:'s_workplace', label:'Workplace Adjustments', excludedByDefault: true },
+  { id:'s_grief',   label:'Grief After Late Diagnosis', excludedByDefault: true },
+  { id:'s_pregnant',  label:'Pregnancy &amp; Breastfeeding', excludedByDefault: true },
+  { id:'s_newparent', label:'New Parents &amp; ADHD', excludedByDefault: true },
+  { id:'s_bfrb',      label:'Body-Focused Repetitive Behaviours', excludedByDefault: true },
+  { id:'s_ri_asd',        label:'Related Issues: ADHD & Autism / Autistic Traits', excludedByDefault: true },
+  { id:'s_ri_gad',        label:'Related Issues: ADHD & Generalised Anxiety', excludedByDefault: true },
+  { id:'s_ri_depression', label:'Related Issues: ADHD & Depression', excludedByDefault: true },
+  { id:'s_sh_sleep',         label:'Self-Help: Managing Sleep', excludedByDefault: true },
+  { id:'s_meds_dex',       label:'Medication: Dexamphetamine' },
+  { id:'s_meds_vyvanse',    label:'Medication: Vyvanse' },
+  { id:'s_meds_ritalinIR',  label:'Medication: Ritalin IR / Artige' },
+  { id:'s_meds_ritalinLA',  label:'Medication: Ritalin LA' },
+  { id:'s_meds_concerta',   label:'Medication: Concerta' },
+  { id:'s_meds_strattera',  label:'Medication: Strattera' },
+  { id:'s_meds_intuniv',    label:'Medication: Intuniv' },
+  { id:'s_meds_catapres',   label:'Medication: Catapres' },
+  { id:'s_monitor', label:'What to Monitor During Titration' },
+  { id:'s_safety',  label:'Important Safety Considerations' },
+  { id:'s_nonpharm_cbt',       label:'Non-Pharm: CBT' },
+  { id:'s_sh_braindump',     label:'Self-Help: Brain Dump' },
+  { id:'s_sh_phone',         label:'Self-Help: Phone &amp; Social Media' },
+  { id:'s_sh_timeblock',     label:'Self-Help: Time Blocking' },
+  { id:'s_sh_bodydouble',    label:'Self-Help: Body Doubling' },
+  { id:'s_sh_ifthen',        label:'Self-Help: If-Then Planning' },
+  { id:'s_sh_decisions',     label:'Self-Help: Managing Decision Fatigue' },
+  { id:'s_sh_reward',        label:'Self-Help: Reward Pairing' },
+  { id:'s_sh_bingeeating',   label:'Self-Help: Binge Eating' },
+  { id:'s_sh_emotional',     label:'Self-Help: Emotional Dysregulation' },
+  { id:'s_sh_exercise',      label:'Self-Help: Exercise for ADHD', excludedByDefault: true },
+  { id:'s_sh_kids',          label:'Self-Help: Difficulty With Kids' },
+  { id:'s_sh_partner',       label:'Self-Help: Difficulty With Partner' },
+  { id:'s_sh_commsadult',    label:'Self-Help: Communicating With ADHD Adult' },
+  { id:'s_sh_commschild',    label:'Self-Help: Talking With ADHD Child' },
+  { id:'s_resources_aus', label:'Australian ADHD Websites' },
+];
+
+function getSectionHTML(id) {
+  const patientName = document.getElementById('patient-name').value || 'your patient';
+  const sections = {
+    s_what: `<div class="rich-h1">What Is ADHD?</div>
+<p class="rich-p">ADHD is not about attention — not really. It is about <em>regulation</em>. The ADHD brain has a fundamentally different way of managing effort, attention, emotion, and time. It is not a deficit of the ability to pay attention; it is a deficit of the ability to <strong>control</strong> which things get attention, for how long, and when.</p>
+<p class="rich-p">Think of it as a brain that runs on interest, urgency, and novelty rather than importance or intention. When something captures genuine interest, the ADHD brain can focus intensely — sometimes for hours. When something is dull, routine, or not immediately rewarding, starting it can feel genuinely impossible despite knowing it matters. This is not a choice. The brain's activation system simply does not fire in the same way.</p>
+<p class="rich-p">ADHD is a neurodevelopmental condition — present from early in life, with a strong genetic basis, and reflecting real, measurable differences in brain structure, chemistry, and connectivity. It is not caused by bad parenting, too much screen time, diet, or a lack of willpower. It is one of the most heritable conditions in medicine.</p>
+<p class="rich-p">It affects around 5% of children and 3–4% of adults worldwide. It presents differently across people: some are externally hyperactive and impulsive, others are internally restless and quietly overwhelmed. Many people — particularly women — go unrecognised until adulthood because their presentation did not match the stereotype. Late diagnosis is common, and the relief that comes with it is real.</p>
+<p class="rich-p">ADHD is also very treatable. With the right support, outcomes across every major life domain — work, relationships, health, and wellbeing — improve substantially.</p>`,
+    s_brain: `<div class="rich-h1">What Is Happening in the Brain</div>
+<p class="rich-p">The part of the brain most involved in ADHD is the <strong>prefrontal cortex</strong> — the region behind your forehead responsible for planning, organising, prioritising, starting tasks, holding information in mind, and regulating emotion and impulse. In ADHD, this region is underactive and less well-connected to the rest of the brain.</p>
+<p class="rich-p">Two neurotransmitters are at the centre of this: <strong>dopamine</strong> and <strong>noradrenaline</strong>.</p>
+<div class="rich-h2">Dopamine — the "why bother" signal</div>
+<p class="rich-p">Dopamine's primary job is to signal that something is <em>worth the effort</em> — it drives motivation, initiates action, and makes the brain feel like a task will be rewarding enough to start. In ADHD, this signal in the prefrontal circuits is weaker and less consistent. This is why tasks that are intellectually straightforward can feel genuinely impossible to begin — not because the person lacks ability or desire, but because the brain's effort-activation system is not firing. It also explains hyperfocus: when something is genuinely novel or stimulating, dopamine fires normally and the person can concentrate extraordinarily well. The problem is <em>regulation</em>, not capacity.</p>
+<div class="rich-h2">Noradrenaline — the "stay locked in" signal</div>
+<p class="rich-p">Noradrenaline controls the brain's signal-to-noise ratio — it sharpens the relevant signal and suppresses background noise. It allows the prefrontal cortex to stay focused on a task despite distractions, and to hold a train of thought without losing it. In ADHD, reduced noradrenaline means the brain is more easily pulled off-task, thoughts are harder to hold, and irrelevant stimuli compete with whatever you are trying to do. It also drives emotional reactivity — emotions arrive louder and are harder to regulate because the prefrontal dampening system is underactive.</p>
+<div class="rich-h2">What this looks like day to day</div>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Starting tasks:</strong> Low dopamine = the activation cost feels enormous, even for simple things</li>
+<li class="rich-li"><strong>Losing the thread mid-task:</strong> Low noradrenaline = the signal drops and something else captures attention</li>
+<li class="rich-li"><strong>Working memory gaps:</strong> Forgetting why you walked into a room; losing a thought mid-sentence</li>
+<li class="rich-li"><strong>Emotional intensity:</strong> Feelings arrive fast and hard because the prefrontal cortex is not adequately dampening the limbic response</li>
+<li class="rich-li"><strong>Impulsivity:</strong> The "wait, think first" brake is slower and weaker</li>
+<li class="rich-li"><strong>Time blindness:</strong> The prefrontal cortex manages time perception — when underactive, time feels abstract and deadlines feel unreal until imminent</li>
+</ul>
+<p class="rich-p">ADHD medication works by increasing the availability of dopamine and noradrenaline in the prefrontal cortex. When it works well, people describe it not as feeling medicated, but as finally having access to the version of themselves they always knew was there.</p>`,
+    s_core: `<div class="rich-h1">Core Symptoms</div>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Inattention:</strong> difficulty sustaining attention, easily distracted, losing track in conversations or tasks</li>
+<li class="rich-li"><strong>Executive dysfunction:</strong> trouble organising, starting tasks, following through, managing time, and holding things in working memory</li>
+<li class="rich-li"><strong>Impulsivity:</strong> acting before thinking, interrupting, difficulty waiting, impulsive decision-making</li>
+<li class="rich-li"><strong>Hyperactivity:</strong> fidgeting and restlessness — in adults this often becomes an internal feeling of restlessness rather than visible overactivity</li>
+</ul>
+<p class="rich-p">Symptoms must cause impairment across at least two settings and have been present since childhood, even if never recognised at the time.</p>`,
+    s_down: `<div class="rich-h1">What Else Does ADHD Cause?</div>
+<p class="rich-p">The diagnostic criteria cover attention, hyperactivity, and impulsivity — but for many people the most disabling features of ADHD are not on that list.</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Emotional dysregulation:</strong> Emotions arrive faster and more intensely, and the prefrontal braking system that would normally modulate them is less effective. Frustration, excitement, rejection, and disappointment all hit harder. This is neurological, not a personality flaw.</li>
+<li class="rich-li"><strong>Rejection sensitive dysphoria (RSD):</strong> Intense, sometimes overwhelming emotional pain triggered by perceived rejection, criticism, or failure — even when mild or imagined. RSD can dominate relationships, cause avoidance of challenge, and be mistaken for anxiety or depression. Extremely common in ADHD and rarely discussed.</li>
+<li class="rich-li"><strong>Time blindness:</strong> ADHD impairs the brain's internal sense of time. People with ADHD often experience time as two states — "now" and "not now." Deadlines days away feel unreal. This produces chronic lateness, last-minute rushes, and inaccurate time estimation — not disrespect or laziness.</li>
+<li class="rich-li"><strong>Working memory deficits:</strong> The mental notepad used to hold information while using it is impaired — causing mid-sentence thought loss, forgetting what you walked into a room for, and needing to re-read the same paragraph repeatedly.</li>
+<li class="rich-li"><strong>Executive dysfunction:</strong> Planning, organising, prioritising, initiating, switching tasks, managing time — the whole suite of self-management is impaired. People can know exactly what they need to do and still be unable to make themselves start.</li>
+<li class="rich-li"><strong>Hyperfocus:</strong> The same dysregulation that causes inattention can flip to tunnel-vision absorption — hours pass unnoticed at the expense of everything else. Same system, different direction.</li>
+<li class="rich-li"><strong>Sleep problems:</strong> Delayed sleep phase, difficulty switching off at night, and unrefreshing sleep are significantly more common in ADHD. The brain that cannot disengage from stimulation during the day struggles to disengage at night.</li>
+<li class="rich-li"><strong>Appetite dysregulation:</strong> Irregular eating, forgetting to eat, reactive or emotional eating, and higher rates of binge eating disorder — driven by impulsivity and reward dysregulation.</li>
+<li class="rich-li"><strong>Anxiety:</strong> Very commonly co-occurs with ADHD — sometimes as a separate condition, often as a downstream consequence of years of struggling without understanding why.</li>
+<li class="rich-li"><strong>Low frustration tolerance:</strong> Difficulty tolerating delay, obstacles, repetition, or perceived unfairness — a downstream effect of poor dopamine regulation, not immaturity.</li>
+<li class="rich-li"><strong>Chronic underachievement:</strong> A persistent gap between capacity and output — intellectually capable but unable to perform consistently or sustain effort on long-horizon goals.</li>
+<li class="rich-li"><strong>Substance use risk:</strong> Higher rates of alcohol and substance use disorders in unmanaged ADHD, driven by impulsivity and self-medication of symptoms.</li>
+<li class="rich-li"><strong>Relationship difficulties:</strong> Forgetting important things, interrupting, inconsistency, emotional intensity, and difficulty with routine or reciprocity create strain — not from indifference, but from ADHD itself.</li>
+</ul>`,
+    s_impact: `<div class="rich-h1">The Real-World Impact</div>
+<p class="rich-p">Untreated ADHD is not a mild inconvenience. The functional consequences are significant across multiple life domains:</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Driving:</strong> Untreated ADHD significantly increases crash risk. Newly licensed drivers with ADHD are 36–62% more likely to crash, and treated individuals show substantially lower accident rates.</li>
+<li class="rich-li"><strong>Relationships:</strong> Divorce rates in couples affected by ADHD are approximately twice that of the general population.</li>
+<li class="rich-li"><strong>Obesity:</strong> Adults with ADHD are ~70% more likely to have obesity, with a roughly 4-fold increased risk of binge eating disorder.</li>
+<li class="rich-li"><strong>Substance use:</strong> Children with ADHD are 2–3 times more likely to develop a substance use disorder, largely through self-medication.</li>
+<li class="rich-li"><strong>Mortality:</strong> Untreated ADHD with comorbidities is associated with significantly increased premature mortality, particularly from accidents, overdose, and suicide.</li>
+</ul>`,
+    s_treat: `<div class="rich-h1">Treatment Is Lifesaving</div>
+<p class="rich-p">ADHD treatment is not just about improving concentration. The evidence shows it changes life outcomes across every domain — and reduces the risk of premature death.</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>21% reduction in all-cause mortality</strong> associated with ADHD medication (JAMA 2024, n=148,578 over 2 years)</li>
+<li class="rich-li"><strong>25% reduction in unnatural-cause mortality</strong> — including accidents and suicide — in people on medication</li>
+<li class="rich-li"><strong>~13% reduction in substance use disorder risk</strong> for each additional year on stimulant medication</li>
+<li class="rich-li"><strong>72% of measured long-term outcomes improved</strong> with treatment across academic, occupational, social, driving, and addiction domains (systematic review, 351 studies)</li>
+<li class="rich-li"><strong>Significantly lower motor vehicle crash rates</strong> while on medication versus off</li>
+<li class="rich-li"><strong>Reduced rates of criminal offending</strong> during periods of treatment at population level</li>
+<li class="rich-li"><strong>Better employment outcomes</strong> — higher retention, performance, and income relative to untreated ADHD</li>
+<li class="rich-li"><strong>Improved relationship stability</strong> and reduced interpersonal conflict</li>
+<li class="rich-li"><strong>Stimulant treatment reduces substance use risk</strong> — contrary to common concern, it does not increase it</li>
+</ul>
+<p class="rich-p">The risks of <em>not</em> treating ADHD — shorter lifespan, higher accident risk, substance use, unemployment, relationship breakdown — are substantially greater than the risks of properly managed treatment.</p>`,
+    s_feels: `<div class="rich-h1">What Treatment Actually Feels Like</div>
+<p class="rich-p">When medication is working well, the experience is usually subtle — a sense of calm clarity:</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Focus becomes easier to direct:</strong> boring-but-important tasks become manageable</li>
+<li class="rich-li"><strong>Internal agitation settles:</strong> people often describe feeling genuinely quiet in their own head for the first time</li>
+<li class="rich-li"><strong>Hyperactivity reduces:</strong> physically and mentally</li>
+<li class="rich-li"><strong>Emotional reactivity improves:</strong> more pause between feeling and reacting</li>
+<li class="rich-li"><strong>Anxiety often improves:</strong> much ADHD-related anxiety is generated by chronic underperformance; when ADHD is managed, that secondary anxiety often lifts</li>
+<li class="rich-li"><strong>Low mood often lifts:</strong> when you are no longer falling short of what you are capable of, chronic demoralisation eases</li>
+</ul>
+<p class="rich-p">What it should <strong>not</strong> feel like: robotic, flat, zombie-like, or like a different person. If it feels that way, the dose is probably too high. That is a signal to adjust, not to tolerate.</p>
+<p class="rich-p">The response rate for stimulants is approximately 70–80% in children and 60–75% in adults. If one stimulant class does not work, switching to the other produces a further response in a meaningful proportion of non-responders.</p>`,
+    s_meds_dex: `<div class="rich-h1">Dexamphetamine (Immediate Release)</div>
+<div class="rich-h2">How It Works</div>
+<p class="rich-p">Dexamphetamine is a stimulant. It increases dopamine and noradrenaline in the prefrontal cortex — the two chemicals your brain needs more of for focus and impulse control. It both blocks the recycling of these chemicals and triggers extra release, which is why it tends to have a slightly stronger effect than methylphenidate-based medications (Ritalin, Concerta).</p>
+
+<div class="rich-h2">Practical Details</div>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Form:</strong> Short-acting tablet (IR). Effects begin within 30–45 minutes, last 4–6 hours.</li>
+<li class="rich-li"><strong>Dosing:</strong> Usually taken 2–3 times daily. Afternoon dose timing matters — too late can delay sleep onset.</li>
+<li class="rich-li"><strong>Food:</strong> Avoid acidic drinks (fruit juice, soft drink) at the same time. Taking after food reduces nausea.</li>
+</ul>
+
+<div class="rich-h2">What to Expect</div>
+<p class="rich-p">Most people notice improved ability to start and sustain tasks, quieter internal restlessness, and better impulse control. Appetite suppression is common, especially at lunchtime. Rebound (a drop in mood or focus as the medication wears off) can occur with short-acting formulations.</p>
+
+<div class="rich-h2">Side Effects: Dexamphetamine</div>
+<p class="rich-p">Most are dose-dependent and settle within 1–2 weeks. If they do not, the dose may need adjusting.</p>
+
+<p class="rich-p"><strong>Common</strong></p>
+<ul class="rich-ul">
+<li class="rich-li">Reduced appetite — most noticeable at lunchtime</li>
+<li class="rich-li">Dry mouth</li>
+<li class="rich-li">Insomnia if taken too late in the day</li>
+<li class="rich-li">Increased heart rate</li>
+<li class="rich-li">Headache (usually settles within 2–3 weeks)</li>
+<li class="rich-li">Irritability or anxiety in a subset of people</li>
+<li class="rich-li">Jaw clenching (bruxism)</li>
+<li class="rich-li">Rebound: drop in mood or focus as medication wears off (more common with short-acting formulations)</li>
+</ul>
+
+<p class="rich-p"><strong>Less Common</strong></p>
+<ul class="rich-ul">
+<li class="rich-li">Elevated blood pressure — monitored at appointments</li>
+<li class="rich-li">Emotional blunting at higher doses (reduce dose if this occurs)</li>
+<li class="rich-li">In people with bipolar disorder, stimulants can occasionally trigger mania — contact your doctor if you notice elevated mood, reduced sleep need, or rapid speech</li>
+</ul>
+
+<div class="rich-h2">Food and Drug Interactions</div>
+<ul class="rich-ul">
+<li class="rich-li">Acidic drinks (fruit juice, vitamin C, soft drinks) reduce absorption — take medication first, then wait 30 minutes</li>
+<li class="rich-li">Decongestants (pseudoephedrine): discuss with your doctor before combining</li>
+<li class="rich-li"><strong>MAOIs: absolute contraindication</strong> — do not combine under any circumstances</li>
+</ul>`,
+    s_meds_vyvanse: `<div class="rich-h1">Vyvanse (Lisdexamfetamine)</div>
+<div class="rich-h2">How It Works</div>
+<p class="rich-p">Vyvanse is dexamphetamine in a slow-release form. The active ingredient is released gradually after you swallow it, giving a smoother, longer-lasting effect than immediate-release dex. Same mechanism — it increases dopamine and noradrenaline in the prefrontal cortex. Because of how it is designed, it has very low abuse potential.</p>
+
+<div class="rich-h2">Practical Details</div>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Form:</strong> Capsule. Can be swallowed whole or opened and dissolved in water.</li>
+<li class="rich-li"><strong>Duration:</strong> Typically 12–14 hours — the longest-acting stimulant option available in Australia.</li>
+<li class="rich-li"><strong>Onset:</strong> Effects usually start within 1–2 hours.</li>
+<li class="rich-li"><strong>Food:</strong> Avoid acidic drinks at the same time. Food does not significantly affect absorption.</li>
+</ul>
+
+<div class="rich-h2">What to Expect</div>
+<p class="rich-p">Smooth, consistent effect across the day with less pronounced peaks and troughs than shorter-acting medications. Particularly useful for people who need sustained coverage into the evening, or who find the rebound from dex IR difficult. Appetite suppression is common.</p>
+
+<div class="rich-h2">Side Effects: Vyvanse</div>
+<p class="rich-p">Fewer peaks and troughs means side effects are often milder and more predictable. Most settle within 1–2 weeks.</p>
+
+<p class="rich-p"><strong>Common</strong></p>
+<ul class="rich-ul">
+<li class="rich-li">Reduced appetite — often improves after the first few weeks</li>
+<li class="rich-li">Dry mouth</li>
+<li class="rich-li">Insomnia if taken later in the morning (given 12–14 hour duration)</li>
+<li class="rich-li">Headache</li>
+<li class="rich-li">Irritability, usually as medication wears off in the evening</li>
+<li class="rich-li">Increased heart rate</li>
+</ul>
+
+<p class="rich-p"><strong>Less Common</strong></p>
+<ul class="rich-ul">
+<li class="rich-li">Elevated blood pressure</li>
+<li class="rich-li">Jaw clenching (bruxism)</li>
+<li class="rich-li">In people with bipolar disorder, stimulants can occasionally trigger mania</li>
+</ul>
+
+<div class="rich-h2">Food and Drug Interactions</div>
+<ul class="rich-ul">
+<li class="rich-li">Acidic drinks reduce absorption</li>
+<li class="rich-li"><strong>MAOIs: absolute contraindication</strong></li>
+<li class="rich-li">Decongestants: discuss with doctor before combining</li>
+</ul>`,
+    s_meds_ritalinIR: `<div class="rich-h1">Medication: Ritalin IR / Artige</div>
+<div class="rich-h2">How It Works</div>
+<p class="rich-p">Ritalin IR and Artige are brand names for immediate-release methylphenidate. Ritalin (methylphenidate IR) works by blocking the dopamine and noradrenaline transporter proteins — like putting a stopper in the vacuum cleaner that normally clears these signals. The result is increased availability of dopamine and noradrenaline in the prefrontal cortex, improving focus and impulse control. Unlike dexamphetamine, it does not directly trigger dopamine release; the mechanism is purely reuptake inhibition, which generally means a milder effect profile.</p>
+<div class="rich-h2">Practical Details</div>
+<ul class="rich-ul">
+  <li><strong>Form:</strong> Short-acting tablet. Effects begin within 30-45 minutes, last 3-5 hours.</li>
+  <li><strong>Dosing:</strong> Usually taken 2-3 times daily. Timing the afternoon dose is important to avoid sleep interference.</li>
+  <li><strong>With or without food:</strong> Avoid acidic drinks at the same time. Taking after food can reduce nausea.</li>
+</ul>
+<div class="rich-h2">What to Expect</div>
+<p class="rich-p">Ritalin IR tends to have a slightly milder side effect profile than dexamphetamine — less appetite suppression and fewer cardiovascular effects on average. The short duration means some people need a top-up dose in the afternoon. Rebound on wearing off is possible.</p>
+
+<p class="rich-p">Ritalin IR has a milder side effect profile than dexamphetamine on average, particularly for appetite suppression. The short duration of action means side effects typically wear off relatively quickly.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Reduced appetite at lunchtime</li>
+  <li>Headache (usually settles within 2-3 weeks)</li>
+  <li>Insomnia if the afternoon dose is taken too late</li>
+  <li>Increased heart rate</li>
+  <li>Jitteriness or anxiety in some people</li>
+  <li>Stomach discomfort — taking with food reduces this</li>
+</ul>
+<div class="rich-h2">Less common</div>
+<ul class="rich-ul">
+  <li>Elevated blood pressure</li>
+  <li>Rebound (drop in mood as medication wears off) — if significant, discuss adjusting timing or formulation</li>
+  <li>In people with bipolar disorder, stimulants can occasionally trigger mania</li>
+</ul>
+<div class="rich-h2">Food and drug interactions</div>
+<ul class="rich-ul">
+  <li>Acidic drinks reduce absorption — take medication before acidic food or drink</li>
+  <li>MAOIs: absolute contraindication</li>
+</ul>`,
+
+    s_meds_ritalinLA: `<div class="rich-h1">Medication: Ritalin LA</div>
+<div class="rich-h2">How It Works</div>
+<p class="rich-p">Ritalin LA (methylphenidate long-acting) uses the same mechanism as Ritalin IR — reuptake inhibition of dopamine and noradrenaline transporters — but delivers 50% of the dose immediately and 50% over the following 4-6 hours, via a two-pulse SODAS delivery system. This gives a smooth onset and a longer coverage window than Ritalin IR.</p>
+<div class="rich-h2">Practical Details</div>
+<ul class="rich-ul">
+  <li><strong>Form:</strong> Capsule. Can be swallowed whole or opened and sprinkled on food (do not chew the beads).</li>
+  <li><strong>Duration:</strong> Approximately 8-10 hours from one morning dose.</li>
+  <li><strong>With or without food:</strong> Avoid acidic drinks. High-fat meals can delay the second pulse but this is usually not clinically significant.</li>
+</ul>
+<div class="rich-h2">What to Expect</div>
+<p class="rich-p">Ritalin LA suits people who want once-daily morning dosing with reliable coverage through the school or work day without needing a lunchtime dose. Compared to Ritalin IR, transitions are smoother. Some people add a small Ritalin IR dose in the afternoon if they need extended coverage.</p>
+
+<p class="rich-p">Ritalin LA delivers a two-pulse dose that smooths out the peaks and troughs of short-acting methylphenidate. The side effect profile is similar to Ritalin IR but the timing is shifted by the longer duration.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Reduced appetite — tends to be less pronounced than with short-acting formulations</li>
+  <li>Insomnia if taken too late (duration 8-10 hours)</li>
+  <li>Headache</li>
+  <li>Increased heart rate</li>
+  <li>Jitteriness or anxiety in some people</li>
+</ul>
+<div class="rich-h2">Less common</div>
+<ul class="rich-ul">
+  <li>Elevated blood pressure</li>
+  <li>In people with bipolar disorder, stimulants can occasionally trigger mania</li>
+</ul>
+<div class="rich-h2">Food and drug interactions</div>
+<ul class="rich-ul">
+  <li>Acidic drinks reduce absorption — take medication before acidic food or drink</li>
+  <li>High-fat meals can delay the second-pulse release but this is usually not clinically significant</li>
+  <li>MAOIs: absolute contraindication</li>
+</ul>`,
+
+    s_meds_concerta: `<div class="rich-h1">Medication: Concerta</div>
+<div class="rich-h2">How It Works</div>
+<p class="rich-p">Concerta (methylphenidate extended-release) uses the OROS (osmotic pump) delivery system: 22% of the dose is delivered immediately, and the remaining 78% is released gradually over 10-12 hours as water enters the osmotic pump. This creates a slowly ascending blood level across the day, mimicking the natural demand curve of the school or work day. The mechanism is the same as other methylphenidate medications — reuptake inhibition of dopamine and noradrenaline.</p>
+<div class="rich-h2">Practical Details</div>
+<ul class="rich-ul">
+  <li><strong>Form:</strong> Tablet. Must be swallowed whole — do not crush or chew. The empty shell may appear in the stool; this is normal.</li>
+  <li><strong>Duration:</strong> 10-12 hours from one morning dose.</li>
+  <li><strong>With or without food:</strong> Food does not significantly affect delivery. Avoid acidic drinks at the same time.</li>
+</ul>
+<div class="rich-h2">What to Expect</div>
+<p class="rich-p">Concerta is a good once-daily option. The ascending delivery profile means the medication builds gradually rather than producing an early peak. Some people prefer this; others prefer the quicker onset of other formulations. The extended duration suits people who need coverage into the afternoon and evening.</p>
+
+<p class="rich-p">Concerta's osmotic pump delivery creates a slowly ascending blood level across the day, which tends to produce a smooth effect with a manageable side effect profile. The shell of the tablet may appear in the stool — this is normal and does not mean the medication hasn't worked.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Reduced appetite</li>
+  <li>Insomnia — given the 10-12 hour duration, take in the morning</li>
+  <li>Headache</li>
+  <li>Increased heart rate</li>
+  <li>Dry mouth</li>
+</ul>
+<div class="rich-h2">Less common</div>
+<ul class="rich-ul">
+  <li>Elevated blood pressure</li>
+  <li>Irritability as medication wears off in the evening</li>
+  <li>In people with bipolar disorder, stimulants can occasionally trigger mania</li>
+</ul>
+<div class="rich-h2">Important</div>
+<ul class="rich-ul">
+  <li>Must be swallowed whole — the OROS pump mechanism requires the tablet to remain intact. Do not crush or chew.</li>
+</ul>
+<div class="rich-h2">Food and drug interactions</div>
+<ul class="rich-ul">
+  <li>Acidic drinks reduce absorption</li>
+  <li>MAOIs: absolute contraindication</li>
+</ul>`,
+
+    s_meds_strattera: `<div class="rich-h1">Medication: Strattera</div>
+<div class="rich-h2">How It Works</div>
+<p class="rich-p">Strattera (atomoxetine) is not a stimulant. It is a selective noradrenaline reuptake inhibitor (SNRI) — it blocks the noradrenaline transporter, which in the prefrontal cortex also increases synaptic dopamine (because the noradrenaline transporter there handles both). It has no abuse potential and is not a controlled substance. The mechanism means it works differently to stimulants and is particularly useful when stimulants are not appropriate, not tolerated, or insufficient on their own.</p>
+<div class="rich-h2">Practical Details</div>
+<ul class="rich-ul">
+  <li><strong>Onset:</strong> Unlike stimulants, atomoxetine takes 4-12 weeks for full therapeutic effect. Some response may appear in 2-4 weeks, but the full benefit often takes longer.</li>
+  <li><strong>Dosing:</strong> Once or twice daily. Dose is typically titrated up slowly over several weeks.</li>
+  <li><strong>Duration:</strong> 24-hour coverage when at therapeutic dose.</li>
+  <li><strong>Important interaction:</strong> Avoid with fluoxetine (Prozac), paroxetine (Aropax), or bupropion — these can dramatically increase atomoxetine blood levels and side effects.</li>
+</ul>
+<div class="rich-h2">What to Expect</div>
+<p class="rich-p">Strattera improves attention, impulse control, and emotional regulation, but the onset is slow. Initial side effects (nausea, fatigue) often settle within the first few weeks. It is a good option for people with anxiety, tic disorders, or a history of substance use, or as an add-on to stimulants.</p>
+
+<p class="rich-p">Atomoxetine's side effects differ from stimulants — it does not affect dopamine directly, so there is no rebound or appetite suppression in the same way. However, it has its own profile to be aware of.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Nausea or stomach discomfort — taking with food reduces this significantly</li>
+  <li>Dry mouth</li>
+  <li>Constipation</li>
+  <li>Dizziness</li>
+  <li>Mood changes — some people notice increased anxiety or irritability during the titration phase</li>
+  <li>Urinary hesitancy</li>
+  <li>Reduced appetite — milder than with stimulants</li>
+  <li>Insomnia in some, sedation in others</li>
+</ul>
+<div class="rich-h2">Rare but important</div>
+<ul class="rich-ul">
+  <li>Liver injury (rare): if you develop yellowing of the skin or eyes, dark urine, or persistent abdominal pain, stop the medication and seek medical attention promptly</li>
+  <li>Priapism (prolonged, painful erection): rare but documented — seek emergency treatment if it occurs</li>
+</ul>
+<div class="rich-h2">Drug interactions</div>
+<ul class="rich-ul">
+  <li>Fluoxetine (Prozac), paroxetine (Aropax), or bupropion: dramatically increase atomoxetine blood levels — inform your prescriber of all medications</li>
+  <li>Salbutamol (Ventolin): may increase cardiovascular effects when combined</li>
+</ul>`,
+
+    s_meds_intuniv: `<div class="rich-h1">Medication: Intuniv</div>
+<div class="rich-h2">How It Works</div>
+<p class="rich-p">Intuniv (guanfacine extended-release) is a non-stimulant that works on alpha-2A adrenergic receptors in the prefrontal cortex. Activating these receptors strengthens the connections between prefrontal neurons that control attention and impulse regulation — essentially improving the signal quality in circuits that ADHD disrupts. It does not affect dopamine directly and has no abuse potential.</p>
+<div class="rich-h2">Practical Details</div>
+<ul class="rich-ul">
+  <li><strong>Dosing:</strong> Once daily, titrated slowly upward over weeks.</li>
+  <li><strong>Onset:</strong> Gradual — therapeutic effect develops over 4-8 weeks of dose titration.</li>
+  <li><strong>Do not stop suddenly:</strong> Stopping guanfacine abruptly can cause rebound hypertension and tachycardia. Always taper the dose under medical guidance.</li>
+  <li><strong>Timing:</strong> Take at the same time each day. Avoid high-fat meals as they increase absorption and can increase side effects.</li>
+</ul>
+<div class="rich-h2">What to Expect</div>
+<p class="rich-p">Guanfacine is particularly helpful for emotional dysregulation, impulsivity, and hyperactivity. It is often used in combination with stimulants. Sedation is the most common side effect, especially in the first few weeks — this usually settles. Low blood pressure and slow heart rate are also common.</p>
+
+<p class="rich-p">Guanfacine acts on blood pressure pathways as well as ADHD circuits, so its side effects reflect both actions. Most settle after the first few weeks at a stable dose.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Drowsiness and sedation — especially in the first weeks. This often improves with time. Taking the dose in the evening can help.</li>
+  <li>Low blood pressure — can cause dizziness, especially when standing up quickly</li>
+  <li>Slow heart rate (bradycardia)</li>
+  <li>Headache</li>
+  <li>Dry mouth</li>
+  <li>Constipation</li>
+  <li>Stomach discomfort</li>
+</ul>
+<div class="rich-h2">Critical: do not stop suddenly</div>
+<p class="rich-p">Stopping guanfacine abruptly can cause a rebound rise in blood pressure and heart rate. Always taper the dose gradually under your doctor's guidance. Do not run out without a plan.</p>
+<div class="rich-h2">Drug interactions</div>
+<ul class="rich-ul">
+  <li>Other blood pressure medications: effects can add up — ensure all your doctors know you are on guanfacine</li>
+  <li>Avoid high-fat meals at the time of dose — they increase absorption and can worsen side effects</li>
+</ul>`,
+
+    s_meds_catapres: `<div class="rich-h1">Medication: Catapres</div>
+<div class="rich-h2">How It Works</div>
+<p class="rich-p">Catapres (clonidine) is a non-stimulant that acts on alpha-2 adrenergic receptors in the brain and peripheral nervous system. In ADHD, it helps regulate arousal, reduce impulsivity, and improve sleep-onset — the latter makes it particularly useful when taken in the evening. Like guanfacine, it has no abuse potential, but it has a broader pharmacological profile and requires careful management.</p>
+<div class="rich-h2">Practical Details</div>
+<ul class="rich-ul">
+  <li><strong>Dosing:</strong> Titrated slowly. Your psychiatrist will specify your exact dose and schedule.</li>
+  <li><strong>Do not stop suddenly:</strong> Stopping clonidine abruptly can cause a rebound rise in blood pressure and heart rate. Always taper the dose under medical guidance.</li>
+  <li><strong>Alcohol:</strong> Significantly increases sedation. Avoid or strictly limit alcohol while taking clonidine.</li>
+  <li><strong>Blood pressure medications:</strong> Effects can add up — let all your doctors know you are taking clonidine.</li>
+</ul>
+<div class="rich-h2">What to Expect</div>
+<p class="rich-p">Clonidine is useful for managing hyperarousal, impulsivity, and sleep difficulties associated with ADHD. Sedation is common, especially at first. Low blood pressure and dizziness (particularly on standing) are also common. These effects often diminish after the first few weeks at a stable dose.</p>
+
+<p class="rich-p">Clonidine has a broader pharmacological profile than guanfacine and requires careful management. Side effects often diminish after the first few weeks at a stable dose.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Sedation — can be significant, especially when starting or after dose increases</li>
+  <li>Dizziness, particularly on standing</li>
+  <li>Low blood pressure</li>
+  <li>Slow heart rate</li>
+  <li>Dry mouth</li>
+  <li>Constipation</li>
+  <li>Headache</li>
+  <li>Low mood or fatigue in some people</li>
+  <li>Erectile dysfunction</li>
+</ul>
+<div class="rich-h2">Critical: do not stop suddenly</div>
+<p class="rich-p">Stopping clonidine abruptly can cause a rebound rise in blood pressure and heart rate. Always taper the dose gradually under your doctor's guidance.</p>
+<div class="rich-h2">Drug interactions</div>
+<ul class="rich-ul">
+  <li>Alcohol significantly increases sedation — avoid or strictly limit alcohol while taking clonidine</li>
+  <li>Other blood pressure medications: effects can add up — ensure all your doctors know you are on clonidine</li>
+</ul>`,
+
+    s_monitor: `<div class="rich-h1">What to Monitor During Titration</div>
+<div class="rich-h2">Positive Effects to Track</div>
+<ul class="rich-ul">
+  <li>Focus and concentration — is it easier to start and stay on tasks?</li>
+  <li>Internal restlessness — is the background agitation quieter?</li>
+  <li>Impulse control — more pause before reacting?</li>
+  <li>Mood and anxiety — is the baseline anxiety lower?</li>
+  <li>Energy and motivation — easier to get going?</li>
+  <li>Productivity — completing more of what you intend to each day?</li>
+</ul>
+<div class="rich-h2">Side Effects to Track</div>
+<ul class="rich-ul">
+  <li>Appetite — eating less, losing weight?</li>
+  <li>Sleep — harder to fall asleep or waking earlier?</li>
+  <li>Heart rate / chest — any palpitations or chest discomfort?</li>
+  <li>Blood pressure — check regularly if any cardiovascular history</li>
+  <li>Mood — any increase in anxiety, irritability, or flatness?</li>
+  <li>Headaches or nausea — particularly in first two weeks</li>
+  <li>Rebound — mood crash in late afternoon or evening?</li>
+</ul>
+<div class="rich-h2">When to Pause Titration</div>
+<ul class="rich-ul">
+  <li class="rich-warn">Heart rate persistently above 100 bpm at rest, or chest pain, palpitations, or shortness of breath</li>
+  <li class="rich-warn">Blood pressure consistently elevated above 140/90</li>
+  <li class="rich-warn">Significant increase in anxiety or panic that is not settling</li>
+  <li class="rich-warn">New or worsening psychotic symptoms — unusual thoughts, paranoia, perceptual disturbances</li>
+  <li class="rich-warn">Marked mood elevation, unusually high energy, or reduced need for sleep</li>
+  <li class="rich-warn">Significant insomnia not resolved by adjusting timing</li>
+  <li class="rich-warn">Severe appetite suppression with noticeable weight loss</li>
+  <li class="rich-warn">Emotional blunting at the current dose — reduce dose, do not increase</li>
+</ul>`,
+
+    s_safety: `<div class="rich-h1">Important Safety Considerations</div>
+<div class="rich-h2">When to Stop and Seek Urgent Help</div>
+<p class="rich-p rich-warn">Stop the medication and contact your doctor or emergency services immediately if you experience chest pain, irregular heartbeat, signs of hypertensive crisis (severe headache, visual changes, confusion), or any psychotic symptoms.</p>
+<div class="rich-h2">Cannabis</div>
+<p class="rich-p">Cannabis and stimulant medications are a genuinely poor combination. Cannabis impairs working memory, attentional control, and executive function — the exact same systems ADHD medication is trying to support. Regular cannabis use significantly reduces treatment effectiveness and can worsen ADHD symptoms. There is also increased cardiovascular stress with the combination.</p>
+<div class="rich-h2">Alcohol</div>
+<p class="rich-p">Stimulants can mask the sedating effects of alcohol, increasing the risk of drinking significantly more than intended. There is also increased cardiovascular load. Warrants awareness and restraint.</p>
+<div class="rich-h2">Drug Interactions</div>
+<ul class="rich-ul">
+  <li><strong class="rich-warn">MAOIs: absolute contraindication.</strong> Do not combine under any circumstances.</li>
+  <li><strong>Other stimulants / sympathomimetics:</strong> combining with other stimulant drugs significantly increases cardiovascular risk.</li>
+  <li><strong>Decongestants (pseudoephedrine):</strong> avoid combining without medical advice.</li>
+  <li><strong>Antidepressants:</strong> most SSRIs and SNRIs are compatible. Do not add or change other medications without disclosing to your psychiatrist.</li>
+</ul>
+<div class="rich-h2">Do Not Share Your Medication</div>
+<p class="rich-p">Stimulant medications are controlled substances in Australia. Sharing them is illegal, places the recipient at risk, and can affect your ability to continue receiving treatment.</p>
+<div class="rich-h2">Pregnancy and Breastfeeding</div>
+<p class="rich-p">If you are pregnant, planning to become pregnant, or breastfeeding, speak with your psychiatrist before starting or continuing stimulant medication.</p>`,
+
+    s_myths: `<div class="rich-h1">Common Myths About ADHD</div>
+<div class="rich-h2">"Stimulants are addictive"</div>
+<p class="rich-p">This is probably the most common concern people have, and the evidence does not support it. Prescribed stimulant medication taken orally at therapeutic doses does not cause addiction. In fact, research consistently shows that treating ADHD with medication <em>reduces</em> the risk of developing substance use problems, not the other way around.</p>
+<div class="rich-h2">"If the medication works, that proves you have ADHD"</div>
+<p class="rich-p">Stimulants increase dopamine and noradrenaline in everyone's brain. The difference is that without ADHD, you tend to just get side effects — increased heart rate, anxiety, reduced appetite — without much cognitive benefit.</p>
+<div class="rich-h2">"Everyone feels like this — it's just normal"</div>
+<p class="rich-p">Everyone gets distracted sometimes, everybody fidgets on occasion, and everybody finds it harder to concentrate on boring things than interesting things. ADHD is not about occasional symptoms. It is about a consistent, pervasive, pattern of symptoms, that are more than the average prson, that have been present since childhood, and affects multiple areas of life. The brain differences in ADHD are measurable on neuroimaging. It is a real, well-documented condition. ADHD is talked a lot on social media, but that doesn't mean everybody has it. Approximately 90-95% of people don't have ADHD. The benefits that come from understanding the diagnosis plus treatment, can be lifechanging.</p>
+<div class="rich-h2">"ADHD only affects children"</div>
+<p class="rich-p">ADHD continues into adulthood in around 60% of cases. In adults it often looks different — less obvious hyperactivity, more internal restlessness, chronic underperformance, and difficulty with organisation and follow-through. Many intelligent adults make it through school with ADHD that was unnoticed; they usually struggled, worked extra hard, were powered by anxiety/perfectionism, played loads of sport to manage the hyperactivity, stayed up late to finish assignments at the last minute, or relied upon the structure of school and home life to keep them going. Then in adulthood, many of these coping mechanisms stop working, become damaging, or the structures that kept everything in place were no longer there. </p>
+<div class="rich-h2">"People with ADHD just need to try harder"</div>
+<p class="rich-p">People with ADHD are often trying extremely hard already. The problem is not effort — it is a brain that does not regulate attention and motivation the same way other brains do. Telling someone with ADHD to try harder is like telling someone with poor eyesight to look harder. The answer is the right tool, not more willpower.</p>
+<div class="rich-h2">"ADHD is made up"</div>
+<p class="rich-p">ADHD is one of the most researched psychiatric conditions we have. It has consistent genetic findings, reproducible neuroimaging differences, and decades of clinical trial data. There are clear differences in the lives of people with ADHD versus those without it. The treatment response is better for ADHD than many other psychiatric conditions. People with ADHD live longer and have greater quality of life with treatment.</p>
+<div class="rich-h2">"You don't really need such a thorough assessment"</div>
+<p class="rich-p">There's a reason that only a small number of experienced medical professionals can diagnose ADHD and legally prescribe treatment. Severe depression, psychosis, acute mania, obsessive-compulsive disorder, iron deficiency, delirium, phaochromocytoma, are just some conditions that can easily look like ADHD on the outside, but are actually driven by something else. Missing these would mean that, in the worse case scenario, the symptoms get significantly worse requiring urgent medical attention. In the best case scenario the ADHD specific treatment simply wouldn't work as the actual underlying condition would still be unrecognised and untreated. When you pay to see a psychiatrist, you are paying for the years of medical experience that they have in being able to quickly recognise all these conditions and know what to do about it.  </p>
+<div class="rich-h2">"ADHD is overdiagnosed and everyone's on stimulants"</div>
+<p class="rich-p">There's no way of knowing if ADHD is overdiagnosed because we don't keep track of everybody with a diagnosis; that would be a massive invasion of privacy. Regarding treatment, it is estimated that up to 5% of Australians have ADHD. However the data shows that only 2.2% of Australians are prescribed stimulant medication. This means that less than half of the expected number of people are accessing the most effective treatment. It may be that not enough people are able to access specialist assessment and treatment. It could also mean that those with a diagnosis either aren't able to have stimulant treamtent, are trying a non-stimulant medication, or with to use non-pharmacological methods to manage. While the rate of stimulant prescribing has increased, it doesn't mean that it's 'everywhere' as such. Keep in mind that the medication 'Vyvanse' is indicated for treatment of binge-eating disorder, and dexamfetamine is used in sleep disorders like narcolepsy; there are other uses for stimulants than just ADHD.</p>
+<div class="rich-h2">"You can't have ADHD if you can focus on things you enjoy"</div>
+<p class="rich-p">This is a very common misconception. The ADHD brain does not have a focus problem across the board — it has a <em>regulation</em> problem. When something is interesting, novel, or urgent, the brain can hyperfocus intensely. When something is dull or feels low-stakes, focus evaporates. It's not like people with ADHD want this to be the way! Most people with ADHD wish that they could just do normal things; or they wish they didn't do other things. They wish they could remember to pay their bills, or be able to sit still, or not interrupt people all the time (just to name three examples). But it seems like it takes extraordinary effort to overcome these obsticles.</p>`,
+
+    s_faq: `<div class="rich-h1">Commonly Asked Questions</div>
+<div class="rich-h2">How quickly will I notice a difference?</div>
+<p class="rich-p">With stimulants, sometimes you don't feel any difference with the first doses, but this is just to acclimatise your body to the medication. As the dose goes up, the effect is usually experienced on the same day soon after taking the stimulant. People can usually feel a clear difference before and after taking a dose. That is one of the distinguishing features of ADHD medication. That said, finding the right doses takes time. Non-stimulants typically take longer for the effect to occur, but they can be very beneficial (with patience!). </p>
+<div class="rich-h2">Do I have to take it every day?</div>
+<p class="rich-p">Generally, yes — the recommendation is to take your medication every day. ADHD does not take weekends off, and consistency helps with titration and makes it easier to track how the medication is working. That said, some people choose to reduce or skip stimulants on weekends or during periods of intense physical exercise. This is an individual decision to discuss with your psychiatrist.</p>
+<div class="rich-h2">Will I need to take it forever?</div>
+<p class="rich-p">ADHD is typically a lifelong condition, but over time the brain continues to make adaptations - even as an adult. Most adults find that they prefer continuing to take the medication lifelong because many of the symptoms return if they stop. Others find that after sufficient time on the medication they may choose to stop because they develop better coping strategies, they set their life up to accommodate themselves better, or there is a medical reason for stopping.</p>
+<div class="rich-h2">Will it change my personality?</div>
+<p class="rich-p">No. Stimulants at therapeutic doses should make you feel more like yourself — more able to follow through on what you actually want to do and less restless. If it makes you feel flat or robotic, the dose is probably too high. That is a signal to adjust. Some people find that the optimal dose is one where they have improvements in focus and hyperactivity, but still keep a degree of 'ADHD energy' especially if they're working in a fast moving work environment.</p>
+<div class="rich-h2">Is it safe long-term?</div>
+<p class="rich-p">Yes. Stimulants have been used clinically since the 1930s and so there is good long term safety data. The main considerations are cardiovascular — blood pressure and heart rate — which your GP will monitor regularly.</p>
+<div class="rich-h2">Can I drink alcohol on it?</div>
+<p class="rich-p">It is not a great combination. Stimulants can mask the sedating effects of alcohol, thus increasing the risk of drinking more than intended, and leading to a false sense of sobriety. Drinking alcohol puts strain on the liver and the heart when combined with stimulants. It doesn't mean that you cannot drink alcohol at all while taking stimulants. However, any decision around this needs to be sensible, weighing the risks and benefits. It would be worth discussing this with your psychiatrist or GP on how to manage this. </p>
+<div class="rich-h2">What if it does not work or I cannot tolerate it?</div>
+<p class="rich-p">If one stimulant class does not work, we may try a different one. If stimulants are not tolerated or not suitable, non-stimulant options — atomoxetine, clonidine, and guanfacine — are effective alternatives for the right patient.</p>
+<div class="rich-h2">Can I drive while on it?</div>
+<p class="rich-p">Yes. ADHD medication does not restrict you from driving. In fact, evidence shows lower crash rates in people with ADHD when they are on medication compared to when they are not. There are no  restrictions on driving in Australia for people taking ADHD medications as prescribed.</p>
+<div class="rich-h2">What happens if I miss a dose?</div>
+<p class="rich-p">For stimulants, take it as soon as you remember, provided it is not too late in the day. If it is past afternoon, going into evening, skip the missed dose and continue normally the next morning. Do not double up. For atomoxetine or guanfacine, take the medication as soon as you remember and do not double up. Missing one of these may lead to withdrawal side effects.</p>`,
+
+    // ---- PSYCHOEDUCATION ADD-ONS (optional, unselected by default) ----
+
+    s_supports: `<div class="rich-h1">Accessing Supports &amp; Services</div>
+<p class="rich-p">Being diagnosed with ADHD opens up access to supports and services that may not have been available to you before. These are not charity — they are structured, evidence-based resources designed for people in exactly your situation.</p>
+<div class="rich-h2">Medicare-Funded Psychology</div>
+<p class="rich-p">Under a Mental Health Treatment Plan from your GP, you can access up to 10 individual psychology sessions per calendar year at a Medicare rebate. This can be used for ADHD-focused Cognitive Behavioural Therapy (CBT), skills coaching, or support for comorbid anxiety or depression. Ask your GP to refer you to a psychologist with ADHD experience.</p>
+<div class="rich-h2">Disability Support at Work or Study</div>
+<p class="rich-p">If you are in employment or tertiary education, you have the right to request reasonable adjustments. At university and TAFE, disability services can provide extended time for exams, assignment extensions, and alternative assessment formats. In the workplace, reasonable adjustments are covered under the Disability Discrimination Act 1992 — your employer cannot legally discriminate based on a disability that is being appropriately managed. You do not have to disclose your specific diagnosis — you can request adjustments based on your functional needs.</p>
+<div class="rich-h2">Peer Support and Community</div>
+<ul class="rich-ul">
+  <li><strong>ADHD Australia:</strong> <a href="https://www.adhdaustralia.org.au" target="_blank">adhdaustralia.org.au</a> — peer support groups, webinars, and community forums</li>
+  <li><strong>ADHD Support Australia:</strong> online community and resources for adults and families</li>
+  <li><strong>Beyond Blue:</strong> for comorbid anxiety and depression support — <a href="https://www.beyondblue.org.au" target="_blank">beyondblue.org.au</a></li>
+</ul>`,
+
+    s_workplace: `<div class="rich-h1">Workplace Adjustments</div>
+<p class="rich-p">Most people with ADHD are highly capable — often creative, energetic, and able to hyperfocus on work they find meaningful. The challenge is that standard workplace environments are often poorly matched to how ADHD brains work. Targeted adjustments can make a significant difference without asking for much.</p>
+<div class="rich-h2">Disclosing Your Diagnosis</div>
+<p class="rich-p">You are not legally required to disclose your ADHD diagnosis to your employer. Under the Disability Discrimination Act 1992 and Fair Work Act 2009, you can request reasonable adjustments without revealing the underlying diagnosis — framing requests around functional needs (e.g. "I work better with written instructions") is often sufficient and avoids stigma risk.</p>
+<p class="rich-p">If you do choose to disclose, do so in writing and frame it constructively: what ADHD means for how you work best, and what specific adjustments would help. Disclosing can improve access to formal accommodations and reduce the risk of performance management for ADHD-related difficulties. Speak with HR or a trusted manager. Your employer is legally required to keep health information confidential and to consider reasonable adjustments before taking disciplinary action on performance.</p>
+<div class="rich-h2">What You May Wish to Request</div>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Written instructions and meeting agendas in advance</strong> — reduces working memory load significantly</li>
+<li class="rich-li"><strong>Quiet workspace or noise-cancelling headphones</strong> — reduces distraction from background noise</li>
+<li class="rich-li"><strong>Flexible start times</strong> — particularly useful if medication timing affects your peak performance window</li>
+<li class="rich-li"><strong>Chunked deadlines</strong> — smaller milestones rather than one final due date</li>
+<li class="rich-li"><strong>Work from home on focused-work days</strong> — removes commute and uncontrolled office noise</li>
+<li class="rich-li"><strong>Regular brief check-ins with a manager</strong> — short, frequent feedback loops work better than infrequent long reviews</li>
+</ul>
+<div class="rich-h2">If You Are Self-Employed</div>
+<p class="rich-p">Self-employment can suit ADHD very well — autonomy, variety, and passion-driven work tend to activate the ADHD brain effectively. The challenges are the unsexy parts: admin, invoicing, consistent scheduling, and sustained work on low-interest tasks. Practical strategies: batch all admin into a single weekly block, use automated invoicing software, build a consistent daily start <em>routine</em> (not start time — the same sequence of actions that signals to your brain that work is beginning), and build in external accountability through a coach, colleague, or accountability partner. Without external structure, you will need to engineer it deliberately.</p>`,
+
+    // ---- GRIEF SECTION (optional, unselected by default) ----
+
+    s_grief: `<div class="rich-h1">Grief After Late Diagnosis</div>
+<p class="rich-p">A late ADHD diagnosis usually brings two things in sequence: relief, then anger — or grief. Relief because a lifetime of difficulties finally has an explanation. Grief because that explanation arrived so late.</p>
+<p class="rich-p">The academic struggles, the jobs that fell apart, the relationships damaged by inconsistency or emotional reactivity, the years spent believing you were lazy or less capable — those were ADHD. Not character defects. Not choices. A neurological condition that went unrecognised, often for decades.</p>
+<p class="rich-p">That grief is legitimate and does not need to be rushed past or reframed away. What helps is recognising that the past cannot be relitigated, but the future is now being approached with accurate information and proper support — and that is not a small thing.</p>
+<p class="rich-p">ADHD is treatable at any age. There is no window that has closed. Late diagnosis also frequently recontextualises family history — many people recognise ADHD in a parent, sibling, or child after their own diagnosis, which can usefully reframe years of difficult relationship dynamics.</p>
+<p class="rich-p">If grief after diagnosis feels persistent or significant, it is worth exploring with a psychologist or therapist with ADHD experience. It is a real and common presentation, and it responds well to treatment.</p>`,
+
+    s_pregnant: `<div class="rich-h1">Pregnancy, Breastfeeding, and ADHD Medication</div>
+<p class="rich-p">Managing ADHD during pregnancy and breastfeeding requires careful thought. This is an individual decision made together with your psychiatrist, weighing the risks of continuing medication against the risks of untreated ADHD during this period.</p>
+<div class="rich-h2">Stimulant medications (dexamphetamine, lisdexamfetamine, methylphenidate)</div>
+<p class="rich-p">Current evidence suggests stimulants carry a small increased risk of certain pregnancy complications, including slightly elevated rates of preterm birth and low birth weight. There is no strong evidence of major structural abnormalities, but data is limited. The standard approach is to discuss stopping or reducing stimulants during pregnancy, particularly in the first trimester, unless the risks of untreated ADHD are considered significant.</p>
+<p class="rich-p">Untreated ADHD in pregnancy carries its own risks: difficulty attending appointments consistently, higher rates of stress and anxiety, impaired self-care, and difficulties with planning for a new baby. These are real considerations that factor into the decision.</p>
+<div class="rich-h2">Non-stimulant options</div>
+<ul class="rich-ul">
+  <li><strong>Atomoxetine (Strattera):</strong> Not recommended in pregnancy — limited data, some animal studies suggest risk. Generally stopped.</li>
+  <li><strong>Guanfacine (Intuniv):</strong> Very limited data. Generally stopped in pregnancy.</li>
+  <li><strong>Clonidine (Catapres):</strong> Limited data. Generally stopped.</li>
+</ul>
+<div class="rich-h2">Breastfeeding</div>
+<p class="rich-p">Small amounts of stimulant medication pass into breast milk. The clinical significance in most cases is low, but this needs to be weighed individually. Discuss with your psychiatrist and GP. If you choose to restart medication while breastfeeding, monitoring the infant for reduced feeding or irritability is appropriate.</p>
+<div class="rich-h2">Practical steps</div>
+<ul class="rich-ul">
+  <li>Discuss your plans early — before or as soon as you know you are pregnant</li>
+  <li>A medication review with your psychiatrist and obstetrician is recommended</li>
+  <li>Non-pharmacological strategies (CBT, coaching, structure) become particularly important during this period</li>
+  <li>If you are stopping stimulants, planning a gradual taper with your psychiatrist is preferable to stopping suddenly</li>
+</ul>
+<p class="rich-p">There is no single right answer. The goal is an informed, personalised plan that manages both the risks of the condition and the risks of treatment.</p>`,
+
+    s_newparent: `<div class="rich-h1">New Parents and ADHD</div>
+<p class="rich-p">The transition to parenthood is demanding for anyone. For people with ADHD, it introduces a sustained period of sleep deprivation, unpredictability, and high cognitive load — all of which hit the executive function system hard. This is not a character failing; it is a predictable collision between the demands of new parenthood and the specific vulnerabilities of ADHD.</p>
+<div class="rich-h2">What makes it harder with ADHD</div>
+<ul class="rich-ul">
+  <li><strong>Sleep deprivation compounds ADHD:</strong> The executive function deficits of ADHD are made significantly worse by sleep loss. Worsened attention, emotional reactivity, and impulse control are common.</li>
+  <li><strong>Routine disruption:</strong> ADHD management depends heavily on structure and routine — which newborns reliably destroy. Finding a minimal workable routine early matters.</li>
+  <li><strong>Medication decisions:</strong> If you paused medication during pregnancy or breastfeeding, discuss the timing of restarting with your psychiatrist — the postnatal period may be when you need it most.</li>
+  <li><strong>Partner strain:</strong> ADHD-related forgetfulness, disorganisation, and emotional dysregulation can create significant tension with a partner who is also exhausted. Name this explicitly between you rather than letting resentment build.</li>
+  <li><strong>Postnatal mood:</strong> Postnatal depression and anxiety are more common in people with ADHD. If you are struggling significantly with mood in the weeks after birth, raise this with your GP or psychiatrist promptly — it is treatable.</li>
+</ul>
+<div class="rich-h2">What helps</div>
+<ul class="rich-ul">
+  <li><strong>Ask for and accept help:</strong> The ADHD tendency to avoid asking for help is particularly costly in this period. Identify one or two specific ways people in your life can practically assist — a meal, a few hours of baby cover, grocery delivery — and ask directly.</li>
+  <li><strong>Minimum viable routine:</strong> A small number of fixed daily anchors (morning feed time, a nap window, a rough bedtime) provides enough structure to work within without requiring rigid scheduling.</li>
+  <li><strong>Rest when you can, not when you should:</strong> ADHD makes it hard to sleep when you ‘should’ (when the baby sleeps). If you can’t sleep, at least rest without screens. Sleep debt compounds ADHD significantly.</li>
+  <li><strong>Repair quickly:</strong> ADHD parents lose patience — this will happen. A genuine, quick repair with your partner or older children matters more than maintaining an appearance of calm. Repair is a parenting skill.</li>
+  <li><strong>Lower the bar deliberately:</strong> The standard for ‘good enough’ parenting in the first months is much lower than many people hold themselves to. Feeding, safety, and warmth are the job. Everything else is optional.</li>
+</ul>`,
+
+    s_bfrb: `<div class="rich-h1">Body-Focused Repetitive Behaviours (BFRBs) and ADHD</div>
+<p class="rich-p">Body-focused repetitive behaviours (BFRBs) include skin picking (excoriation), hair pulling (trichotillomania), nail biting, cheek chewing, and similar repetitive self-directed behaviours. They are significantly more common in people with ADHD than in the general population, and are frequently not recognised or discussed.</p>
+<div class="rich-h2">Why BFRBs and ADHD overlap</div>
+<ul class="rich-ul">
+  <li><strong>Stimulation-seeking:</strong> The ADHD brain’s drive for stimulation means repetitive tactile behaviours can serve as a way of self-regulating arousal and focus. The behaviour often happens automatically while concentrating on something else.</li>
+  <li><strong>Impulsivity:</strong> The gap between urge and action is shorter in ADHD, making it harder to pause and redirect BFRB impulses before they become automatic.</li>
+  <li><strong>Emotional regulation:</strong> BFRBs often intensify during periods of stress, anxiety, boredom, or emotional discomfort — all situations where the ADHD brain seeks regulation.</li>
+  <li><strong>Habit loops:</strong> Over time the behaviour becomes deeply automatic and occurs with little conscious awareness, making it hard to stop even when the person wants to.</li>
+</ul>
+<div class="rich-h2">These are not ‘just habits’</div>
+<p class="rich-p">BFRBs are recognised in the DSM-5 as obsessive-compulsive and related disorders. They can cause significant distress, physical damage (hair loss, skin wounds, scarring), shame, and social avoidance. If BFRBs are affecting your quality of life, it is worth raising with your psychiatrist — they are treatable.</p>
+<div class="rich-h2">What helps</div>
+<ul class="rich-ul">
+  <li><strong>Habit Reversal Training (HRT):</strong> The most evidence-based psychological treatment. A therapist helps you identify triggers and physical cues, then trains a competing response — a different physical action performed instead of the BFRB when the urge arises.</li>
+  <li><strong>The Comprehensive Behavioural Treatment (ComB) model:</strong> A broader approach that categorises the sensory, cognitive, affective, motor, and environmental triggers for each person’s BFRB and targets them specifically. More tailored than standard HRT.</li>
+  <li><strong>Awareness training:</strong> Many people with ADHD are unaware they are doing it. Ask a trusted person like a spouse or parent to tell you every time you do it. Promise them you won't get mad at them when they identify it! It can sometimes be very surprising how often you do these things without knowing it.</li>
+  <li><strong>Barrier strategies:</strong> Bandaids or Pimple Patches on commonly picked sites, wearing gloves while driving or studying (search for Solbari driving gloves), keeping nails very short — physical barriers that increase friction before the urge becomes action.</li>
+  <li><strong>Fidget substitutes:</strong> Providing an alternative tactile stimulus — a textured fidget toy, worry stone, or sensory ring — can redirect the stimulation-seeking without harm.</li>
+  <li><strong>ADHD treatment itself:</strong> Treating the underlying ADHD often reduces BFRB frequency, particularly when impulsivity and emotional dysregulation improve.</li>
+  <li><strong>N-acetylcysteine (NAC):</strong> An over-the-counter supplement with emerging evidence for reducing compulsive behaviours including trichotillomania and skin picking. Discuss with your psychiatrist. Available at Bulk Nutrients online in capsule form.</li>
+</ul>
+<p class="rich-p">Finding a psychologist experienced in BFRBs (look for HRT or CBT-based BFRB treatment) is the most effective first step for moderate-to-severe presentations.</p>`,
+
+    // ---- TREATMENT RESOURCES (optional, unselected by default) ----
+
+    s_resources_aus: `<div class="rich-h1">Australian ADHD Resources</div>
+<p class="rich-p">The following are reputable Australian sources for information, support, and advocacy.</p>
+<div class="rich-h2">Clinical and Professional Bodies</div>
+<ul class="rich-ul">
+  <li><strong>AADPA — Australian ADHD Professionals Association</strong><br>
+    <a href="https://www.aadpa.com.au" target="_blank">aadpa.com.au</a><br>
+    The peak professional body in Australia for clinicians working in ADHD. Their Clinical Practice Guidelines (2022) are the current standard of care. The website has patient-facing resources and a clinician finder.</li>
+  <li><strong>ADHD Australia</strong><br>
+    <a href="https://www.adhdaustralia.org.au" target="_blank">adhdaustralia.org.au</a><br>
+    Peer support, advocacy, community forums, webinars, and state-based support groups. One of the main consumer organisations in Australia. Useful for connecting with others who understand the lived experience.</li>
+  <li><strong>ADHD Foundation Australia</strong><br>
+    <a href="https://adhdfoundation.org.au" target="_blank">adhdfoundation.org.au</a><br>
+    Education and advocacy with a focus on children and young people, though increasingly relevant for adults. Provides resources for schools and workplaces.</li>
+  <li><strong>Healthy Minds Australia</strong><br>
+    <a href="https://www.healthymindsprogram.com.au" target="_blank">healthymindsprogram.com.au</a><br>
+    Evidence-based mental health education programs. ADHD modules are clinician-reviewed and provide accessible psychoeducation.</li>
+</ul>
+<div class="rich-h2">Government and Regulatory</div>
+<ul class="rich-ul">
+  <li><strong>TGA (Therapeutic Goods Administration) — Consumer Medicines Information</strong><br>
+    <a href="https://www.tga.gov.au" target="_blank">tga.gov.au</a><br>
+    Official Australian product information for all PBS-listed medications. Search for your specific medication for the CMI (Consumer Medicine Information) document.</li>
+  <li><strong>NPS MedicineWise</strong><br>
+    <a href="https://www.nps.org.au" target="_blank">nps.org.au</a><br>
+    Independent, evidence-based medication information for Australian consumers. Accessible and reliable.</li>
+  <li><strong>PBS (Pharmaceutical Benefits Scheme)</strong><br>
+    <a href="https://www.pbs.gov.au" target="_blank">pbs.gov.au</a><br>
+    Official PBS listings for ADHD medications, including subsidy status and authority prescription requirements.</li>
+</ul>
+<div class="rich-h2">Support and Mental Health</div>
+<ul class="rich-ul">
+  <li><strong>Beyond Blue</strong><br>
+    <a href="https://www.beyondblue.org.au" target="_blank">beyondblue.org.au</a> | Phone: 1300 22 4636<br>
+    For comorbid anxiety, depression, and general mental health support. 24/7 phone and online chat.</li>
+  <li><strong>Lifeline Australia</strong><br>
+    <a href="https://www.lifeline.org.au" target="_blank">lifeline.org.au</a> | Phone: 13 11 14<br>
+    Crisis support and suicide prevention. 24/7.</li>
+  <li><strong>Head to Health</strong><br>
+    <a href="https://www.headtohealth.gov.au" target="_blank">headtohealth.gov.au</a><br>
+    Australian Government mental health portal with links to digital mental health programs, many of which are free or low-cost.</li>
+</ul>`,
+
+    s_resources_meds: `<div class="rich-h1">Medication Information</div>
+<p class="rich-p">These sources provide reliable, evidence-based information about the specific medications used for ADHD in Australia.</p>
+<div class="rich-h2">Methylphenidate (Ritalin, Concerta)</div>
+<ul class="rich-ul">
+  <li><strong>Ritalin (Novartis) Consumer Medicine Information (TGA)</strong><br>
+    <a href="https://www.ebs.tga.gov.au" target="_blank">Search "Ritalin" at ebs.tga.gov.au</a><br>
+    Official Australian product information including all indications, dosing, interactions, and side effects.</li>
+  <li><strong>Concerta (Janssen) Consumer Medicine Information</strong><br>
+    <a href="https://www.ebs.tga.gov.au" target="_blank">Search "Concerta" at ebs.tga.gov.au</a><br>
+    Extended-release methylphenidate. 12-hour duration. Single morning dose.</li>
+  <li><strong>NPS MedicineWise — Methylphenidate</strong><br>
+    <a href="https://www.nps.org.au/consumers/methylphenidate" target="_blank">nps.org.au</a><br>
+    Consumer-friendly overview of how methylphenidate works, what to expect, and how to take it safely.</li>
+</ul>
+<div class="rich-h2">Dexamphetamine</div>
+<ul class="rich-ul">
+  <li><strong>Dexamphetamine (AFT Pharmaceuticals) CMI</strong><br>
+    <a href="https://www.ebs.tga.gov.au" target="_blank">Search "Dexamphetamine" at ebs.tga.gov.au</a><br>
+    Official product information for dexamphetamine sulfate 5 mg tablets.</li>
+  <li><strong>NPS MedicineWise — Dexamfetamine</strong><br>
+    <a href="https://www.nps.org.au" target="_blank">nps.org.au</a><br>
+    Patient information on dexamphetamine including common questions, side effects, and storage.</li>
+</ul>
+<div class="rich-h2">Lisdexamfetamine (Vyvanse)</div>
+<ul class="rich-ul">
+  <li><strong>Vyvanse (Takeda) Consumer Medicine Information</strong><br>
+    <a href="https://www.ebs.tga.gov.au" target="_blank">Search "Vyvanse" at ebs.tga.gov.au</a><br>
+    Full product information including prodrug mechanism, dosing, side effects, and contraindications.</li>
+  <li><strong>Takeda Australia — Vyvanse Patient Resources</strong><br>
+    <a href="https://www.vyvanse.com.au" target="_blank">vyvanse.com.au</a><br>
+    Manufacturer site with patient information, FAQs, and support resources specific to the Australian context.</li>
+  <li><strong>NPS MedicineWise — Lisdexamfetamine</strong><br>
+    <a href="https://www.nps.org.au" target="_blank">nps.org.au</a><br>
+    Evidence-based consumer information on Vyvanse, including comparison with other stimulants.</li>
+</ul>
+<div class="rich-h2">Non-Stimulant Options</div>
+<ul class="rich-ul">
+  <li><strong>Atomoxetine (Strattera)</strong><br>
+    <a href="https://www.ebs.tga.gov.au" target="_blank">Search "Strattera" at ebs.tga.gov.au</a><br>
+    A non-stimulant noradrenaline reuptake inhibitor. Takes 4-8 weeks for full effect. Useful when stimulants are not tolerated or when comorbid anxiety is significant.</li>
+  <li><strong>Guanfacine (Intuniv)</strong><br>
+    <a href="https://www.ebs.tga.gov.au" target="_blank">Search "Intuniv" at ebs.tga.gov.au</a><br>
+    Alpha-2A agonist. Primarily used in children but also effective in some adults, particularly for emotional dysregulation and hyperactivity. Not a first-line option but evidence-supported.</li>
+</ul>`,
+
+    s_nonpharm_cbt: `<div class="rich-h1">Psychological Therapies for ADHD</div>
+<p class="rich-p">Medication is the most effective single treatment for ADHD, but psychological therapies address something medication alone does not: the habits, thought patterns, and skills gaps that accumulate over a lifetime of unmanaged ADHD. These approaches work best alongside medication — medication opens the window, therapy helps you climb through it and stay there.</p>
+<div class="rich-h2">CBT — Cognitive Behavioural Therapy</div>
+<p class="rich-p"><strong>Evidence: Strong.</strong> Best for: time management, procrastination, organisation, negative self-beliefs. ~60–70% of participants show meaningful functional gains.</p>
+<p class="rich-p">ADHD-focused CBT targets functional impairments directly: structured planning, breaking tasks into steps, identifying avoidance patterns, and challenging all-or-nothing thinking. Skills-based and practical, not primarily insight-based.</p>
+<div class="rich-h2">ACT — Acceptance and Commitment Therapy</div>
+<p class="rich-p"><strong>Evidence: Moderate to strong.</strong> Best for: self-criticism, avoidance, psychological flexibility, values-based action.</p>
+<p class="rich-p">ACT teaches psychological flexibility: noticing thoughts without being dominated by them, connecting to personal values as a behavioural guide, and accepting discomfort as part of meaningful action. Key techniques include <em>defusion</em> ("I notice I'm having the thought that I'm useless" instead of "I am useless"), <em>values clarification</em>, and <em>committed action</em> planning. For those who have exhausted themselves trying harder to control their mind, ACT offers a fundamentally different approach.</p>
+<div class="rich-h2">DBT Skills Training</div>
+<p class="rich-p"><strong>Evidence: Moderate to strong</strong> — especially for emotional dysregulation and rejection sensitivity.</p>
+<p class="rich-p">DBT's four skill modules map directly onto ADHD's most impairing features: mindfulness, distress tolerance, emotion regulation, and interpersonal effectiveness. Can be done as standalone skills training without the full DBT programme.</p>
+<div class="rich-h2">Mindfulness-Based Interventions (MBSR / MBCT)</div>
+<p class="rich-p"><strong>Evidence: Moderate.</strong> Best for: attentional control, emotional reactivity, meta-awareness. Gains require consistent practice over weeks to months.</p>
+<p class="rich-p">Mindfulness trains the skill of noticing when attention has wandered and redirecting it — precisely what ADHD makes difficult. Apps such as Waking Up or Insight Timer are effective starting points.</p>
+<div class="rich-h2">ADHD Coaching</div>
+<p class="rich-p"><strong>Evidence: Moderate.</strong> Practical and present-focused — not therapy. Best for: goal attainment, accountability, routine-building.</p>
+<p class="rich-p">A coach works on specific life challenges: building routines, managing time, completing projects. Best suited to people who are functionally stable but need structured accountability. Look for ICF-accredited coaches with specific ADHD training or affiliated with ADHD Australia.</p>
+<div class="rich-h2">Occupational Therapy</div>
+<p class="rich-p"><strong>Evidence: Emerging.</strong> Best for: daily living skills, environmental modification, workplace function. May be fundable through NDIS.</p>
+<p class="rich-p">An OT with ADHD experience can implement hands-on solutions: workspace organisation, routine scaffolding, sensory strategies, and assistive technology. Particularly valuable for those who need individualised practical support.</p>
+<div class="rich-h2">Neuromodulation (tDCS / TMS)</div>
+<p class="rich-p"><strong>Evidence: Emerging.</strong> Modest effect sizes; protocols not yet standardised. May be worth considering in refractory cases or as an adjunct. Not a first-line recommendation.</p>
+<div class="rich-h2">Neurofeedback</div>
+<p class="rich-p"><strong>Evidence: Fair (contested).</strong> Real-time EEG-guided brain training. Some trials show benefit; effects difficult to replicate when blinded. Time-intensive and expensive. Not recommended as a primary treatment.</p>`,
+
+    s_nonpharm_coaching: `<p class="rich-p">See the Psychological Therapies section for the full overview of CBT, ACT, DBT, Mindfulness, Coaching, OT, and Neuromodulation.</p>`,
+
+    s_nonpharm_mindful: `<p class="rich-p">See the Psychological Therapies section for the full overview of CBT, ACT, DBT, Mindfulness, Coaching, OT, and Neuromodulation.</p>`,
+
+    s_nonpharm_dbt: `<p class="rich-p">See the Psychological Therapies section for the full overview of CBT, ACT, DBT, Mindfulness, Coaching, OT, and Neuromodulation.</p>`,
+
+    s_nonpharm_exercise: `<p class="rich-p">See the Psychological Therapies section for the full overview of CBT, ACT, DBT, Mindfulness, Coaching, OT, and Neuromodulation.</p>`,
+
+    s_nonpharm_ot: `<p class="rich-p">See the Psychological Therapies section for the full overview of CBT, ACT, DBT, Mindfulness, Coaching, OT, and Neuromodulation.</p>`,
+
+    s_sh_braindump: `<p class="rich-p">These are not generic productivity tips. Each one addresses a specific mechanism of ADHD. Try one or two at a time rather than implementing everything at once.</p>
+<div class="rich-h2">Brain Dump + Priority Matrix</div>
+<p class="rich-p">The ADHD brain cannot efficiently hold multiple open loops in working memory. Too many unresolved items create a persistent background anxiety and make it impossible to start any single thing. The fix: get everything out of your head and onto a list — not a to-do list, a <em>brain dump</em>. Everything, regardless of size or urgency. Once it is out, sort it:</p>
+<table class="rich-table">
+  <thead><tr><th></th><th>Urgent</th><th>Not urgent</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Important</strong></td><td>Do it today</td><td>Schedule it</td></tr>
+    <tr><td><strong>Not important</strong></td><td>Delegate or batch</td><td>Drop it or do it last</td></tr>
+  </tbody>
+</table>
+<p class="rich-p">Do this weekly, or whenever your mental load feels unmanageable. Externalising your task list is itself calming — you are offloading to a trusted system instead of trying to hold everything in RAM.</p>`,
+
+    s_sh_phone: `<div class="rich-h2">Reducing Phone and Social Media Use</div>
+<p class="rich-p">Smartphones are engineered to capture attention. For ADHD brains the goal is not willpower — it is <strong>friction</strong>: making undesirable habits physically harder to start.</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Hidden folders:</strong> Move Instagram, TikTok, and other high-dopamine apps into a folder within a folder on a back page. The extra taps break the automatic reflex and prevent a surprising amount of mindless scrolling.</li>
+<li class="rich-li"><strong>Grayscale mode:</strong> Settings → Accessibility → Display &amp; Text Size → Colour Filters → Greyscale. Colour is a significant part of what makes apps visually rewarding. Grayscale makes your phone boring. It works.</li>
+<li class="rich-li"><strong>Screen Time limits:</strong> Settings → Screen Time. Set daily limits per app. Have someone else set the passcode if you tend to override it impulsively.</li>
+<li class="rich-li"><strong>Brick:</strong> A physical NFC card (brickself.com) that locks specific apps for a set period when you tap it. Unlike software-only blockers, it cannot easily be circumvented on impulse. Genuinely effective for focus blocks.</li>
+<li class="rich-li"><strong>Apple Watch with cellular:</strong> Leave your phone in another room during work blocks. A cellular Apple Watch (GPS + Cellular model) lets you receive calls and urgent messages without having a pocket-sized dopamine dispenser within reach. Physical separation is one of the most effective strategies available.</li>
+<li class="rich-li"><strong>Notification audit:</strong> Turn off all non-essential notifications. Every interruption costs not just the distraction time but 10–20 minutes of reorientation to get back to deep work.</li>
+<li class="rich-li"><strong>Charge your phone outside the bedroom:</strong> Eliminates late-night scrolling and the morning phone-grab that hijacks the first 30 minutes of your day before medication has kicked in.</li>
+</ul>`,
+
+    s_sh_timeblock: `<div class="rich-h2">Time Blocking and Visual Timers</div>
+<p class="rich-p">ADHD impairs time perception — "I have time" and "I am running out of time" can feel identical until a deadline is imminent. The solution is to make time <strong>visible</strong>.</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Time blocking:</strong> Allocate specific tasks to specific time slots in a calendar — not just a to-do list. A to-do list tells you <em>what</em>. A calendar tells you <em>when</em>. Protect deep work blocks like appointments and build in buffer time.</li>
+<li class="rich-li"><strong>The Time Timer:</strong> A visual countdown timer that shows time as a shrinking red disc — making the passage of time concrete rather than abstract. Available as an app or physical device. <a href="https://www.thetherapystore.com.au/product-cat/time-management/" target="_blank">Physical Time Timers available at The Therapy Store Australia</a>.</li>
+<li class="rich-li"><strong>The Pomodoro Technique:</strong> Work for 25 minutes, then a 5-minute break. After four rounds, take a longer break. The short sprint structure matches the ADHD attention window and makes starting feel low-stakes.</li>
+<li class="rich-li"><strong>Time estimates × 2:</strong> Whatever you think something will take, double it. ADHD consistently produces optimistic time estimates.</li>
+</ul>`,
+
+    s_sh_bodydouble: `<div class="rich-h2">Body Doubling</div>
+<p class="rich-p">Body doubling is the practice of working in the presence of another person — physically or via video — without necessarily collaborating. Many people with ADHD can initiate and sustain tasks dramatically better when someone else is simply present. Even a silent video call where both people work on separate tasks produces the effect.</p>
+<ul class="rich-ul">
+<li class="rich-li">Work in a library, café, or co-working space rather than alone at home</li>
+<li class="rich-li">Arrange "accountability calls" — each person states what they are working on, then checks back in 30–60 minutes</li>
+<li class="rich-li"><strong>Focusmate</strong> (focusmate.com) — free online body doubling community; book 50-minute sessions with a stranger, state your goal at the start, check in at the end</li>
+<li class="rich-li">Brain.fm or lofi playlists can simulate the background-presence effect when working alone</li>
+</ul>`,
+
+    s_sh_reward: `<div class="rich-h2">Reward Pairing for Aversive Tasks</div>
+<p class="rich-p">The ADHD brain is under-stimulated by low-interest tasks. The trick is not to force motivation — it is to pair the aversive task with something that adds stimulation without replacing the task.</p>
+<ul class="rich-ul">
+  <li>Listen to music, podcasts, or audiobooks only while doing routine household tasks (cleaning, cooking, folding). This makes the task feel different and makes the audio reward contingent on the activity.</li>
+  <li>Work in a preferred environment — the coffee shop effect is real. A novel, mildly stimulating environment can sustain engagement longer than a familiar, quiet one for ADHD brains.</li>
+  <li>Use a specific playlist only for focused work. Over time, the music becomes a cue that activates the "working" state.</li>
+  <li>Set a small, concrete reward for completing a defined block of work — not "when I finish this project" (too remote) but "after I write this section, I will make a coffee." Concrete and proximate rewards activate the dopamine system more reliably than distant ones.</li>
+</ul>`,
+
+    s_sh_ifthen: `<div class="rich-h2">If-Then Planning</div>
+<p class="rich-p">The ADHD brain struggles with initiating tasks — not because of laziness, but because the automatic link between "it is time to start" and actually starting is weaker. If-then planning (implementation intentions) builds that link explicitly.</p>
+<div class="rich-h3">How to use it</div>
+<p class="rich-p">Format: <strong>If [situation], then I will [action].</strong></p>
+<ul class="rich-ul">
+  <li>"If it is 9am and I sit at my desk, then I will open the document I need to work on first."</li>
+  <li>"If I finish eating dinner, then I will put my medication out for tomorrow morning immediately."</li>
+  <li>"If my phone buzzes while I am working, then I will place it face-down and return to what I was doing before checking it."</li>
+</ul>
+<p class="rich-p">The more specific the if-then, the more effective. Vague intentions ("I will try to start earlier") do not work for ADHD brains. Concrete, situation-specific triggers do. Write them down and place them somewhere visible.</p>`,
+
+    s_sh_decisions: `<div class="rich-h2">Managing Decision Fatigue</div>
+<p class="rich-p">Every decision draws on the same executive function pool that ADHD already taxes. Reducing decision volume preserves mental energy for what matters.</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Automate recurring decisions:</strong> Weekly meal structure, similar clothes, default answers to common requests. "I don't schedule meetings before 10am" removes that negotiation every time.</li>
+<li class="rich-li"><strong>Batch similar decisions:</strong> Standing shopping list updated throughout the week rather than deciding at the time of purchase.</li>
+<li class="rich-li"><strong>Pre-commit with rules:</strong> "If I haven't used it in 12 months, I donate it." Rules made in advance don't require executive function at decision time.</li>
+<li class="rich-li"><strong>Protect your best hours:</strong> Do cognitively demanding work during peak medication effect. Reserve lower-stakes decisions for later when executive function has depleted.</li>
+</ul>
+<div class="rich-h2">Improving Your Ability to Study</div>
+<p class="rich-p">Standard study advice was written for neurotypical brains. ADHD requires techniques that work with the interest-driven attention system rather than against it.</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Close open loops first:</strong> Do a quick brain dump before starting. Unresolved items compete for attention in working memory. Getting them out of your head clears the mental workspace.</li>
+<li class="rich-li"><strong>Active recall, not re-reading:</strong> Re-reading creates almost no lasting memory in ADHD. Read a section, close it, write down everything you remember, then check. Flashcards with spaced repetition (Anki) are ideal — the quiz format provides the mild novelty-reward that activates the ADHD dopamine system.</li>
+<li class="rich-li"><strong>The Feynman Technique:</strong> Explain the concept out loud as if teaching someone who knows nothing about it. When you get stuck, you have found the exact gap. Go back, fill it, and explain again. Forces genuine understanding rather than recognition-level familiarity.</li>
+<li class="rich-li"><strong>Loop studying:</strong> Instead of working linearly from start to finish, work in loops — cover the whole topic at a surface level first, then go around again in more depth, then again. Each pass deepens understanding without losing the overall map. Interruptions are also less catastrophic — you are never deep in a single thread that gets lost.</li>
+<li class="rich-li"><strong>Body doubling for study:</strong> Study in a library, café, or on Focusmate. The presence of others significantly improves initiation and sustained effort.</li>
+<li class="rich-li"><strong>Short sprints with hard stops:</strong> 25-minute Pomodoros with genuine breaks. Set a timer and commit to stopping when it ends. Makes starting feel low-stakes ("it's only 25 minutes") and prevents burnout.</li>
+<li class="rich-li"><strong>Interest bridging:</strong> If the material is genuinely uninteresting, find an angle that connects it to something you care about. ADHD brains learn through interest — the connection does not need to be logical, just genuine.</li>
+<li class="rich-li"><strong>Eliminate decision friction before studying:</strong> Lay out everything you need the night before. Pre-decide exactly what you are studying (not "chemistry" but "chapter 4, questions 1–20"). The activation cost in ADHD is highest at the point of starting — reduce decisions required at that moment to near zero.</li>
+<li class="rich-li"><strong>Study during medication peak:</strong> Schedule demanding cognitive work 60–90 minutes after taking stimulant medication. Do not save studying for evening when medication has worn off.</li>
+<li class="rich-li"><strong>Record and replay:</strong> Record yourself summarising material out loud, then listen back during low-focus activities (walking, commuting). Multimodal input improves retention in ADHD.</li>
+</ul>`,
+
+    s_sh_bingeeating: `<div class="rich-h2">Binge Eating and ADHD</div>
+<p class="rich-p">Binge eating is significantly more common in ADHD and is not simply about willpower or food. The ADHD brain seeks dopamine, and food — particularly highly palatable, calorie-dense food — provides a reliable and immediate dopamine hit. Impulsivity reduces the pause between urge and action. Inattention means meals are skipped or irregular, driving hunger that accelerates loss of control. Understanding this helps remove shame and directs effort toward what actually works.</p>
+<div class="rich-h3">What helps</div>
+<ul class="rich-ul">
+  <li><strong>Eat regularly:</strong> Skipping meals (especially when ADHD medication suppresses appetite at lunch) leads to significant hunger later, which makes eating regulation much harder. A small, scheduled lunch — even when not very hungry — reduces evening overconsumption.</li>
+  <li><strong>Reduce friction for regular eating, increase friction for bingeing:</strong> Keep easy, adequate food accessible; make high-stimulation binge foods harder to reach (don't buy them, store them out of sight, require preparation).</li>
+  <li><strong>Identify the emotional trigger:</strong> Binge urges often follow boredom, procrastination, frustration, or overwhelm in ADHD — not just physical hunger. Noticing "I am not hungry, I am avoiding something" is the first step to choosing a different response.</li>
+  <li><strong>Address the dopamine need directly:</strong> If binge eating is serving as a dopamine source, other dopamine-generating activities (movement, music, a brief engaging task) can reduce the urge without the eating.</li>
+  <li><strong>If binge eating is significantly impacting your life:</strong> This is worth raising with your psychiatrist. Medication changes and/or psychological support (particularly CBT-E or DBT) have good evidence.</li>
+</ul>`,
+
+    s_sh_emotional: `<div class="rich-h2">Managing Emotional Dysregulation</div>
+<p class="rich-p">Emotional dysregulation in ADHD is neurological — the same prefrontal circuits that manage attention also regulate emotional responses. Emotions arrive faster, feel more intense, and take longer to settle. These skills are adapted from DBT, ACT, and neuroscience-informed approaches.</p>
+<div class="rich-h3">In the moment — when already activated</div>
+<ul class="rich-ul">
+<li class="rich-li"><strong>TIPP (DBT):</strong> <em>Temperature</em> — cold water on face or wrists activates the dive reflex and rapidly lowers heart rate. <em>Intense exercise</em> — 60 seconds of jumping jacks burns off physiological activation. <em>Paced breathing</em> — exhale longer than inhale (4 in, 7 out) activates the parasympathetic system. <em>Progressive muscle relaxation</em> — tense and release major muscle groups in sequence.</li>
+<li class="rich-li"><strong>STOP skill (DBT):</strong> <em>S</em>top. <em>T</em>ake a step back physically if possible. <em>O</em>bserve what you are feeling without acting on it. <em>P</em>roceed mindfully. Even 30 seconds before responding changes outcomes.</li>
+<li class="rich-li"><strong>Cold water face immersion:</strong> Submerge your face in cold water for 15–30 seconds. Activates the mammalian dive reflex, rapidly reducing heart rate and emotional intensity. It sounds unusual; it works reliably.</li>
+</ul>
+<div class="rich-h3">Building longer-term regulation</div>
+<ul class="rich-ul">
+<li class="rich-li"><strong>PLEASE skills (DBT):</strong> Emotional regulation is dramatically worse when your physical baseline is poor. <em>PL</em>ease treat physical illness. <em>E</em>at regularly. <em>A</em>void mood-altering substances. <em>S</em>leep adequately. <em>E</em>xercise daily. Prerequisites for emotional regulation in ADHD, not optional lifestyle tips.</li>
+<li class="rich-li"><strong>Opposite Action (DBT):</strong> When an emotion is prompting an action that will make things worse, do the opposite. Shame says withdraw — opposite action is to reach out. Anger says attack — opposite action is to approach gently. The emotion changes when the behaviour changes.</li>
+<li class="rich-li"><strong>Defusion (ACT):</strong> Create distance from intense thoughts. Instead of "I am worthless," try "I notice I am having the thought that I am worthless." The feeling is still there, but you are no longer fused with it.</li>
+<li class="rich-li"><strong>Emotion naming:</strong> Accurately labelling what you are feeling — not just "bad" but "I feel rejected and ashamed" — activates the prefrontal cortex and reduces amygdala reactivity. Solid neuroimaging evidence supports this.</li>
+<li class="rich-li"><strong>The 90-second rule:</strong> The physiological component of an emotional response lasts approximately 90 seconds if you do not feed it with rumination. Ride out the wave without acting on it and it will naturally begin to subside.</li>
+<li class="rich-li"><strong>Map your RSD triggers in advance:</strong> Identify the situations that reliably activate rejection sensitivity — certain types of feedback, ambiguous messages, specific relationships. Knowing the trigger in advance lets you apply skills before you are already flooded.</li>
+</ul>`,
+
+    s_sh_exercise: `<div class="rich-h2">Exercise and ADHD</div>
+<p class="rich-p">Exercise is one of the most robustly evidence-based non-pharmacological interventions for ADHD. A single bout of aerobic exercise produces an immediate, measurable improvement in attention, working memory, and impulse control for 1-4 hours afterwards — comparable in magnitude to a low dose of stimulant medication. Regular exercise also improves baseline executive function, sleep quality, emotional regulation, and mood over time.</p>
+<div class="rich-h3">What the evidence supports</div>
+<ul class="rich-ul">
+  <li><strong>Aerobic exercise is the most studied:</strong> Running, cycling, swimming, rowing — anything that elevates heart rate for 20 minutes or more. The acute cognitive benefit appears with as little as 20 minutes.</li>
+  <li><strong>Timing matters:</strong> Exercise in the morning or before cognitively demanding tasks maximises the acute benefit. Some people find evening exercise delays sleep; others don't — pay attention to your own response.</li>
+  <li><strong>Consistency matters more than intensity:</strong> Three moderate sessions per week has better evidence for ADHD-specific benefits than occasional intense sessions.</li>
+  <li><strong>Novelty helps adherence:</strong> ADHD brains disengage from routine. Varying activities, training with others, joining a team, or using competitive elements (running apps, challenges) tends to sustain engagement better than the same routine every day.</li>
+</ul>
+<div class="rich-h3">Getting started when motivation is low</div>
+<p class="rich-p">The ADHD brain finds initiation hardest. Commit to the smallest viable version: 10 minutes walking. Pair it with something enjoyable (podcast, playlist). Keep your shoes by the door. Make it as easy to start as possible — the decision architecture matters more than the intention.</p>`,
+
+    s_sh_sleep: `<div class="rich-h2">Managing Sleep with ADHD</div>
+<p class="rich-p">Sleep problems are extremely common in ADHD — difficulty switching off at night, delayed sleep phase, and waking feeling unrefreshed are part of the disorder, not just bad habits. Managing sleep well makes everything else easier.</p>
+<div class="rich-h3">The ADHD-sleep connection</div>
+<ul class="rich-ul">
+  <li>The ADHD brain struggles to disengage — thoughts keep firing when you want to wind down</li>
+  <li>Delayed sleep phase (being a natural night owl) is more common in ADHD</li>
+  <li>Stimulant timing can affect sleep onset — if this is an issue, it is worth discussing with your psychiatrist</li>
+</ul>
+<div class="rich-h3">What actually helps:</div>
+<ul class="rich-ul">
+  <li><strong>Bright light therapy:</strong> Morning bright light is one of the higher-yield sleep interventions in ADHD. A 10,000 lux light box, Re-Timer style morning light glasses, or other bright-light glasses used soon after waking can help shift a delayed body clock earlier and improve alertness.</li>
+  <li><strong>Consistent wake time:</strong> Getting up at the same time every day — even after a bad night — is the single most evidence-based sleep intervention; it anchors your circadian rhythm.</li>
+  <li><strong>Wind-down buffer:</strong> The ADHD brain needs longer to decelerate — allow 45–60 minutes of low-stimulation activity before bed (no problem-solving, no high-stimulation screens).</li>
+  <li><strong>Cool room:</strong> Sleeping at around 18°C significantly improves sleep onset and quality.</li>
+  <li><strong>Manta Sleep SOUND:</strong> This eye mask lets you listen to audiobooks, white noise, music, or podcasts while also creating a pitch-black sleep environment, which many people find helpful.</li>
+  <li><strong>Loop earplugs:</strong> Excellent for sleep and also useful during the day for distraction reduction. Using this link gets you 15% off your first purchase <a href="http://rwrd.io/ref_0FBYY7M?c">http://rwrd.io/ref_0FBYY7M?c</a>.</li>
+  <li><strong>Physical activity:</strong> Even a 20-minute walk improves sleep quality measurably in ADHD — timing is flexible, though very late intense exercise can delay sleep onset for some people.</li>
+  <li><strong>Reducing evening stimulation:</strong> Phones, social media, and decision-heavy content activate the ADHD brain — creating a lower-stimulation wind-down environment helps.</li>
+</ul>
+<div class="rich-h3">A note on sleep hygiene advice</div>
+<p class="rich-p">Standard sleep hygiene advice (strict bedtime routines, no screens, and similar advice) has surprisingly limited evidence for ADHD specifically. It is not harmful, but it is often presented as the whole solution when it is not. The higher-yield interventions are consistent wake time, morning bright light, and physical activity. If sleep remains a significant problem despite these, there are medication options worth discussing with your psychiatrist.</p>`,
+
+
+    s_sh_kids: `<div class="rich-h2">Parenting Difficulties with ADHD</div>
+<p class="rich-p">Parenting is hard. Parenting with ADHD is harder — and if you have a child who also has ADHD, the demands can be overwhelming. ADHD affects the very skills parenting requires most: consistency, patience, sustained attention, emotional regulation, and planning ahead. This is not a character failure; it is a brain-based challenge.</p>
+<div class="rich-h3">What helps</div>
+<ul class="rich-ul">
+  <li><strong>Reduce cognitive load:</strong> Simplify routines to the minimum viable version. Visual schedules on the wall that both you and your child can follow reduce the number of verbal reminders and arguments.</li>
+  <li><strong>Short, specific instructions:</strong> "Shoes on, bag by the door" rather than a chain of instructions. One step at a time works better for ADHD brains — yours and theirs.</li>
+  <li><strong>Repair quickly:</strong> ADHD parents often lose patience and say things they regret. A quick, genuine repair — "I got angry and that wasn't fair, I'm sorry" — matters more to long-term relationship quality than having never lost patience.</li>
+  <li><strong>Your own medication:</strong> If you are on ADHD medication, taking it consistently (including weekends) makes a measurable difference to parenting patience and follow-through.</li>
+  <li><strong>Structure for yourself:</strong> Use the same planning tools for parenting tasks that you use for work tasks — calendars, reminders, checklists. Externalise what you can't hold in working memory.</li>
+  <li><strong>Get support:</strong> Parent management training adapted for ADHD families (such as the Triple P or 1-2-3 Magic programmes) has good evidence. If you are struggling significantly, your psychiatrist can refer you.</li>
+</ul>`,
+
+    s_sh_partner: `<div class="rich-h2">Relationships and ADHD</div>
+<p class="rich-p">ADHD affects relationships in predictable, often painful ways: forgetfulness is misread as not caring, emotional dysregulation creates escalating conflicts, hyperfocus on a new relationship gives way to inattention once novelty fades, and the non-ADHD partner often becomes the default organiser, which breeds resentment over time.</p>
+<div class="rich-h3">What helps</div>
+<ul class="rich-ul">
+  <li><strong>Externalise memory:</strong> Shared digital calendars, to-do apps, and household management lists reduce the reliance on the ADHD brain's unreliable internal organisation — and make it visible to your partner that things are being tracked.</li>
+  <li><strong>Have a consistent check-in:</strong> A brief weekly conversation — "what's on this week, what do we each need from the other" — prevents the accumulation of unvoiced frustrations and missed commitments.</li>
+  <li><strong>Separate intent from impact:</strong> Forgetting your partner's important appointment is not the same as not caring about them. Acknowledging the impact without defensiveness, and problem-solving together (what system would help?), is more productive than the "I didn't mean to" / "but you always" loop.</li>
+  <li><strong>Discuss the diagnosis together:</strong> If your partner understands ADHD as a brain-based condition rather than selfishness or immaturity, it changes the frame. Many couples find couples therapy — particularly with a therapist familiar with ADHD — helpful.</li>
+  <li><strong>The ADHD partner's responsibility:</strong> Having ADHD explains your difficulties; it does not remove the responsibility to work on them. Partners need to see consistent effort, even when the effort looks different from neurotypical organisation.</li>
+</ul>`,
+
+    s_sh_commsadult: `<div class="rich-h2">Communicating Effectively with an Adult Who Has ADHD</div>
+<p class="rich-p">If you are reading this because someone in your life has ADHD — or because you want to share it with them — here are practical communication approaches that work with ADHD brains rather than against them.</p>
+<div class="rich-h3">What works</div>
+<ul class="rich-ul">
+  <li><strong>One thing at a time:</strong> A list of instructions — "can you pick up the kids, remember to call the plumber, and don't forget dinner is at 7" — will likely result in one item being remembered. Prioritise and communicate one request per conversation.</li>
+  <li><strong>Get attention first:</strong> Say their name and wait for eye contact before giving important information. Starting to speak while they are absorbed in something else means the message is not received.</li>
+  <li><strong>Write it down:</strong> Text a request after mentioning it verbally. This is not a slight; it is how ADHD working memory actually works.</li>
+  <li><strong>Short, direct, specific:</strong> "The appointment is Friday at 2pm, I've sent you a calendar invite" works. "I mentioned it last week and really hope you haven't forgotten again" doesn't.</li>
+  <li><strong>Timing matters:</strong> Raising an important topic when they are in the middle of a task, on the phone, or hyperfocused means it will not be properly heard. Ask "is now a good time?" for important conversations.</li>
+  <li><strong>Assume distraction, not disrespect:</strong> If something was forgotten or missed, a curious "did you get a chance to..." lands very differently to an accusatory "you never remember anything I ask."</li>
+</ul>`,
+
+    s_sh_commschild: `<div class="rich-h2">Talking With a Child Who Has ADHD</div>
+<p class="rich-p">Children with ADHD hear far more correction, criticism, and redirection than their peers — studies suggest up to 20,000 more negative interactions by age 10. The goal is to interrupt that pattern without removing necessary structure.</p>
+<div class="rich-h3">What works</div>
+<ul class="rich-ul">
+  <li><strong>Catch them being good:</strong> Describe the positive behaviour specifically when you see it — "I noticed you put your bag away without being asked, that's great." Vague praise ("good job") is less effective than named praise.</li>
+  <li><strong>Instructions: short, specific, one at a time:</strong> "Shoes on" rather than "get ready." "Sit at the table" rather than "stop running around and come and eat your dinner." Wait for compliance before giving the next instruction.</li>
+  <li><strong>Get physical proximity and eye contact first:</strong> Calling from another room rarely works. Move close, make eye contact (without demanding it aggressively), then speak.</li>
+  <li><strong>Explain the why, briefly:</strong> Children with ADHD respond better to reasons than to authority alone — "we need to leave now because the appointment is at 3 and we need to park" is more effective than "because I said so."</li>
+  <li><strong>Use visual supports:</strong> Morning routine charts, step-by-step checklists with pictures, and visible timers reduce the number of verbal prompts needed and give the child autonomy.</li>
+  <li><strong>Choose your battles:</strong> If everything is a battle, the currency of correction is devalued. Reserve firm limits for safety and non-negotiables; let minor things go.</li>
+  <li><strong>Avoid public correction where possible:</strong> ADHD children are often already hyperaware of being different. Quiet correction, away from peers, is more effective and less damaging to self-esteem.</li>
+</ul>`,
+
+
+    s_titration: '', // handled separately
+
+    s_se_dex: `<div class="rich-h1">Side Effects: Dexamphetamine</div>
+<p class="rich-p">Knowing what to expect makes side effects easier to manage. Most are dose-dependent and settle within the first 1-2 weeks. If they do not, the dose may need adjusting rather than simply tolerating them.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Reduced appetite — most noticeable at lunchtime</li>
+  <li>Dry mouth</li>
+  <li>Insomnia if taken too late in the day</li>
+  <li>Increased heart rate</li>
+  <li>Headache (usually settles within 2-3 weeks)</li>
+  <li>Irritability or anxiety in a subset of people</li>
+  <li>Jaw clenching (bruxism)</li>
+  <li>Rebound: a drop in mood or focus as the medication wears off (more common with short-acting formulations)</li>
+</ul>
+<div class="rich-h2">Less common</div>
+<ul class="rich-ul">
+  <li>Elevated blood pressure — monitored at your appointments</li>
+  <li>Emotional blunting at higher doses (reduce dose if this occurs)</li>
+  <li>In people with bipolar disorder, stimulants can occasionally trigger mania — contact your doctor if you notice elevated mood, reduced sleep need, or rapid speech</li>
+</ul>
+<div class="rich-h2">Food and drug interactions</div>
+<ul class="rich-ul">
+  <li>Acidic drinks (fruit juice, vitamin C, soft drinks) reduce absorption — take your medication first, then have breakfast or wait 30 minutes</li>
+  <li>Decongestants (pseudoephedrine): discuss with your doctor before combining, as cardiovascular effects can add up</li>
+  <li>MAOIs: absolute contraindication — do not combine under any circumstances</li>
+</ul>`,
+
+    s_se_vyvanse: `<div class="rich-h1">Side Effects: Vyvanse</div>
+<p class="rich-p">Vyvanse's slow-release mechanism produces fewer peaks and troughs than short-acting dexamphetamine, which means side effects are often milder and more predictable. Most settle within 1-2 weeks.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Reduced appetite — noticeable at lunchtime; often improves after the first few weeks</li>
+  <li>Dry mouth</li>
+  <li>Insomnia if medication is taken later in the morning (given its 12-14 hour duration)</li>
+  <li>Headache</li>
+  <li>Irritability, usually as the medication starts to wear off in the evening</li>
+  <li>Increased heart rate</li>
+</ul>
+<div class="rich-h2">Less common</div>
+<ul class="rich-ul">
+  <li>Elevated blood pressure</li>
+  <li>Jaw clenching (bruxism)</li>
+  <li>In people with bipolar disorder, stimulants can occasionally trigger mania — contact your doctor if you notice elevated mood, reduced sleep need, or rapid speech</li>
+</ul>
+<div class="rich-h2">Food and drug interactions</div>
+<ul class="rich-ul">
+  <li>Acidic drinks reduce absorption — take medication before acidic food or drink</li>
+  <li>MAOIs: absolute contraindication</li>
+  <li>Decongestants: discuss with doctor before combining</li>
+</ul>`,
+
+    s_se_ritalinIR: `<div class="rich-h1">Side Effects: Ritalin IR / Artige</div>
+<p class="rich-p">Ritalin IR has a milder side effect profile than dexamphetamine on average, particularly for appetite suppression. The short duration of action means side effects typically wear off relatively quickly.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Reduced appetite at lunchtime</li>
+  <li>Headache (usually settles within 2-3 weeks)</li>
+  <li>Insomnia if the afternoon dose is taken too late</li>
+  <li>Increased heart rate</li>
+  <li>Jitteriness or anxiety in some people</li>
+  <li>Stomach discomfort — taking with food reduces this</li>
+</ul>
+<div class="rich-h2">Less common</div>
+<ul class="rich-ul">
+  <li>Elevated blood pressure</li>
+  <li>Rebound (drop in mood as medication wears off) — if significant, discuss adjusting timing or formulation</li>
+  <li>In people with bipolar disorder, stimulants can occasionally trigger mania</li>
+</ul>
+<div class="rich-h2">Food and drug interactions</div>
+<ul class="rich-ul">
+  <li>Acidic drinks reduce absorption — take medication before acidic food or drink</li>
+  <li>MAOIs: absolute contraindication</li>
+</ul>`,
+
+    s_se_ritalinLA: `<div class="rich-h1">Side Effects: Ritalin LA</div>
+<p class="rich-p">Ritalin LA delivers a two-pulse dose that smooths out the peaks and troughs of short-acting methylphenidate. The side effect profile is similar to Ritalin IR but the timing is shifted by the longer duration.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Reduced appetite — tends to be less pronounced than with short-acting formulations</li>
+  <li>Insomnia if taken too late (duration 8-10 hours)</li>
+  <li>Headache</li>
+  <li>Increased heart rate</li>
+  <li>Jitteriness or anxiety in some people</li>
+</ul>
+<div class="rich-h2">Less common</div>
+<ul class="rich-ul">
+  <li>Elevated blood pressure</li>
+  <li>In people with bipolar disorder, stimulants can occasionally trigger mania</li>
+</ul>
+<div class="rich-h2">Food and drug interactions</div>
+<ul class="rich-ul">
+  <li>Acidic drinks reduce absorption — take medication before acidic food or drink</li>
+  <li>High-fat meals can delay the second-pulse release but this is usually not clinically significant</li>
+  <li>MAOIs: absolute contraindication</li>
+</ul>`,
+
+    s_se_concerta: `<div class="rich-h1">Side Effects: Concerta</div>
+<p class="rich-p">Concerta's osmotic pump delivery creates a slowly ascending blood level across the day, which tends to produce a smooth effect with a manageable side effect profile. The shell of the tablet may appear in the stool — this is normal and does not mean the medication hasn't worked.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Reduced appetite</li>
+  <li>Insomnia — given the 10-12 hour duration, take in the morning</li>
+  <li>Headache</li>
+  <li>Increased heart rate</li>
+  <li>Dry mouth</li>
+</ul>
+<div class="rich-h2">Less common</div>
+<ul class="rich-ul">
+  <li>Elevated blood pressure</li>
+  <li>Irritability as medication wears off in the evening</li>
+  <li>In people with bipolar disorder, stimulants can occasionally trigger mania</li>
+</ul>
+<div class="rich-h2">Important</div>
+<ul class="rich-ul">
+  <li>Must be swallowed whole — the OROS pump mechanism requires the tablet to remain intact. Do not crush or chew.</li>
+</ul>
+<div class="rich-h2">Food and drug interactions</div>
+<ul class="rich-ul">
+  <li>Acidic drinks reduce absorption</li>
+  <li>MAOIs: absolute contraindication</li>
+</ul>`,
+
+    s_se_strattera: `<div class="rich-h1">Side Effects: Strattera</div>
+<p class="rich-p">Atomoxetine's side effects differ from stimulants — it does not affect dopamine directly, so there is no rebound or appetite suppression in the same way. However, it has its own profile to be aware of.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Nausea or stomach discomfort — taking with food reduces this significantly</li>
+  <li>Dry mouth</li>
+  <li>Constipation</li>
+  <li>Dizziness</li>
+  <li>Mood changes — some people notice increased anxiety or irritability during the titration phase</li>
+  <li>Urinary hesitancy</li>
+  <li>Reduced appetite — milder than with stimulants</li>
+  <li>Insomnia in some, sedation in others</li>
+</ul>
+<div class="rich-h2">Rare but important</div>
+<ul class="rich-ul">
+  <li>Liver injury (rare): if you develop yellowing of the skin or eyes, dark urine, or persistent abdominal pain, stop the medication and seek medical attention promptly</li>
+  <li>Priapism (prolonged, painful erection): rare but documented — seek emergency treatment if it occurs</li>
+</ul>
+<div class="rich-h2">Drug interactions</div>
+<ul class="rich-ul">
+  <li>Fluoxetine (Prozac), paroxetine (Aropax), or bupropion: dramatically increase atomoxetine blood levels — inform your prescriber of all medications</li>
+  <li>Salbutamol (Ventolin): may increase cardiovascular effects when combined</li>
+</ul>`,
+
+    s_se_intuniv: `<div class="rich-h1">Side Effects: Intuniv</div>
+<p class="rich-p">Guanfacine acts on blood pressure pathways as well as ADHD circuits, so its side effects reflect both actions. Most settle after the first few weeks at a stable dose.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Drowsiness and sedation — especially in the first weeks. This often improves with time. Taking the dose in the evening can help.</li>
+  <li>Low blood pressure — can cause dizziness, especially when standing up quickly</li>
+  <li>Slow heart rate (bradycardia)</li>
+  <li>Headache</li>
+  <li>Dry mouth</li>
+  <li>Constipation</li>
+  <li>Stomach discomfort</li>
+</ul>
+<div class="rich-h2">Critical: do not stop suddenly</div>
+<p class="rich-p">Stopping guanfacine abruptly can cause a rebound rise in blood pressure and heart rate. Always taper the dose gradually under your doctor's guidance. Do not run out without a plan.</p>
+<div class="rich-h2">Drug interactions</div>
+<ul class="rich-ul">
+  <li>Other blood pressure medications: effects can add up — ensure all your doctors know you are on guanfacine</li>
+  <li>Avoid high-fat meals at the time of dose — they increase absorption and can worsen side effects</li>
+</ul>`,
+
+    s_se_catapres: `<div class="rich-h1">Side Effects: Catapres</div>
+<p class="rich-p">Clonidine has a broader pharmacological profile than guanfacine and requires careful management. Side effects often diminish after the first few weeks at a stable dose.</p>
+<div class="rich-h2">Common side effects</div>
+<ul class="rich-ul">
+  <li>Sedation — can be significant, especially when starting or after dose increases</li>
+  <li>Dizziness, particularly on standing</li>
+  <li>Low blood pressure</li>
+  <li>Slow heart rate</li>
+  <li>Dry mouth</li>
+  <li>Constipation</li>
+  <li>Headache</li>
+  <li>Low mood or fatigue in some people</li>
+  <li>Erectile dysfunction</li>
+</ul>
+<div class="rich-h2">Critical: do not stop suddenly</div>
+<p class="rich-p">Stopping clonidine abruptly can cause a rebound rise in blood pressure and heart rate. Always taper the dose gradually under your doctor's guidance.</p>
+<div class="rich-h2">Drug interactions</div>
+<ul class="rich-ul">
+  <li>Alcohol significantly increases sedation — avoid or strictly limit alcohol while taking clonidine</li>
+  <li>Other blood pressure medications: effects can add up — ensure all your doctors know you are on clonidine</li>
+</ul>`,
+
+    s_ri_asd: `<div class="rich-h1">Related Issues</div><div class="rich-h2">ADHD and Autism Spectrum Disorder / Autistic Traits</div>
+<p class="rich-p">ADHD and autism spectrum disorder (ASD) co-occur in around 50–70% of cases — far more than chance. For decades they were considered mutually exclusive; that exclusion was removed in DSM-5 (2013). Many people receive one diagnosis years before the other, and the overlap can make both harder to recognise.</p>
+<div class="rich-h3">How the combination presents</div>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Sensory sensitivities</strong> are often more prominent than in ADHD alone — textures, sounds, lighting, and crowds can be overwhelming.</li>
+<li class="rich-li"><strong>Masking</strong> is extremely common, particularly in women diagnosed late. The effort of masking autistic traits is cognitively exhausting and can look like ADHD inattention or fatigue.</li>
+<li class="rich-li"><strong>Social difficulties</strong> differ in quality: ADHD produces impulsive, enthusiasm-driven social errors; ASD produces difficulty reading implicit social rules.</li>
+<li class="rich-li"><strong>Emotional dysregulation</strong> tends to be more intense in the combined presentation, beyond typical ADHD emotional reactivity.</li>
+<li class="rich-li"><strong>Executive dysfunction</strong> is compounded — both conditions impair different aspects of planning and initiation.</li>
+</ul>
+<div class="rich-h3">Treatment considerations</div>
+<p class="rich-p">Stimulant medication is generally appropriate and effective in the combined presentation, though some people with ASD experience more pronounced side effects. Starting lower and titrating more slowly is often advisable.</p>`,
+
+    s_ri_gad: `<div class="rich-h2">ADHD and Generalised Anxiety Disorder</div>
+<p class="rich-p">Anxiety is the most common co-occurring condition in ADHD, present in around 50% of adults. It can be a separate condition, a downstream consequence of unmanaged ADHD, or both.</p>
+<div class="rich-h3">ADHD-driven anxiety vs independent GAD</div>
+<p class="rich-p">Much of what looks like generalised anxiety in ADHD is the product of ADHD itself: chronic disorganisation generates low-level worry; poor time management produces anticipatory anxiety; rejection sensitivity creates social anxiety. When ADHD is treated effectively, this type of anxiety often substantially reduces without specific anxiety treatment.</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Anxiety can mask ADHD</strong> — an anxious person may appear organised because anxiety drives compensatory over-preparation, concealing underlying ADHD. Particularly common in women diagnosed late.</li>
+<li class="rich-li"><strong>Stimulants and anxiety</strong> — stimulant medications can worsen anxiety in some people. Atomoxetine or guanfacine may be better tolerated. Many find better ADHD control outweighs mild stimulant-related anxiety.</li>
+<li class="rich-li"><strong>Sleep disruption</strong> compounds both — ADHD impairs sleep, and sleep deprivation worsens both ADHD symptoms and anxiety.</li>
+</ul>
+<p class="rich-p">Treat ADHD first and reassess anxiety. If significant anxiety persists, it warrants its own treatment — typically CBT and/or an SSRI. Avoid benzodiazepines in ADHD given impulsivity risk.</p>`,
+
+    s_ri_depression: `<div class="rich-h2">ADHD and Depression</div>
+<p class="rich-p">Depression co-occurs in approximately 30–40% of adults with ADHD. It can be primary (a separate depressive disorder) or secondary (a consequence of chronic impairment, underachievement, and self-blame).</p>
+<div class="rich-h3">How ADHD produces depressive symptoms</div>
+<p class="rich-p">Repeated failure despite effort, chronic disorganisation, and a pervasive sense of not living up to potential erode self-esteem over time. Many describe a lifelong narrative of "I should be able to do this — why can't I?" That narrative, sustained over years, produces depressive cognition difficult to separate from a primary mood disorder.</p>
+<ul class="rich-ul">
+<li class="rich-li"><strong>Low mood in ADHD</strong> is often reactive and fluctuating — linked to specific failures or rejections, lifting rapidly with positive stimulation.</li>
+<li class="rich-li"><strong>Anhedonia</strong> is more characteristic of primary depression. ADHD low motivation is interest-driven — the person can enjoy things when engaged.</li>
+<li class="rich-li"><strong>Rejection sensitive dysphoria</strong> can look like rapid-cycling mood disorder — brief, intense episodes triggered by perceived rejection, resolving within hours.</li>
+</ul>
+<p class="rich-p">Treating ADHD effectively often substantially improves depressive symptoms when depression is secondary. Bupropion has activity on noradrenaline and dopamine and can address both conditions simultaneously.</p>`,
+
+
+  };
+  return sections[id] || '';
+}
+
+// Build titration section HTML (for embedding in full guide)
+
+// Organized tile structure - ADHD friendly!
+const TILE_CATEGORIES = [
+  {
+    title: '🎯 Start Here',
+    color: 'teal',
+    tiles: [
+      { id: 's_what', emoji: '🤔', label: 'What is ADHD?', color: 'teal' },
+      { id: 's_faq', emoji: '❓', label: 'Common Questions', color: 'blue' },
+      { id: 's_myths', emoji: '🚫', label: 'Myths vs Facts', color: 'purple' },
+      { id: 's_core', emoji: '🎯', label: 'Core Symptoms', color: 'orange' },
+    ]
+  },
+  {
+    title: '💊 Treatment & Medication',
+    color: 'purple',
+    tiles: [
+      { id: 's_treat', emoji: '💊', label: 'Treatment Options', color: 'purple' },
+      { id: 's_feels', emoji: '✨', label: 'What Treatment Feels Like', color: 'pink' },
+      { id: 's_meds_dex', emoji: '💊', label: 'Dexamphetamine', color: 'purple' },
+      { id: 's_meds_vyvanse', emoji: '💊', label: 'Vyvanse', color: 'indigo' },
+      { id: 's_meds_ritalinIR', emoji: '💊', label: 'Ritalin / Artige', color: 'purple' },
+      { id: 's_meds_concerta', emoji: '💊', label: 'Concerta', color: 'indigo' },
+      { id: 's_meds_strattera', emoji: '💊', label: 'Strattera', color: 'purple' },
+      { id: 's_safety', emoji: '⚠️', label: 'Safety & Monitoring', color: 'red' },
+    ]
+  },
+  {
+    title: '🛠️ Daily Life Strategies',
+    color: 'orange',
+    tiles: [
+      { id: 's_sh_braindump', emoji: '📝', label: 'Brain Dump', color: 'orange' },
+      { id: 's_sh_timeblock', emoji: '⏰', label: 'Time Blocking', color: 'yellow' },
+      { id: 's_sh_phone', emoji: '📱', label: 'Phone & Social Media', color: 'blue' },
+      { id: 's_sh_bodydouble', emoji: '👥', label: 'Body Doubling', color: 'green' },
+      { id: 's_sh_ifthen', emoji: '🔄', label: 'If-Then Planning', color: 'orange' },
+      { id: 's_sh_decisions', emoji: '🤯', label: 'Decision Fatigue', color: 'yellow' },
+      { id: 's_sh_reward', emoji: '🎁', label: 'Reward Pairing', color: 'pink' },
+      { id: 's_sh_sleep', emoji: '😴', label: 'Sleep Problems', color: 'indigo' },
+      { id: 's_sh_exercise', emoji: '🏃', label: 'Exercise for ADHD', color: 'green' },
+    ]
+  },
+  {
+    title: '💭 Emotions & Mental Health',
+    color: 'pink',
+    tiles: [
+      { id: 's_sh_emotional', emoji: '😤', label: 'Emotional Dysregulation', color: 'pink' },
+      { id: 's_ri_gad', emoji: '😰', label: 'Anxiety & ADHD', color: 'yellow' },
+      { id: 's_ri_depression', emoji: '😔', label: 'Depression & ADHD', color: 'blue' },
+      { id: 's_ri_asd', emoji: '🧩', label: 'Autism & ADHD', color: 'purple' },
+      { id: 's_bfrb', emoji: '🤚', label: 'Skin Picking / Nail Biting', color: 'orange' },
+      { id: 's_sh_bingeeating', emoji: '🍕', label: 'Binge Eating', color: 'red' },
+      { id: 's_grief', emoji: '💔', label: 'Late Diagnosis Grief', color: 'pink' },
+      { id: 's_nonpharm_cbt', emoji: '🧠', label: 'Therapy (CBT)', color: 'teal' },
+    ]
+  },
+  {
+    title: '👨‍👩‍👧 Relationships & Communication',
+    color: 'green',
+    tiles: [
+      { id: 's_sh_partner', emoji: '💑', label: 'ADHD & Partners', color: 'pink' },
+      { id: 's_sh_kids', emoji: '👶', label: 'ADHD & Parenting', color: 'green' },
+      { id: 's_sh_commsadult', emoji: '💬', label: 'Talking to ADHD Adults', color: 'blue' },
+      { id: 's_sh_commschild', emoji: '👦', label: 'Talking to ADHD Kids', color: 'yellow' },
+      { id: 's_newparent', emoji: '🍼', label: 'New Parents with ADHD', color: 'orange' },
+    ]
+  },
+  {
+    title: '💼 Work & Life Admin',
+    color: 'blue',
+    tiles: [
+      { id: 's_workplace', emoji: '💼', label: 'Workplace Adjustments', color: 'blue' },
+      { id: 's_supports', emoji: '🎓', label: 'NDIS & Supports', color: 'emerald' },
+    ]
+  },
+  {
+    title: '🤰 Pregnancy & Family',
+    color: 'emerald',
+    tiles: [
+      { id: 's_pregnant', emoji: '🤰', label: 'Pregnancy & Breastfeeding', color: 'pink' },
+      { id: 's_newparent', emoji: '👶', label: 'New Parents', color: 'green' },
+    ]
+  },
+  {
+    title: '📚 More Resources',
+    color: 'indigo',
+    tiles: [
+      { id: 's_brain', emoji: '🧬', label: 'What Happens in the Brain', color: 'purple' },
+      { id: 's_impact', emoji: '📊', label: 'Real-World Impact (Stats)', color: 'blue' },
+      { id: 's_resources_aus', emoji: '🇦🇺', label: 'Australian Resources', color: 'emerald' },
+    ]
+  },
+];
+
+// ========== STATE ==========
+let currentId = null;
+let readIds = new Set();
+let allTileIds = [];
+
+// Build flat list
+TILE_CATEGORIES.forEach(cat => {
+  cat.tiles.forEach(tile => {
+    if (!allTileIds.includes(tile.id)) allTileIds.push(tile.id);
+  });
+});
+
+// ========== BUILD TILES ==========
+function buildTiles() {
+  const container = document.getElementById('tileCategories');
+  container.innerHTML = '';
+  TILE_CATEGORIES.forEach(cat => {
+    const section = document.createElement('div');
+    section.className = 'section-category';
+    section.innerHTML = `
+      <div class="section-cat-header">
+        <h2 class="section-cat-title">${cat.title}</h2>
+      </div>
+      <div class="tile-grid" id="grid-${cat.title.replace(/[^a-z0-9]/gi, '')}"></div>
+    `;
+    container.appendChild(section);
+
+    const grid = section.querySelector('.tile-grid');
+    cat.tiles.forEach(tile => {
+      const sec = SECTIONS.find(s => s.id === tile.id);
+      if (!sec) return;
+      const btn = document.createElement('button');
+      btn.className = `tile tile-${tile.color}`;
+      btn.dataset.id = tile.id;
+      btn.dataset.label = tile.label.toLowerCase();
+      btn.innerHTML = `
+        <div class="tile-emoji">${tile.emoji}</div>
+        <div class="tile-label">${tile.label}</div>
+      `;
+      btn.addEventListener('click', () => navigateTo(tile.id));
+      grid.appendChild(btn);
+    });
+  });
+}
+
+// ========== NAVIGATION ==========
+function navigateTo(id) {
+  currentId = id;
+  readIds.add(id);
+
+  document.getElementById('welcomeScreen').style.display = 'none';
+  const articleView = document.getElementById('articleView');
+  articleView.className = 'article active';
+
+  const sec = SECTIONS.find(s => s.id === id);
+  document.getElementById('articleTitle').textContent = sec?.label || '';
+
+  // Stub patient-name input
+  let pn = document.getElementById('patient-name');
+  if (!pn) {
+    pn = document.createElement('input');
+    pn.id = 'patient-name';
+    pn.value = '';
+    pn.style.display = 'none';
+    document.body.appendChild(pn);
+  }
+
+  const html = getSectionHTML(id);
+  const content = document.getElementById('articleContent');
+  const cleanHtml = html.replace(/<div class="rich-h1">[^<]*<\/div>\s*/, '');
+  content.innerHTML = cleanHtml || '<p class="rich-p" style="color:var(--text-faint)">Content coming soon.</p>';
+
+  buildPrevNext(id);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgress();
+}
+
+function buildPrevNext(id) {
+  const idx = allTileIds.indexOf(id);
+  const footer = document.getElementById('articleFooter');
+  let html = '';
+  if (idx > 0) {
+    const prevId = allTileIds[idx - 1];
+    const prevSec = SECTIONS.find(s => s.id === prevId);
+    if (prevSec) html += `<button class="prev-next-btn" onclick="navigateTo('${prevId}')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <div class="pn-content"><span class="pn-label">Previous</span><div class="pn-title">${prevSec.label}</div></div>
+    </button>`;
+  } else html += '<div></div>';
+  if (idx < allTileIds.length - 1) {
+    const nextId = allTileIds[idx + 1];
+    const nextSec = SECTIONS.find(s => s.id === nextId);
+    if (nextSec) html += `<button class="prev-next-btn" onclick="navigateTo('${nextId}')">
+      <div class="pn-content" style="text-align:right"><span class="pn-label">Next</span><div class="pn-title">${nextSec.label}</div></div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>`;
+  }
+  footer.innerHTML = html;
+}
+
+function showWelcome() {
+  currentId = null;
+  document.getElementById('welcomeScreen').style.display = '';
+  document.getElementById('articleView').className = 'article';
+  document.getElementById('welcomeSearch').value = '';
+  filterTiles('');
+}
+
+// ========== SEARCH ==========
+function filterTiles(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.tile').forEach(tile => {
+    const label = tile.dataset.label || '';
+    tile.classList.toggle('tile-hidden', q && !label.includes(q));
+  });
+  document.querySelectorAll('.section-category').forEach(cat => {
+    const visible = cat.querySelectorAll('.tile:not(.tile-hidden)');
+    cat.style.display = visible.length ? '' : 'none';
+  });
+}
+
+// ========== PROGRESS ==========
+function updateProgress() {
+  const pct = allTileIds.length ? Math.round((readIds.size / allTileIds.length) * 100) : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+// ========== UTILS ==========
+function copyArticle() {
+  const text = document.getElementById('articleContent').innerText;
+  navigator.clipboard.writeText(text).then(() => showToast('✓ Copied!'));
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ========== DARK MODE ==========
+(function() {
+  const r = document.documentElement;
+  const t = document.getElementById('themeToggle');
+  let d = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+  r.setAttribute('data-theme', d);
+  function setIcon(theme) {
+    t.innerHTML = theme === 'dark'
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  }
+  setIcon(d);
+  t.addEventListener('click', () => {
+    d = d === 'dark' ? 'light' : 'dark';
+    r.setAttribute('data-theme', d);
+    setIcon(d);
+  });
+})();
+
+// ========== INIT ==========
+buildTiles();
+</script>
+</body>
+</html>

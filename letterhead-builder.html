@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Letterhead Builder</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --surface: #ffffff;
+    --surface2: #f8fafc;
+    --accent: #2563eb;
+    --teal: #1a6478;
+    --teal-light: #4db8b8;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f1f5f9;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  .app {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  .page-header {
+    margin-bottom: 32px;
+  }
+  .page-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .page-header p {
+    color: var(--muted);
+    font-size: 0.93rem;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .panel-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel-head-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .panel-head h2 {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .panel-head p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .panel-body { padding: 20px; }
+
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 5px;
+  }
+
+  input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.88rem;
+    color: var(--ink);
+    background: var(--surface);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  @media (max-width: 500px) {
+    .two-col, .three-col { grid-template-columns: 1fr; }
+  }
+
+  /* Clinic name section tabs */
+  .mode-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    background: var(--surface2);
+    border-radius: 9px;
+    padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .mode-tab {
+    flex: 1;
+    text-align: center;
+    padding: 7px 10px;
+    border-radius: 7px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .mode-tab.active {
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .mode-tab.dokotela-tab.active {
+    background: #1a6478;
+    color: #fff;
+  }
+
+  .mode-pane { display: none; }
+  .mode-pane.active { display: block; }
+
+  /* Logo upload area */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    background: var(--surface2);
+  }
+  .upload-zone:hover { border-color: var(--accent); background: #eff6ff; }
+  .upload-zone input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .upload-zone-text { font-size: 0.85rem; color: var(--muted); }
+  .upload-zone-text strong { color: var(--accent); }
+  #logo-preview { max-height: 60px; max-width: 200px; margin: 0 auto 8px; display: none; }
+
+  /* Color + font row */
+  .style-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+  .style-row .field { margin-bottom: 0; flex: 1; min-width: 100px; }
+  input[type="color"] {
+    width: 100%;
+    height: 38px;
+    padding: 2px 4px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  /* Dokotela preview chip */
+  .dokotela-chip {
+    background: linear-gradient(135deg, #0d4f62, #1a7a8c);
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: white;
+    font-size: 0.88rem;
+  }
+  .dokotela-chip .wordmark {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .dokotela-chip .wordmark span:nth-child(1) { color: #c5e8ef; }
+  .dokotela-chip .wordmark span:nth-child(2) { color: #4db8b8; }
+  .dokotela-chip .wordmark span:nth-child(3) { color: #c5e8ef; }
+  .dokotela-chip .sub { font-size: 0.72rem; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+  /* Rich text editor */
+  .editor-wrap {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .editor-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+  }
+  .editor-toolbar {
+    display: flex;
+    gap: 2px;
+    padding: 6px 8px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .tb-btn {
+    width: 30px; height: 28px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.1s;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .tb-btn:hover { background: var(--border); border-color: var(--border); }
+  .tb-btn.active { background: #dbeafe; border-color: #93c5fd; color: var(--accent); }
+  .tb-sep {
+    width: 1px; height: 20px;
+    background: var(--border);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
+  .tb-select {
+    padding: 3px 6px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font: inherit;
+    font-size: 0.78rem;
+    color: var(--ink);
+    cursor: pointer;
+    height: 28px;
+  }
+  .letter-editor {
+    width: 100%;
+    min-height: 340px;
+    font-size: 10.5pt;
+    line-height: 1.7;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 14px 16px;
+    color: var(--ink);
+    background: #fff;
+    outline: none;
+    word-break: break-word;
+  }
+  .letter-editor p { margin: 0 0 0.6em; }
+  .letter-editor p:last-child { margin-bottom: 0; }
+  .letter-editor[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: #aaa;
+    font-style: italic;
+    pointer-events: none;
+  }
+
+  /* Action buttons */
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 18px;
+    border-radius: 9px;
+    font: inherit;
+    font-size: 0.87rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+  .btn-primary:hover { background: #1e293b; }
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--ink);
+    border-color: var(--border);
+  }
+  .btn-secondary:hover { border-color: #94a3b8; background: var(--surface2); }
+  .btn-teal {
+    background: var(--teal);
+    color: #fff;
+    border-color: var(--teal);
+  }
+  .btn-teal:hover { background: #145568; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border-color: var(--border);
+  }
+  .btn-ghost:hover { color: var(--ink); background: var(--surface2); }
+
+  /* Preview area */
+  .preview-wrap {
+    margin-top: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .preview-head {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface2);
+  }
+  .preview-doc {
+    padding: 40px 52px;
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
+    color: #111;
+    min-height: 200px;
+    line-height: 1.6;
+  }
+  @media (max-width: 600px) {
+    .preview-doc { padding: 24px 20px; }
+  }
+
+  /* Letterhead rendered styles */
+  .lh-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom-width: 2.5px;
+    border-bottom-style: solid;
+    margin-bottom: 24px;
+  }
+  .lh-left { line-height: 1.1; }
+  .lh-clinician { margin-top: 8px; font-size: 9pt; line-height: 1.6; }
+  .lh-right { text-align: right; font-size: 8pt; color: #555; line-height: 1.7; }
+  .lh-letter-body { font-family: Arial, sans-serif; font-size: 10.5pt; white-space: pre-wrap; line-height: 1.65; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--ink);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: transform 0.25s ease;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 18px 0;
+  }
+
+  .hint {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .full-span { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="page-header">
+    <h1>Letterhead Builder</h1>
+    <p>Set up your clinician and clinic details, write your letter, then download or copy.</p>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT COLUMN -->
+    <div>
+      <!-- Clinician Details -->
+      <div class="panel" style="margin-bottom:20px;">
+        <div class="panel-head">
+          <div class="panel-head-icon">👤</div>
+          <div>
+            <h2>Clinician Details</h2>
+            <p>Saved in your browser automatically</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="two-col">
+            <div class="field">
+              <label>Full Name</label>
+              <input type="text" id="clinName" placeholder="Dr Jane Smith" oninput="save();renderPreview()">
+            </div>
+            <div class="field">
+              <label>Occupation / Role</label>
+              <input type="text" id="clinRole" placeholder="Psychiatrist" oninput="save();renderPreview()">
+            </div>
+          </div>
+          <div class="field">
+            <label>Qualifications</label>
+            <input type="text" id="clinCreds" placeholder="MBBS (Hons), FRANZCP" oninput="save();renderPreview()">
+          </div>
+          <div class="two-col">
+            <div class="field">
+              <label>AHPRA Number</label>
+              <input type="text" id="clinAhpra" placeholder="MED0001234567" oninput="save();renderPreview()">
+            </div>
+            <div class="field">
+              <label>Provider Number</label>
+              <input type="text" id="clinProvider" placeholder="1234567A" oninput="save();renderPreview()">
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="field">
+              <label>Prescriber Number</label>
+              <input type="text" id="clinPrescriber" placeholder="Optional" oninput="save();renderPreview()">
+            </div>
+            <div class="field">
+              <label>Medicare PIN</label>
+              <input type="text" id="clinMedicare" placeholder="Optional" oninput="save();renderPreview()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clinic Details -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-head-icon">🏥</div>
+          <div>
+            <h2>Clinic Details</h2>
+            <p>Practice name, contact, and address</p>
+          </div>
+        </div>
+        <div class="panel-body">
+
+          <!-- Mode selector -->
+          <div class="mode-tabs">
+            <button class="mode-tab active" onclick="setMode('custom')">Custom clinic</button>
+            <button class="mode-tab dokotela-tab" onclick="setMode('dokotela')">Dokotela</button>
+          </div>
+
+          <!-- Custom mode -->
+          <div class="mode-pane active" id="pane-custom">
+            <div class="field">
+              <label>Clinic name display</label>
+              <div class="mode-tabs" style="margin-bottom:10px;">
+                <button class="mode-tab active" id="name-tab-text" onclick="setNameMode('text')">Text name</button>
+                <button class="mode-tab" id="name-tab-logo" onclick="setNameMode('logo')">Upload logo</button>
+              </div>
+
+              <!-- Text name pane -->
+              <div id="name-pane-text">
+                <div class="field" style="margin-bottom:10px;">
+                  <input type="text" id="clinicName" placeholder="e.g. Bondi Psychiatry" oninput="save();renderPreview()">
+                </div>
+                <div class="style-row">
+                  <div class="field" style="flex:2;min-width:130px;">
+                    <label>Font</label>
+                    <select id="clinicFont" onchange="save();renderPreview()">
+                      <option value="Georgia,'Times New Roman',serif">Georgia (serif)</option>
+                      <option value="'Palatino Linotype',Palatino,serif">Palatino (elegant)</option>
+                      <option value="Arial,Helvetica,sans-serif">Arial (clean)</option>
+                      <option value="'Trebuchet MS',sans-serif">Trebuchet (modern)</option>
+                      <option value="Garamond,serif">Garamond (classic)</option>
+                      <option value="'Courier New',monospace">Courier (typewriter)</option>
+                    </select>
+                  </div>
+                  <div class="field" style="flex:1;min-width:80px;">
+                    <label>Colour</label>
+                    <input type="color" id="clinicColor" value="#0f172a" onchange="save();renderPreview()">
+                  </div>
+                  <div class="field" style="flex:1;min-width:80px;">
+                    <label>Rule colour</label>
+                    <input type="color" id="ruleColor" value="#2563eb" onchange="save();renderPreview()">
+                  </div>
+                </div>
+                <div class="two-col" style="margin-top:10px;">
+                  <div class="field">
+                    <label>Font size (pt)</label>
+                    <input type="text" id="clinicFontSize" value="24" oninput="save();renderPreview()">
+                  </div>
+                  <div class="field">
+                    <label>Font weight</label>
+                    <select id="clinicFontWeight" onchange="save();renderPreview()">
+                      <option value="400">Regular</option>
+                      <option value="600">Semi-bold</option>
+                      <option value="700" selected>Bold</option>
+                      <option value="800">Extra-bold</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Logo pane -->
+              <div id="name-pane-logo" style="display:none;">
+                <div class="upload-zone" id="upload-zone">
+                  <input type="file" accept="image/*" id="logoInput" onchange="handleLogo(event)">
+                  <img id="logo-preview" alt="Logo preview">
+                  <div class="upload-zone-text">
+                    <strong>Click to upload</strong> or drag & drop<br>
+                    PNG, JPG, SVG — any size
+                  </div>
+                </div>
+                <div class="field" style="margin-top:10px;">
+                  <label>Logo height (px in preview)</label>
+                  <input type="text" id="logoHeight" value="56" oninput="renderPreview()">
+                </div>
+                <div class="field" style="margin-top:6px;">
+                  <label>Rule colour</label>
+                  <input type="color" id="ruleColorLogo" value="#2563eb" onchange="save();renderPreview()">
+                </div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="field">
+              <label>ABN</label>
+              <input type="text" id="clinicABN" placeholder="12 345 678 901" oninput="save();renderPreview()">
+            </div>
+            <div class="field">
+              <label>Address</label>
+              <input type="text" id="clinicAddress" placeholder="Suite 1, 123 Collins St, Melbourne VIC 3000" oninput="save();renderPreview()">
+            </div>
+            <div class="two-col">
+              <div class="field">
+                <label>Phone</label>
+                <input type="tel" id="clinicPhone" placeholder="02 9000 0000" oninput="save();renderPreview()">
+              </div>
+              <div class="field">
+                <label>Fax</label>
+                <input type="tel" id="clinicFax" placeholder="02 9000 0001" oninput="save();renderPreview()">
+              </div>
+            </div>
+            <div class="two-col">
+              <div class="field">
+                <label>Email</label>
+                <input type="email" id="clinicEmail" placeholder="hello@clinic.com.au" oninput="save();renderPreview()">
+              </div>
+              <div class="field">
+                <label>Website</label>
+                <input type="text" id="clinicWebsite" placeholder="www.clinic.com.au" oninput="save();renderPreview()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Dokotela mode -->
+          <div class="mode-pane" id="pane-dokotela">
+            <div class="dokotela-chip">
+              <div class="wordmark">
+                <span>D</span><span>ok</span><span>otela</span>
+              </div>
+              <div class="sub">Dokotela letterhead — pre-filled</div>
+            </div>
+            <div style="font-size:0.82rem;color:var(--muted);margin-top:10px;line-height:1.5;">
+              Uses the standard Dokotela brand: teal rule, pre-filled address and contact details. Your clinician details above will appear on the letterhead.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <!-- Letter body -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-head-icon">✉️</div>
+          <div>
+            <h2>Letter Body</h2>
+            <p>Paste or type your letter content below</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="editor-wrap">
+            <div class="editor-toolbar">
+              <button class="tb-btn" title="Bold (Ctrl+B)" onclick="fmt('bold')"><b>B</b></button>
+              <button class="tb-btn" title="Italic (Ctrl+I)" onclick="fmt('italic')"><i>I</i></button>
+              <button class="tb-btn" title="Underline (Ctrl+U)" onclick="fmt('underline')" style="text-decoration:underline;">U</button>
+              <div class="tb-sep"></div>
+              <button class="tb-btn" title="Align left" onclick="fmt('justifyLeft')">&#8676;</button>
+              <button class="tb-btn" title="Align centre" onclick="fmt('justifyCenter')">&#8644;</button>
+              <button class="tb-btn" title="Align right" onclick="fmt('justifyRight')">&#8677;</button>
+              <div class="tb-sep"></div>
+              <select class="tb-select" title="Font size" onchange="fmt('fontSize', this.value); this.blur()">
+                <option value="">Size</option>
+                <option value="2">Small</option>
+                <option value="3" selected>Normal</option>
+                <option value="4">Large</option>
+                <option value="5">Larger</option>
+              </select>
+              <div class="tb-sep"></div>
+              <button class="tb-btn" title="Clear formatting" onclick="fmt('removeFormat')" style="font-size:0.7rem;font-weight:400;">✕ fmt</button>
+            </div>
+            <div class="letter-editor" id="letterBody" contenteditable="true"
+              data-placeholder="Paste or type your letter here…"
+              oninput="renderPreview()"
+              onpaste="handlePaste(event)">
+            </div>
+          </div>
+          <p class="hint" style="margin-top:6px;">Supports bold, italic, paste from Word/email. Letterhead added automatically above.</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn btn-primary" onclick="downloadDocx()">
+          📄 Download Word (.doc)
+        </button>
+        <button class="btn btn-secondary" onclick="downloadLetterheadOnly()">
+          🖼 Letterhead only (.doc)
+        </button>
+        <button class="btn btn-ghost" onclick="copyLetter()">
+          📋 Copy
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full-width preview -->
+  <div class="preview-wrap" style="margin-top:28px;">
+    <div class="preview-head">
+      <span>Live Preview</span>
+      <span style="font-weight:400;font-size:0.75rem;">Updates as you type</span>
+    </div>
+    <div class="preview-doc" id="preview-doc">
+      <!-- rendered here -->
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─────────────── State ─────────────── */
+const KEY = 'lh_builder_v1';
+let logoDataUrl = null;
+let currentMode = 'custom';
+let currentNameMode = 'text';
+
+function getFields() {
+  return {
+    clinName:       v('clinName'),
+    clinRole:       v('clinRole'),
+    clinCreds:      v('clinCreds'),
+    clinAhpra:      v('clinAhpra'),
+    clinProvider:   v('clinProvider'),
+    clinPrescriber: v('clinPrescriber'),
+    clinMedicare:   v('clinMedicare'),
+    clinicName:     v('clinicName'),
+    clinicFont:     v('clinicFont'),
+    clinicColor:    v('clinicColor'),
+    clinicFontSize: v('clinicFontSize'),
+    clinicFontWeight:v('clinicFontWeight'),
+    ruleColor:      v('ruleColor'),
+    ruleColorLogo:  v('ruleColorLogo'),
+    logoHeight:     v('logoHeight'),
+    clinicABN:      v('clinicABN'),
+    clinicAddress:  v('clinicAddress'),
+    clinicPhone:    v('clinicPhone'),
+    clinicFax:      v('clinicFax'),
+    clinicEmail:    v('clinicEmail'),
+    clinicWebsite:  v('clinicWebsite'),
+    mode:           currentMode,
+    nameMode:       currentNameMode,
+    logoDataUrl:    logoDataUrl,
+  };
+}
+
+function v(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(getFields())); } catch(e) {}
+}
+
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY) || '{}');
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+    set('clinName', d.clinName); set('clinRole', d.clinRole); set('clinCreds', d.clinCreds);
+    set('clinAhpra', d.clinAhpra); set('clinProvider', d.clinProvider);
+    set('clinPrescriber', d.clinPrescriber); set('clinMedicare', d.clinMedicare);
+    set('clinicName', d.clinicName); set('clinicFont', d.clinicFont);
+    set('clinicColor', d.clinicColor || '#0f172a'); set('clinicFontSize', d.clinicFontSize || '24');
+    set('clinicFontWeight', d.clinicFontWeight || '700'); set('ruleColor', d.ruleColor || '#2563eb');
+    set('ruleColorLogo', d.ruleColorLogo || '#2563eb'); set('logoHeight', d.logoHeight || '56');
+    set('clinicABN', d.clinicABN); set('clinicAddress', d.clinicAddress);
+    set('clinicPhone', d.clinicPhone); set('clinicFax', d.clinicFax);
+    set('clinicEmail', d.clinicEmail); set('clinicWebsite', d.clinicWebsite);
+    if (d.logoDataUrl) { logoDataUrl = d.logoDataUrl; showLogoPreview(d.logoDataUrl); }
+    if (d.mode) setMode(d.mode, true);
+    if (d.nameMode) setNameMode(d.nameMode, true);
+  } catch(e) {}
+}
+
+/* ─────────────── Mode switching ─────────────── */
+function setMode(mode, silent) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tabs:first-of-type .mode-tab').forEach(b => b.classList.remove('active'));
+  // find the tab buttons for the main mode switcher (first .mode-tabs in panel-body)
+  const tabs = document.querySelectorAll('#pane-custom').item(0)?.closest('.panel-body')?.querySelectorAll(':scope > .mode-tabs .mode-tab');
+  document.querySelectorAll('.panel-body > .mode-tabs .mode-tab').forEach((b,i) => {
+    b.classList.toggle('active', (i===0 && mode==='custom') || (i===1 && mode==='dokotela'));
+  });
+  document.getElementById('pane-custom').classList.toggle('active', mode==='custom');
+  document.getElementById('pane-dokotela').classList.toggle('active', mode==='dokotela');
+  if (!silent) { save(); renderPreview(); }
+}
+
+function setNameMode(mode, silent) {
+  currentNameMode = mode;
+  document.getElementById('name-pane-text').style.display = mode === 'text' ? '' : 'none';
+  document.getElementById('name-pane-logo').style.display = mode === 'logo' ? '' : 'none';
+  document.getElementById('name-tab-text').classList.toggle('active', mode === 'text');
+  document.getElementById('name-tab-logo').classList.toggle('active', mode === 'logo');
+  if (!silent) { save(); renderPreview(); }
+}
+
+/* ─────────────── Logo handling ─────────────── */
+function handleLogo(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    logoDataUrl = ev.target.result;
+    showLogoPreview(logoDataUrl);
+    save();
+    renderPreview();
+  };
+  reader.readAsDataURL(file);
+}
+
+function showLogoPreview(src) {
+  const img = document.getElementById('logo-preview');
+  const zone = document.getElementById('upload-zone');
+  img.src = src;
+  img.style.display = 'block';
+  zone.querySelector('.upload-zone-text').style.display = 'none';
+}
+
+/* ─────────────── Build letterhead HTML ─────────────── */
+function buildLetterheadHTML() {
+  const f = getFields();
+  if (f.mode === 'dokotela') return buildDokotelaLetterhead(f);
+  return buildCustomLetterhead(f);
+}
+
+function buildDokotelaLetterhead(f) {
+  const clinBlock = f.clinName ? `
+    <div style="margin-top:6pt;font-size:9pt;color:#1a6478;line-height:1.6;">
+      <div style="font-weight:700;font-size:10.5pt;color:#1a6478;">${esc(f.clinName)}</div>
+      ${f.clinRole ? `<div style="color:#444;">${esc(f.clinRole)}${f.clinCreds ? ' · ' + esc(f.clinCreds) : ''}</div>` : ''}
+      ${f.clinProvider ? `<div style="color:#777;font-size:8pt;">Provider: ${esc(f.clinProvider)}</div>` : ''}
+      ${f.clinAhpra ? `<div style="color:#777;font-size:8pt;">AHPRA: ${esc(f.clinAhpra)}</div>` : ''}
+    </div>` : '';
+  return `<div style="padding-bottom:10pt;font-family:Arial,sans-serif;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10pt;margin-bottom:10pt;">
+      <div style="line-height:1;">
+        <span style="font-size:28pt;font-weight:800;letter-spacing:-0.5pt;">
+          <span style="color:#1a6478;">D</span><span style="color:#4db8b8;">ok</span><span style="color:#1a6478;">otela</span>
+        </span>
+        ${clinBlock}
+      </div>
+      <div style="text-align:right;font-size:8pt;color:#444;line-height:1.7;">
+        <div>101 Grafton St, Bondi Junction NSW 2022</div>
+        <div>Ph: 02 8003 7668 &nbsp;|&nbsp; Fax: 02 8569 1844</div>
+        <div><a href="mailto:specialists@dokotela.com.au" style="color:#1a6478;text-decoration:none;">specialists@dokotela.com.au</a></div>
+        <div><a href="http://www.dokotela.com.au" style="color:#1a6478;text-decoration:none;">www.dokotela.com.au</a></div>
+      </div>
+    </div>
+    <hr style="border:none;border-top:2.5pt solid #4db8b8;margin:0 0 20pt 0;">
+  </div>`;
+}
+
+function buildCustomLetterhead(f) {
+  const ruleColor = f.nameMode === 'logo' ? f.ruleColorLogo : f.ruleColor;
+
+  // Left side: logo or name
+  let leftHtml = '';
+  if (f.nameMode === 'logo' && logoDataUrl) {
+    const h = parseInt(f.logoHeight) || 56;
+    leftHtml = `<div><img src="${logoDataUrl}" style="height:${h}px;max-width:260px;display:block;" alt="Clinic logo"></div>`;
+  } else if (f.clinicName) {
+    leftHtml = `<div style="font-family:${f.clinicFont};font-size:${parseInt(f.clinicFontSize)||24}pt;font-weight:${f.clinicFontWeight};color:${f.clinicColor};line-height:1.1;letter-spacing:-0.3px;">${esc(f.clinicName)}</div>`;
+  }
+
+  // Clinician sub-block
+  const clinLines = [];
+  if (f.clinName) {
+    let nameLine = `<span style="font-weight:700;font-size:10pt;">${esc(f.clinName)}</span>`;
+    if (f.clinRole) nameLine += ` <span style="font-weight:400;color:#555;">· ${esc(f.clinRole)}</span>`;
+    clinLines.push(nameLine);
+  }
+  if (f.clinCreds) clinLines.push(`<span style="color:#555;">${esc(f.clinCreds)}</span>`);
+  const badges = [];
+  if (f.clinAhpra) badges.push(`AHPRA: ${esc(f.clinAhpra)}`);
+  if (f.clinProvider) badges.push(`Provider: ${esc(f.clinProvider)}`);
+  if (f.clinPrescriber) badges.push(`Prescriber: ${esc(f.clinPrescriber)}`);
+  if (badges.length) clinLines.push(`<span style="color:#888;font-size:7.5pt;">${badges.join('  |  ')}</span>`);
+
+  const clinBlock = clinLines.length ? `<div style="margin-top:7pt;font-size:9pt;line-height:1.7;color:#333;">${clinLines.map(l=>`<div>${l}</div>`).join('')}</div>` : '';
+
+  // Right contact block
+  const contactLines = [];
+  if (f.clinicAddress) contactLines.push(esc(f.clinicAddress));
+  const phoneFax = [f.clinicPhone && `Ph: ${esc(f.clinicPhone)}`, f.clinicFax && `Fax: ${esc(f.clinicFax)}`].filter(Boolean).join('  |  ');
+  if (phoneFax) contactLines.push(phoneFax);
+  if (f.clinicEmail) contactLines.push(`<a href="mailto:${esc(f.clinicEmail)}" style="color:${ruleColor};text-decoration:none;">${esc(f.clinicEmail)}</a>`);
+  if (f.clinicWebsite) contactLines.push(`<a href="http://${esc(f.clinicWebsite)}" style="color:${ruleColor};text-decoration:none;">${esc(f.clinicWebsite)}</a>`);
+  if (f.clinicABN) contactLines.push(`ABN: ${esc(f.clinicABN)}`);
+
+  const rightHtml = contactLines.length ? `<div style="text-align:right;font-size:8pt;color:#555;line-height:1.75;">${contactLines.map(l=>`<div>${l}</div>`).join('')}</div>` : '';
+
+  if (!leftHtml && !rightHtml && !clinBlock) return '';
+
+  return `<div style="padding-bottom:10pt;font-family:Arial,sans-serif;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10pt;margin-bottom:10pt;">
+      <div>${leftHtml}${clinBlock}</div>
+      ${rightHtml}
+    </div>
+    <hr style="border:none;border-top:2.5pt solid ${ruleColor};margin:0 0 20pt 0;">
+  </div>`;
+}
+
+/* ─────────────── Rich text helpers ─────────────── */
+function fmt(cmd, val) {
+  document.getElementById('letterBody').focus();
+  document.execCommand(cmd, false, val || null);
+  renderPreview();
+}
+
+function handlePaste(e) {
+  e.preventDefault();
+  // Prefer HTML paste (keeps bold/italic from Word/email), fall back to plain text
+  const html = e.clipboardData.getData('text/html');
+  const text = e.clipboardData.getData('text/plain');
+  if (html) {
+    // Strip Word/Outlook cruft but keep bold/italic/underline/paragraphs
+    const clean = sanitizePaste(html);
+    document.execCommand('insertHTML', false, clean);
+  } else {
+    // Plain text: convert newlines to <br> / paragraphs
+    const escaped = text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\r\n|\r/g,'\n')
+      .split(/\n\n+/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+    document.execCommand('insertHTML', false, escaped || text);
+  }
+  renderPreview();
+}
+
+function sanitizePaste(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  // Remove script/style/meta tags
+  tmp.querySelectorAll('script,style,meta,link,head').forEach(el => el.remove());
+  // Strip all attributes except a few safe ones
+  tmp.querySelectorAll('*').forEach(el => {
+    const keep = ['href','style'];
+    [...el.attributes].forEach(attr => {
+      if (!keep.includes(attr.name)) el.removeAttribute(attr.name);
+    });
+    // Strip inline styles except bold/italic/underline signals
+    if (el.style) {
+      const fw = el.style.fontWeight;
+      const fs = el.style.fontStyle;
+      const td = el.style.textDecoration;
+      el.removeAttribute('style');
+      if (fw === 'bold' || parseInt(fw) >= 700) el.style.fontWeight = 'bold';
+      if (fs === 'italic') el.style.fontStyle = 'italic';
+      if (td && td.includes('underline')) el.style.textDecoration = 'underline';
+    }
+  });
+  return tmp.innerHTML;
+}
+
+function getLetterHTML() {
+  return document.getElementById('letterBody').innerHTML || '';
+}
+
+/* ─────────────── Render preview ─────────────── */
+function renderPreview() {
+  const lh = buildLetterheadHTML();
+  const letter = getLetterHTML();
+  const isEmpty = !letter || letter === '<br>' || letter.trim() === '';
+  const letterHtml = isEmpty
+    ? `<div style="color:#aaa;font-size:9.5pt;font-style:italic;">Your letter will appear here…</div>`
+    : `<div style="font-family:Arial,sans-serif;font-size:10.5pt;line-height:1.7;color:#111;">${letter}</div>`;
+  document.getElementById('preview-doc').innerHTML = lh + letterHtml;
+}
+
+/* ─────────────── Download helpers ─────────────── */
+function buildFullHTML(letterheadOnly) {
+  const lh = buildLetterheadHTML();
+  const letter = getLetterHTML();
+  const body = letterheadOnly ? '' : `<div style="font-family:Arial,sans-serif;font-size:10.5pt;line-height:1.7;color:#111;">${letter}</div>`;
+  return `<html><head><meta charset='UTF-8'><style>body{margin:40px 52px;font-family:Arial,sans-serif;font-size:10.5pt;color:#111;line-height:1.7;}p{margin:0 0 0.6em;}a{color:inherit;}</style></head><body>${lh}${body}</body></html>`;
+}
+
+function downloadDocx() {
+  const html = buildFullHTML(false);
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'letter-with-letterhead.doc'; a.click();
+  toast('Downloaded letter.doc');
+}
+
+function downloadLetterheadOnly() {
+  const html = buildFullHTML(true);
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'letterhead-only.doc'; a.click();
+  toast('Downloaded letterhead-only.doc');
+}
+
+function copyLetter() {
+  const lh = buildLetterheadHTML();
+  const letter = getLetterHTML();
+  const full = `<div style="font-family:Arial,sans-serif;font-size:10.5pt;line-height:1.7;">${lh}<div>${letter}</div></div>`;
+  try {
+    const blob = new Blob([full], { type: 'text/html' });
+    const item = new ClipboardItem({ 'text/html': blob });
+    navigator.clipboard.write([item]).then(() => toast('Copied with formatting'));
+  } catch(e) {
+    navigator.clipboard.writeText(document.getElementById('letterBody').innerText || '').then(() => toast('Copied plain text'));
+  }
+}
+
+/* ─────────────── Toast ─────────────── */
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ─────────────── Escape ─────────────── */
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ─────────────── Init ─────────────── */
+load();
+renderPreview();
+
+// Re-wire mode tab clicks after load (simple approach)
+document.querySelectorAll('.panel-body > .mode-tabs').forEach(tabs => {
+  const btns = tabs.querySelectorAll('.mode-tab');
+  btns.forEach((b, i) => {
+    b.onclick = () => setMode(i === 0 ? 'custom' : 'dokotela');
+  });
+});
+</script>
+</body>
+</html>
