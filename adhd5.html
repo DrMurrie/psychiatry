@@ -29,6 +29,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .tab{padding:10px 15px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#64748b;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;font-family:var(--sans);flex-shrink:0}
 .tab:hover{color:#cbd5e1}
 .tab.active{color:#f1f5f9;border-bottom-color:var(--primary)}
+.tab-guide{margin-left:auto;padding:8px 11px;font-size:16px;border:none;background:none;color:#cbd5e1;cursor:pointer;font-family:var(--sans);flex-shrink:0;line-height:1}
+.tab-guide+.tab-guide{margin-left:0}
+.tab-guide:hover{background:#0f172a}
 .tbadge{display:inline-block;margin-left:5px;font-size:10px;background:#334155;color:#94a3b8;padding:1px 5px;border-radius:999px;font-weight:700;vertical-align:middle;min-width:18px;text-align:center}
 .tbadge.ok{background:#14532d;color:#86efac}
 .tbadge.warn{background:#78350f;color:#fcd34d}
@@ -327,7 +330,7 @@ select.inp{appearance:none}
 
 <div class="topbar">
   <div class="tb-row">
-    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v5.3</span></span>
+    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v5.4</span></span>
     <input class="ti" id="drName" placeholder="Psychiatrist name" oninput="save();refresh()" style="flex:1 1 130px;min-width:100px">
     <input class="ti" id="drQuals" placeholder="FRANZCP / RANZCP" oninput="save();refresh()" style="flex:0 1 130px;min-width:80px">
     <input class="ti" id="ptDate" type="date" style="flex:0 0 120px" oninput="save();refresh()">
@@ -338,10 +341,6 @@ select.inp{appearance:none}
     </div>
   </div>
   </div>
-  <div class="tb-row" style="border-top:1px solid #1e293b;padding-top:5px;margin-top:3px;gap:5px">
-    <button onclick="document.getElementById('how-ov').classList.add('open')" style="flex:1;padding:5px 13px;border-radius:6px;border:1.5px solid #64748b;background:#1e293b;color:#94a3b8;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);text-align:center">💡 How to Use</button>
-    <button onclick="document.getElementById('pg-ov').classList.add('open')" style="flex:1;padding:5px 13px;border-radius:6px;border:1.5px solid #3b82f6;background:#1e3a5f;color:#93c5fd;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);text-align:center">📋 Prescriber Guide</button>
-  </div>
 </div>
 
 <div class="tabs">
@@ -349,6 +348,8 @@ select.inp{appearance:none}
   <button class="tab" onclick="showTab('safety',this)">Medical Hx <span class="tbadge" id="tb-safety">--</span></button>
   <button class="tab" onclick="showTab('plan',this)">Plan</button>
   <button class="tab" onclick="showTab('outputs',this)">Letters</button>
+  <button class="tab-guide" onclick="document.getElementById('how-ov').classList.add('open')" title="How to Use" aria-label="How to Use">💡</button>
+  <button class="tab-guide" onclick="document.getElementById('pg-ov').classList.add('open')" title="Prescriber Guide" aria-label="Prescriber Guide">📋</button>
 </div>
 
 <div class="content">
@@ -1704,8 +1705,7 @@ function renderTitMedBlock(m,mi){
   if(m.key==='other'){
     nameEl+='<input style="flex:1;background:transparent;border:none;color:var(--muted);font:12px var(--sans);outline:none;border-bottom:1px solid var(--border);margin-left:6px;min-width:80px" type="text" value="'+esc(m.customName||'')+'" placeholder="Custom name" oninput="titMeds['+mi+'].customName=this.value">';
   }
-  var authEl=m.def.auth?'<span class="tit-med-auth" title="'+esc(m.def.auth)+'">'+esc(m.def.auth.substring(0,35))+'...</span>':'';
-  return '<div class="tit-med-block"><div class="tit-med-head">'+nameEl+authEl+'<button class="tit-med-rm" onclick="titRemoveMed('+mi+')">x</button></div><div class="tit-step-list">'+steps+'</div></div>';
+  return '<div class="tit-med-block"><div class="tit-med-head">'+nameEl+'<button class="tit-med-rm" onclick="titRemoveMed('+mi+')">x</button></div><div class="tit-step-list">'+steps+'</div></div>';
 }
 
 function renderTitMeds(){
