@@ -327,7 +327,7 @@ select.inp{appearance:none}
 
 <div class="topbar">
   <div class="tb-row">
-    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v5.2</span></span>
+    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v5.3</span></span>
     <input class="ti" id="drName" placeholder="Psychiatrist name" oninput="save();refresh()" style="flex:1 1 130px;min-width:100px">
     <input class="ti" id="drQuals" placeholder="FRANZCP / RANZCP" oninput="save();refresh()" style="flex:0 1 130px;min-width:80px">
     <input class="ti" id="ptDate" type="date" style="flex:0 0 120px" oninput="save();refresh()">
@@ -1105,7 +1105,8 @@ select.inp{appearance:none}
         <button class="abtn primary" onclick="printFullDoc()">Print / PDF</button>
         <button class="abtn" onclick="dlDocx()">Download .docx</button>
         <button class="abtn" onclick="dlRtf()">Download .rtf</button>
-        <button class="abtn" onclick="copyDocBP()">Copy for Best Practice</button>
+        <button class="abtn" onclick="copyDocPlain()">Copy plain text</button>
+        <button class="abtn" onclick="copyDocFormatted()">Copy formatted</button>
       </div>
 
       <!-- Document preview tabs -->
@@ -3669,7 +3670,7 @@ function buildDocHtmlBody(){
 
 function dlDocx(){
   var body = buildDocHtmlBody();
-  var wh = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>@page{margin:2cm}body{font-family:Arial,sans-serif;font-size:10pt;line-height:1.6}h2{font-size:13pt;font-weight:bold;margin-bottom:6pt;margin-top:0}h3{font-size:9pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#555;margin:14pt 0 4pt;border-bottom:1pt solid #ccc;padding-bottom:2pt}p{margin-bottom:8pt}ul{margin:2pt 0 8pt 18pt}li{margin-bottom:3pt}table{border-collapse:collapse;width:100%;font-size:9pt}th,td{border:1pt solid #ccc;padding:4pt 7pt}th{background:#f3f4f6;font-weight:bold}hr{border:none;border-top:1pt solid #e5e7eb}div[style*="page-break-before"]{page-break-before:always;mso-break-type:page-break}</style></head><body>'+body+'</body></html>';
+  var wh = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>@page{margin:2cm}body{font-family:Arial,sans-serif;font-size:10pt;line-height:1.6}h2{font-size:13pt;font-weight:bold;margin:18pt 0 6pt 0}h3{font-size:9pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#555;margin:14pt 0 4pt;border-bottom:1pt solid #ccc;padding-bottom:2pt}p{margin:0 0 8pt 0}ul{margin:2pt 0 10pt 18pt}li{margin-bottom:3pt}table{border-collapse:collapse;width:100%;font-size:9pt;margin:4pt 0 14pt 0}th,td{border:1pt solid #ccc;padding:4pt 7pt}th{background:#f3f4f6;font-weight:bold}hr{border:none;border-top:1pt solid #e5e7eb}div[style*="page-break-before"]{page-break-before:always;mso-break-type:page-break}</style></head><body>'+body+'</body></html>';
   var pat = (f('ptName')||'Patient').replace(/[^a-zA-Z0-9]/g,'_');
   var blob = new Blob(['﻿'+wh],{type:'application/msword;charset=utf-8'});
   var url = URL.createObjectURL(blob);
@@ -3758,43 +3759,78 @@ function htmlToPlainText(html){
   return s.trim();
 }
 
-function copyDocBP(){
-  var sections = buildFullDocHTML();
-  var baseStyle = 'font-family:Arial,sans-serif;font-size:11pt;color:#000000;line-height:1.6;';
+function flashBtn(sel){
+  var btn=document.querySelector(sel);
+  if(!btn)return;
+  var orig=btn.textContent;btn.textContent='Copied!';
+  setTimeout(function(){btn.textContent=orig;},2000);
+}
 
-  // Plain text — built FIRST before any DOM mutation
+// Plain text only — clipboard gets just text/plain so paste targets
+// (e.g. Best Practice) render in their default black text, no inherited styling.
+function copyDocPlain(){
+  var sections = buildFullDocHTML();
   var txt = sections.map(function(sec){ return htmlToPlainText(sec.html); })
     .join('\r\n\r\n==========\r\n\r\n');
+  navigator.clipboard.writeText(txt).then(function(){
+    flashBtn('[onclick="copyDocPlain()"]');
+  });
+}
 
-  // Rich HTML — separate pass, stripped of colours/backgrounds
+// Clean Arial HTML: bold black headings, sensible spacing, no tinted
+// backgrounds. Writes HTML only so rich-text targets don't fall back to
+// the plain-text mime type.
+function copyDocFormatted(){
+  var sections = buildFullDocHTML();
+  var baseStyle = 'font-family:Arial,sans-serif;font-size:11pt;color:#000000;line-height:1.5;';
+
   var htmlParts = sections.map(function(sec){
     var tmp = document.createElement('div');
     tmp.innerHTML = sec.html;
-    tmp.querySelectorAll('h1,h2,h3,h4').forEach(function(el){
-      el.style.cssText = 'font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;color:#000000;margin:10pt 0 3pt 0;';
+    tmp.querySelectorAll('h1,h2').forEach(function(el){
+      el.style.cssText='font-family:Arial,sans-serif;font-size:13pt;font-weight:bold;color:#000000;margin:18pt 0 6pt 0;';
     });
-    tmp.querySelectorAll('p,li,td,th').forEach(function(el){
-      el.style.color='#000000';el.style.background='none';
-      el.style.fontFamily='Arial,sans-serif';el.style.fontSize='11pt';
+    tmp.querySelectorAll('h3').forEach(function(el){
+      el.style.cssText='font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;color:#000000;margin:12pt 0 4pt 0;';
     });
-    // Strip all background/color from other elements
+    tmp.querySelectorAll('h4').forEach(function(el){
+      el.style.cssText='font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;color:#000000;margin:10pt 0 3pt 0;';
+    });
+    tmp.querySelectorAll('p').forEach(function(el){
+      el.style.cssText='font-family:Arial,sans-serif;font-size:11pt;color:#000000;margin:0 0 8pt 0;line-height:1.5;';
+    });
+    tmp.querySelectorAll('ul,ol').forEach(function(el){
+      el.style.cssText='font-family:Arial,sans-serif;font-size:11pt;color:#000000;margin:2pt 0 10pt 18pt;';
+    });
+    tmp.querySelectorAll('li').forEach(function(el){
+      el.style.cssText='font-family:Arial,sans-serif;font-size:11pt;color:#000000;margin:0 0 3pt 0;';
+    });
+    tmp.querySelectorAll('table').forEach(function(el){
+      el.style.cssText='border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:11pt;color:#000000;margin:4pt 0 14pt 0;';
+    });
+    tmp.querySelectorAll('td').forEach(function(el){
+      el.style.cssText='font-family:Arial,sans-serif;font-size:11pt;color:#000000;border:1px solid #ccc;padding:5pt 8pt;vertical-align:top;';
+    });
+    tmp.querySelectorAll('th').forEach(function(el){
+      el.style.cssText='font-family:Arial,sans-serif;font-size:11pt;color:#000000;background:#f0f0f0;font-weight:bold;border:1px solid #ccc;padding:5pt 8pt;text-align:left;';
+    });
+    // Strip residual background/color from any other styled nodes so nothing inherits tint
     tmp.querySelectorAll('[style]').forEach(function(el){
-      el.style.background='none';el.style.backgroundColor='none';
-      if(!el.matches('h1,h2,h3,h4,p,li,td,th,b,strong,em,i'))el.style.color='#000000';
+      if(!el.matches('h1,h2,h3,h4,p,li,td,th,table,ul,ol')){
+        el.style.color='#000000';el.style.background='none';el.style.backgroundColor='';
+      }
     });
     return '<div style="'+baseStyle+'">'+tmp.innerHTML+'</div>';
-  }).join('<hr style="border:none;border-top:1px solid #ccc;margin:14pt 0;">');
+  }).join('<div style="margin:14pt 0"></div>');
 
   var fullHtml = '<html><body style="'+baseStyle+'margin:0;padding:0;">'+htmlParts+'</body></html>';
 
   try {
     var htmlBlob = new Blob([fullHtml], {type:'text/html'});
-    var txtBlob = new Blob([txt], {type:'text/plain'});
-    navigator.clipboard.write([new ClipboardItem({'text/html':htmlBlob,'text/plain':txtBlob})]).then(function(){
-      var btn = document.querySelector('[onclick="copyDocBP()"]');
-      if(btn){var orig=btn.textContent;btn.textContent='Copied!';setTimeout(function(){btn.textContent=orig;},2000);}
-    }).catch(function(){navigator.clipboard.writeText(txt);});
-  } catch(e){navigator.clipboard.writeText(txt);}
+    navigator.clipboard.write([new ClipboardItem({'text/html':htmlBlob})]).then(function(){
+      flashBtn('[onclick="copyDocFormatted()"]');
+    }).catch(function(){navigator.clipboard.writeText(fullHtml);});
+  } catch(e){navigator.clipboard.writeText(fullHtml);}
 }
 
 // ─── AUTO-DSM LOGIC ──────────────────────────────────────────────────────────
