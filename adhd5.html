@@ -353,7 +353,7 @@ select.inp{appearance:none}
 
 <div class="topbar">
   <div class="tb-row">
-    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v6.0</span></span>
+    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v6.1</span></span>
     <input class="ti" id="drName" placeholder="Psychiatrist name" oninput="save();refresh()" style="flex:1 1 130px;min-width:100px">
     <input class="ti" id="drQuals" placeholder="FRANZCP / RANZCP" oninput="save();refresh()" style="flex:0 1 130px;min-width:80px">
     <input class="ti" id="ptDate" type="date" style="flex:0 0 120px" oninput="save();refresh()">
@@ -1484,8 +1484,8 @@ const TIT_MEDS={
 // Per-medication script defaults: tabs, repeats (0-5), prescription interval (days)
 // perStrength = generate one script per distinct strength used in titration
 const SCRIPT_DEFAULTS={
-  dex:{tabs:100,repeats:5,interval:20,form:'tab',unit:'mg',fixedStrength:5},
-  ritalinIR:{tabs:100,repeats:5,interval:20,form:'tab',unit:'mg',fixedStrength:10},
+  dex:{tabs:100,repeats:5,interval:20,form:'tab',unit:'mg',fixedStrength:5,scriptName:'Dexamfetamine IR'},
+  ritalinIR:{tabs:100,repeats:5,interval:20,form:'tab',unit:'mg',fixedStrength:10,scriptName:'Methylphenidate IR'},
   ritalinLA:{tabs:30,repeats:5,interval:20,form:'cap',unit:'mg'},
   concerta:{tabs:30,repeats:5,interval:20,form:'tab',unit:'mg'},
   vyvanse2030:{tabs:30,repeats:5,interval:20,form:'cap',unit:'mg',perStrength:true},
@@ -1908,7 +1908,8 @@ function renderScripts(){
   if(!titMeds.length){el.innerHTML='<div style="font-size:12px;color:var(--muted);padding:6px 0">Add a medication above to generate script details.</div>';refreshTitOutputs();return;}
   el.innerHTML=titMeds.map(function(m,mi){
     ensureScripts(m);
-    var nm=m.key==='other'&&m.customName?m.customName:m.def.name;
+    var def=SCRIPT_DEFAULTS[m.key]||SCRIPT_DEFAULTS.other;
+    var nm=m.key==='other'&&m.customName?m.customName:(def.scriptName||m.def.name);
     var rows=m.scripts.map(function(s,si){return renderScriptRow(m,mi,s,si);}).join('');
     return '<div class="script-med-block">'
       +'<div class="script-med-head">'+esc(nm)+'</div>'
@@ -1923,8 +1924,8 @@ function buildScriptLines(){
   var lines=[];
   titMeds.forEach(function(m){
     if(!m.scripts||!m.scripts.length)return;
-    var nm=m.key==='other'&&m.customName?m.customName:m.def.name;
     var def=SCRIPT_DEFAULTS[m.key]||SCRIPT_DEFAULTS.other;
+    var nm=m.key==='other'&&m.customName?m.customName:(def.scriptName||m.def.name);
     var unit=def.unit||m.def.unit||'';
     var form=def.form||m.def.form||'tab';
     m.scripts.forEach(function(s){
