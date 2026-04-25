@@ -370,7 +370,7 @@ select.inp{appearance:none}
 
 <div class="topbar">
   <div class="tb-row">
-    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v6.3</span></span>
+    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v6.4</span></span>
     <input class="ti" id="drName" placeholder="Psychiatrist name" oninput="save();refresh()" style="flex:1 1 130px;min-width:100px">
     <input class="ti" id="drQuals" placeholder="FRANZCP / RANZCP" oninput="save();refresh()" style="flex:0 1 130px;min-width:80px">
     <input class="ti" id="ptDate" type="date" style="flex:0 0 120px" oninput="save();refresh()">
@@ -1141,25 +1141,17 @@ select.inp{appearance:none}
     <div class="out-head"><span class="out-title">Script text -- eScript</span><button class="cbtn" onclick="copyOut('out-script',this)">Copy</button></div>
     <div class="out-text" id="out-script">--</div>
   </div>
-  <div class="out-panel" id="heidi-panel">
-    <div class="out-head" onclick="toggleHeidi(event)" style="cursor:pointer">
-      <span class="out-title">Heidi / AI context -- plain text <span id="heidi-arrow" style="display:inline-block;margin-left:4px;font-size:9px;color:#64748b;transition:transform .15s">▶</span></span>
-      <button class="cbtn" onclick="event.stopPropagation();copyOut('out-heidi',this)">Copy full report</button>
-    </div>
-    <div class="out-text" id="out-heidi" style="display:none">--</div>
-  </div>
-
   <!-- Full Assessment Report (official formatted version) -->
   <div class="out-panel" id="report-panel">
     <div class="out-head" onclick="toggleReport(event)" style="cursor:pointer;flex-wrap:wrap;gap:5px;row-gap:6px">
-      <span class="out-title">Full Assessment Report <span id="report-arrow" style="display:inline-block;margin-left:4px;font-size:9px;color:#64748b;transition:transform .15s">▶</span></span>
+      <span class="out-title">Full Assessment Report <span id="report-arrow" style="display:inline-block;margin-left:4px;font-size:9px;color:#64748b;transition:transform .15s;transform:rotate(90deg)">▶</span></span>
       <div style="display:flex;gap:4px;flex-wrap:wrap;margin-left:auto" onclick="event.stopPropagation()">
-        <button class="cbtn" onclick="copyReportFormatted()">Copy formatted</button>
-        <button class="cbtn" onclick="copyReportPlain()">Copy plain</button>
-        <button class="cbtn" onclick="dlReportDocx()">Download Word</button>
+        <button class="cbtn" onclick="copyReportFormatted()">Copy</button>
+        <button class="cbtn" onclick="dlReportDocx()">Download .docx</button>
+        <button class="cbtn" onclick="copyReportPlain()">Copy plain text</button>
       </div>
     </div>
-    <div id="out-report" style="display:none;background:#fff;color:#000;padding:22px 26px;max-height:560px;overflow-y:auto;font-family:Arial,sans-serif;font-size:11pt;line-height:1.5"></div>
+    <div id="out-report" style="background:#fff;color:#000;padding:22px 26px;font-family:Arial,sans-serif;font-size:11pt;line-height:1.5"></div>
   </div>
 
   <!-- PATIENT DOCUMENT BUILDER -->
@@ -2359,7 +2351,6 @@ function refreshTitOutputs(){
   if(dp)dp.innerHTML=titBuildDayHTML();
   if(pp)pp.textContent=titBuildPlain();
   var se=$('out-script');if(se)se.textContent=buildScript();
-  var he=$('out-heidi');if(he)he.textContent=buildHeidi();
   if(typeof refreshReport==='function')refreshReport();
   if(typeof refreshDocPreview==='function')refreshDocPreview();
 }
@@ -3352,14 +3343,6 @@ function copyOut(id,btn){
   var el=$(id);if(!el)return;
   navigator.clipboard.writeText(el.textContent).then(function(){var orig=btn.textContent;btn.textContent='Copied';btn.classList.add('copied');setTimeout(function(){btn.textContent=orig;btn.classList.remove('copied');},2000);});
 }
-function toggleHeidi(e){
-  if(e&&e.target&&e.target.closest('button'))return;
-  var box=$('out-heidi'),arrow=$('heidi-arrow');
-  if(!box)return;
-  var open=box.style.display!=='none';
-  box.style.display=open?'none':'block';
-  if(arrow)arrow.style.transform=open?'rotate(0deg)':'rotate(90deg)';
-}
 
 // ─── REVIEW TYPE + FOLLOW-UP STATE ────────────────────────────────────────────
 function setReviewType(val,btn){
@@ -3420,20 +3403,34 @@ function buildFullReportFollowUp(rt){
   h+='<div style="'+F+'font-size:11pt;color:#444;margin-top:2pt;">Attention-Deficit / Hyperactivity Disorder — Review Note</div>';
   h+='</div>';
 
-  // Identifier table
-  function row(a,av,b,bv){
-    return '<tr>'
-      +'<td style="'+F+'padding:3pt 8pt 3pt 0;width:22%;vertical-align:top;"><strong>'+a+'</strong></td>'
-      +'<td style="'+F+'padding:3pt 14pt 3pt 0;width:28%;vertical-align:top;">'+av+'</td>'
-      +'<td style="'+F+'padding:3pt 8pt 3pt 0;width:22%;vertical-align:top;"><strong>'+b+'</strong></td>'
-      +'<td style="'+F+'padding:3pt 0 3pt 0;width:28%;vertical-align:top;">'+bv+'</td>'
-      +'</tr>';
+  // Identifier table — only fill cells with values
+  function buildIdRowsFu(items){
+    var pairs='';
+    for(var i=0;i<items.length;i+=2){
+      var a=items[i],b=items[i+1];
+      pairs+='<tr>'
+        +'<td style="'+F+'padding:3pt 8pt 3pt 0;width:22%;vertical-align:top;"><strong>'+a[0]+'</strong></td>'
+        +'<td style="'+F+'padding:3pt 14pt 3pt 0;width:28%;vertical-align:top;">'+a[1]+'</td>';
+      if(b){
+        pairs+='<td style="'+F+'padding:3pt 8pt 3pt 0;width:22%;vertical-align:top;"><strong>'+b[0]+'</strong></td>'
+              +'<td style="'+F+'padding:3pt 0 3pt 0;width:28%;vertical-align:top;">'+b[1]+'</td>';
+      } else {
+        pairs+='<td colspan="2" style="'+F+'padding:3pt 0;"></td>';
+      }
+      pairs+='</tr>';
+    }
+    return pairs;
   }
-  h+='<table style="border-collapse:collapse;width:100%;'+F+'font-size:11pt;margin:0 0 14pt 0;border-top:1.5pt solid #000;border-bottom:1.5pt solid #000;">';
-  h+=row('Patient', esc(name)+(age?' ('+esc(age)+' y)':'')+(g?' · '+esc(g):''), 'Date of review', ds);
-  h+=row('Review type', esc(rt), 'Occupation', esc(occ||'—'));
-  if(dr||gp) h+=row('Psychiatrist', dr?esc(dr)+(drQuals?' '+esc(drQuals):''):'—', 'Referring GP', gp?esc(gp):'—');
-  h+='</table>';
+  var idItems=[];
+  idItems.push(['Patient', esc(name)+(age?' ('+esc(age)+' y)':'')+(g?' · '+esc(g):'')]);
+  idItems.push(['Date of review', ds]);
+  idItems.push(['Review type', esc(rt)]);
+  if(occ) idItems.push(['Occupation', esc(occ)]);
+  if(f('ptLiving')) idItems.push(['Living situation', esc(f('ptLiving'))]);
+  if(dr) idItems.push(['Psychiatrist', esc(dr)+(drQuals?' '+esc(drQuals):'')]);
+  if(gp) idItems.push(['Referring GP', esc(gp)]);
+  h+='<table style="border-collapse:collapse;width:100%;'+F+'font-size:11pt;margin:0 0 14pt 0;border-top:1.5pt solid #000;border-bottom:1.5pt solid #000;">'
+    +buildIdRowsFu(idItems)+'</table>';
 
   function sec(t){return '<div style="'+F+'font-size:12pt;font-weight:bold;margin:16pt 0 6pt 0;padding-bottom:2pt;border-bottom:.5pt solid #888;">'+t+'</div>';}
   function p(t){return '<div style="'+F+'font-size:11pt;line-height:1.5;margin:0 0 8pt 0;">'+t+'</div>';}
@@ -3444,12 +3441,10 @@ function buildFullReportFollowUp(rt){
   }
   function nl(t){return esc(t).replace(/\n/g,'<br>');}
 
-  var n=1;
-
   // Medication response + adherence + side effects
   var sfx=SIDE_FX.filter(function(s){return S.sideFx&&S.sideFx[s.id];});
   if(S.medResponse||S.adherence||sfx.length){
-    h+=sec(n+++'. Medication Response and Tolerability');
+    h+=sec('Medication Response and Tolerability');
     var rItems=[];
     if(S.medResponse) rItems.push('<strong>Response / efficacy:</strong> '+esc(S.medResponse));
     if(S.adherence) rItems.push('<strong>Adherence:</strong> '+esc(S.adherence));
@@ -3458,14 +3453,14 @@ function buildFullReportFollowUp(rt){
   }
 
   // SafeScript / RTPM (prescribing)
-  h+=sec(n+++'. SafeScript / RTPM Check');
+  h+=sec('SafeScript / RTPM Check');
   var ssLine='<strong>Status:</strong> '+esc(S.safeScript||'Not checked');
   if(f('ssDetail')) ssLine+=' — '+esc(f('ssDetail'));
   h+=p(ssLine);
 
   // Session notes
   if(f('reviewNotes')){
-    h+=sec(n+++'. Session Notes');
+    h+=sec('Session Notes');
     h+=p(nl(f('reviewNotes')));
   }
 
@@ -3478,13 +3473,13 @@ function buildFullReportFollowUp(rt){
   if(S.ecg&&S.ecg!=='Not done') invItems.push('<strong>ECG:</strong> '+esc(S.ecg));
   if(S.uds&&S.uds!=='Not done') invItems.push('<strong>UDS:</strong> '+esc(S.uds)+(f('udsDetail')?' ('+esc(f('udsDetail'))+')':''));
   if(invItems.length){
-    h+=sec(n+++'. Investigations');
+    h+=sec('Investigations');
     h+=list(invItems);
   }
 
   // Management plan
   if(titMeds.length||f('rationaleNotes')||f('rxNotes')){
-    h+=sec(n+++'. Management Plan');
+    h+=sec('Management Plan');
     if(f('rationaleNotes')) h+=p('<strong>Rationale:</strong> '+nl(f('rationaleNotes')));
     if(titMeds.length){
       titMeds.forEach(function(m){
@@ -3508,7 +3503,7 @@ function buildFullReportFollowUp(rt){
   // Follow-up
   var fuApptStr=getFuApptStr(),fuMonStr=getFuMonStr(),fuNPList=getFuNPList();
   if(fuApptStr||fuMonStr||fuNPList.length||f('fuNotes')){
-    h+=sec(n+++'. Follow-Up and Monitoring');
+    h+=sec('Follow-Up and Monitoring');
     var fuItems=[];
     if(fuApptStr) fuItems.push('<strong>Appointments:</strong> '+esc(fuApptStr));
     if(fuMonStr) fuItems.push('<strong>GP monitoring:</strong> '+esc(fuMonStr));
@@ -3522,12 +3517,12 @@ function buildFullReportFollowUp(rt){
   // Educational material
   var peDone=getPEDoneItems();
   if(peDone.length){
-    h+=sec(n+++'. Educational Material Provided');
+    h+=sec('Educational Material Provided');
     h+=list(peDone.map(esc));
   }
 
   if(f('reviewNotes')){
-    h+=sec(n+++'. Additional Notes');
+    h+=sec('Additional Notes');
     h+=p(nl(f('reviewNotes')));
   }
 
@@ -3557,20 +3552,34 @@ function buildFullReport(){
   h+='<div style="'+F+'font-size:11pt;color:#444;margin-top:2pt;">Adult Attention-Deficit / Hyperactivity Disorder Assessment</div>';
   h+='</div>';
 
-  // Identifier block
-  function row(a,av,b,bv){
-    return '<tr>'
-      +'<td style="'+F+'padding:3pt 8pt 3pt 0;width:22%;vertical-align:top;"><strong>'+a+'</strong></td>'
-      +'<td style="'+F+'padding:3pt 14pt 3pt 0;width:28%;vertical-align:top;">'+av+'</td>'
-      +'<td style="'+F+'padding:3pt 8pt 3pt 0;width:22%;vertical-align:top;"><strong>'+b+'</strong></td>'
-      +'<td style="'+F+'padding:3pt 0 3pt 0;width:28%;vertical-align:top;">'+bv+'</td>'
-      +'</tr>';
+  // Identifier block — only include cells that have values, paired into rows.
+  function buildIdRows(items){
+    var pairs='';
+    for(var i=0;i<items.length;i+=2){
+      var a=items[i],b=items[i+1];
+      pairs+='<tr>'
+        +'<td style="'+F+'padding:3pt 8pt 3pt 0;width:22%;vertical-align:top;"><strong>'+a[0]+'</strong></td>'
+        +'<td style="'+F+'padding:3pt 14pt 3pt 0;width:28%;vertical-align:top;">'+a[1]+'</td>';
+      if(b){
+        pairs+='<td style="'+F+'padding:3pt 8pt 3pt 0;width:22%;vertical-align:top;"><strong>'+b[0]+'</strong></td>'
+              +'<td style="'+F+'padding:3pt 0 3pt 0;width:28%;vertical-align:top;">'+b[1]+'</td>';
+      } else {
+        pairs+='<td colspan="2" style="'+F+'padding:3pt 0;"></td>';
+      }
+      pairs+='</tr>';
+    }
+    return pairs;
   }
-  h+='<table style="border-collapse:collapse;width:100%;'+F+'font-size:11pt;margin:0 0 14pt 0;border-top:1.5pt solid #000;border-bottom:1.5pt solid #000;">';
-  h+=row('Patient', esc(name)+(age?' ('+esc(age)+' y)':'')+(g?' · '+esc(g):''), 'Date of assessment', ds);
-  if(occ||f('ptLiving')) h+=row('Occupation', esc(occ||'—'), 'Living situation', esc(f('ptLiving')||'—'));
-  if(dr||gp) h+=row('Psychiatrist', dr?esc(dr)+(drQuals?' '+esc(drQuals):''):'—', 'Referring GP', gp?esc(gp):'—');
-  h+='</table>';
+  var idItems=[];
+  idItems.push(['Patient', esc(name)+(age?' ('+esc(age)+' y)':'')+(g?' · '+esc(g):'')]);
+  idItems.push(['Date of assessment', ds]);
+  if(occ) idItems.push(['Occupation', esc(occ)]);
+  if(f('ptLiving')) idItems.push(['Living situation', esc(f('ptLiving'))]);
+  if(dr) idItems.push(['Psychiatrist', esc(dr)+(drQuals?' '+esc(drQuals):'')]);
+  if(gp) idItems.push(['Referring GP', esc(gp)]);
+  if(f('ptOtherPresent')) idItems.push(['Others present', esc(f('ptOtherPresent'))]);
+  h+='<table style="border-collapse:collapse;width:100%;'+F+'font-size:11pt;margin:0 0 14pt 0;border-top:1.5pt solid #000;border-bottom:1.5pt solid #000;">'
+    +buildIdRows(idItems)+'</table>';
 
   function sec(t){return '<div style="'+F+'font-size:12pt;font-weight:bold;margin:16pt 0 6pt 0;padding-bottom:2pt;border-bottom:.5pt solid #888;">'+t+'</div>';}
   function p(t){return '<div style="'+F+'font-size:11pt;line-height:1.5;margin:0 0 8pt 0;">'+t+'</div>';}
@@ -3582,7 +3591,7 @@ function buildFullReport(){
   function nl(t){return esc(t).replace(/\n/g,'<br>');}
 
   // 1. Referral & Presenting Concerns
-  h+=sec('1. Referral and Presenting Concerns');
+  h+=sec('Referral and Presenting Concerns');
   var refBits=[];
   if(f('referralReason')) refBits.push('<strong>Referral reason:</strong> '+esc(f('referralReason')));
   if(S.consultType) refBits.push('<strong>Consultation type:</strong> '+esc(S.consultType));
@@ -3605,12 +3614,12 @@ function buildFullReport(){
   if(S.screening.vanderbiltParent&&S.screening.vanderbiltParent!=='Not provided') screenItems.push('<strong>Vanderbilt (parents):</strong> '+esc(S.screening.vanderbiltParent));
   if(S.screening.vanderbiltTeacher&&S.screening.vanderbiltTeacher!=='Not provided') screenItems.push('<strong>Vanderbilt (teacher):</strong> '+esc(S.screening.vanderbiltTeacher));
   if(f('screenNotes')) screenItems.push('<strong>Other collateral:</strong> '+esc(f('screenNotes')));
-  if(screenItems.length){ h+=sec('2. Screening and Collateral'); h+=list(screenItems); }
+  if(screenItems.length){ h+=sec('Screening and Collateral'); h+=list(screenItems); }
 
   // 3. Developmental / symptom history
   var devYes=DEV.filter(function(d){return S.dev[d.id]&&d.type!=='label';});
   if(devYes.length||f('devNotes')){
-    h+=sec('3. Developmental and Symptom History');
+    h+=sec('Developmental and Symptom History');
     var devNorm=devYes.filter(function(d){return d.type!=='sym';});
     var inattSx=devYes.filter(function(d){return d.id&&d.id.indexOf('sym_inatt')===0;});
     var hiSx=devYes.filter(function(d){return d.id&&d.id.indexOf('sym_hi')===0;});
@@ -3625,11 +3634,11 @@ function buildFullReport(){
     var famPresent=FAM_PSYCH.filter(function(item){return S.fam[item.id]==='Present';});
     var famAllNil=FAM_PSYCH.every(function(item){return S.fam[item.id]==='Nil';});
     if(famPresent.length){
-      h+=sec('4. Family Psychiatric History');
+      h+=sec('Family Psychiatric History');
       h+=list(famPresent.map(function(item){return esc(item.label);}));
       if(f('famNotes')) h+=p('<strong>Details:</strong> '+nl(f('famNotes')));
     } else if(famAllNil){
-      h+=sec('4. Family Psychiatric History');
+      h+=sec('Family Psychiatric History');
       h+=p('Nil significant family psychiatric history reported.');
     }
   }
@@ -3637,7 +3646,7 @@ function buildFullReport(){
   // 5. Medical history and medications
   var medFlagged=MEDICAL.filter(function(m){return S.medical[m.id];});
   if(medFlagged.length||f('medHistory')||f('currentMeds')||f('allergies')||f('medNotes')){
-    h+=sec('5. Medical History and Medications');
+    h+=sec('Medical History and Medications');
     var medItems=[];
     if(medFlagged.length) medItems.push('<strong>Medical conditions:</strong> '+medFlagged.map(function(m){return esc(m.label);}).join(', '));
     if(f('medHistory')) medItems.push('<strong>Past medical / psychiatric history:</strong> '+esc(f('medHistory')));
@@ -3651,7 +3660,7 @@ function buildFullReport(){
   var currSubs=SUBS.filter(function(s){return S.substances['sub_'+s.replace(/\W/g,'_')]==='Current';});
   var pastSubs=SUBS.filter(function(s){return S.substances['sub_'+s.replace(/\W/g,'_')]==='Past';});
   if(currSubs.length||pastSubs.length||f('subNotes')){
-    h+=sec('6. Substance Use');
+    h+=sec('Substance Use');
     var subItems=[];
     if(currSubs.length) subItems.push('<strong>Current:</strong> '+currSubs.map(esc).join(', '));
     if(pastSubs.length) subItems.push('<strong>Past:</strong> '+pastSubs.map(esc).join(', '));
@@ -3663,7 +3672,7 @@ function buildFullReport(){
   var mseItems=[];
   MSE.forEach(function(sectn){var v=mseVals(sectn.id);if(v.length)mseItems.push('<strong>'+esc(sectn.label)+':</strong> '+v.map(esc).join(', '));});
   if(mseItems.length||f('mseNotes')){
-    h+=sec('7. Mental State Examination');
+    h+=sec('Mental State Examination');
     if(mseItems.length) h+=list(mseItems);
     if(f('mseNotes')) h+=p(nl(f('mseNotes')));
   }
@@ -3681,19 +3690,19 @@ function buildFullReport(){
   if(f('ptHeight')) safeItems.push('<strong>Height:</strong> '+esc(f('ptHeight'))+' cm');
   var cardFlagged=CARDIAC.filter(function(c){return c.flag&&S.cardiac[c.id];});
   if(cardFlagged.length) safeItems.push('<strong>Cardiac flags:</strong> '+cardFlagged.map(function(c){return esc(c.label);}).join('; '));
-  h+=sec('8. Safety and Prescribing Screen');
+  h+=sec('Safety and Prescribing Screen');
   h+=list(safeItems);
   if(f('cardiacNotes')) h+=p('<strong>Cardiac notes:</strong> '+nl(f('cardiacNotes')));
 
   // 9. Validity concerns
   var malFlagged=MAL.filter(function(m){return S.malingering[m.id];});
   if(malFlagged.length){
-    h+=sec('9. Validity Considerations');
+    h+=sec('Validity Considerations');
     h+=list(malFlagged.map(function(m){return esc(m.label);}));
   }
 
   // 10. Diagnosis and formulation
-  h+=sec((malFlagged.length?'10':'9')+'. Diagnosis and Formulation');
+  h+=sec('Diagnosis and Formulation');
   var dsmMet=DSM.filter(function(d){return S.dsm[d.id];});
   if(dsmMet.length){
     h+=p('<strong>DSM-5-TR criteria met:</strong>');
@@ -3710,10 +3719,9 @@ function buildFullReport(){
   if(dx) h+=p('<strong>Diagnosis:</strong> '+esc(dx));
   if(f('dxNotes')) h+=p('<strong>Formulation:</strong> '+nl(f('dxNotes')));
 
-  // 11. Management plan
-  var mgmtN=(malFlagged.length?11:10);
-  if(titMeds.length||f('rationaleNotes')||f('rxNotes')){
-    h+=sec(mgmtN+'. Management Plan');
+  // Management plan
+  if(titMeds.length||regScripts.length||f('rationaleNotes')||f('rxNotes')){
+    h+=sec('Management Plan');
     if(f('rationaleNotes')) h+=p('<strong>Rationale:</strong> '+nl(f('rationaleNotes')));
     if(titMeds.length){
       titMeds.forEach(function(m){
@@ -3734,13 +3742,12 @@ function buildFullReport(){
     }
   }
 
-  // 12. Follow-up
-  var fuN=mgmtN+(titMeds.length||f('rationaleNotes')||f('rxNotes')?1:0);
+  // Follow-up
   var fuApptStr=(typeof getFuApptStr==='function')?getFuApptStr():'';
   var fuMonStr=(typeof getFuMonStr==='function')?getFuMonStr():'';
   var fuNPList=(typeof getFuNPList==='function')?getFuNPList():[];
   if(fuApptStr||fuMonStr||fuNPList.length||f('fuNotes')){
-    h+=sec(fuN+'. Follow-Up and Monitoring');
+    h+=sec('Follow-Up and Monitoring');
     var fuItems=[];
     if(fuApptStr) fuItems.push('<strong>Appointments:</strong> '+esc(fuApptStr));
     if(fuMonStr) fuItems.push('<strong>GP monitoring:</strong> '+esc(fuMonStr));
@@ -3750,14 +3757,12 @@ function buildFullReport(){
     if(provideList.length||provideOther) fuItems.push('<strong>Patient to provide:</strong> '+provideList.concat(provideOther?[provideOther]:[]).map(esc).join(', ')+(provideTF?' (by '+esc(provideTF)+')':''));
     if(fuItems.length) h+=list(fuItems);
     if(f('fuNotes')) h+=p(nl(f('fuNotes')));
-    fuN++;
-  } else { fuN = null; }
+  }
 
   // Educational material
   var peDone=(typeof getPEDoneItems==='function')?getPEDoneItems():[];
   if(peDone.length){
-    var eduN=fuN||mgmtN+1;
-    h+=sec(eduN+'. Educational Material Provided');
+    h+=sec('Educational Material Provided');
     h+=list(peDone.map(esc));
   }
 
