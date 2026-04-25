@@ -261,6 +261,25 @@ select.inp{appearance:none}
 .fu-ctag button:hover{color:var(--red)}
 /* ── Titration system ── */
 .tit-pgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:2px}
+.tit-grp-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:8px 0 4px}
+.tit-med-list{display:flex;flex-direction:column;gap:4px;margin-bottom:6px}
+.tit-med-item{transition:opacity .12s}
+.tit-med-item.dim{opacity:.35}
+.tit-med-item.dim .tit-med-name{cursor:pointer}
+.tit-med-name{display:flex;align-items:center;justify-content:space-between;width:100%;background:#fafbfc;border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;text-align:left;font:600 13px var(--sans);color:var(--text);cursor:pointer;transition:all .12s}
+.tit-med-name:hover{border-color:var(--primary);background:var(--primary-bg);color:var(--primary)}
+.tit-med-item.on .tit-med-name{background:var(--primary);border-color:var(--primary);color:#fff}
+.tit-med-item.added .tit-med-name{border-color:var(--green)}
+.tit-med-item.on.added .tit-med-name{background:var(--green);border-color:var(--green)}
+.tit-med-check{color:var(--green);margin-right:6px;font-weight:800}
+.tit-med-item.on .tit-med-check{color:#fff}
+.tit-med-arrow{font-size:11px;color:inherit;opacity:.7}
+.tit-proto-row{display:flex;flex-wrap:wrap;gap:5px;padding:7px 0 4px 8px;background:#f0f5ff;border:1px solid #cfe1f9;border-top:none;border-radius:0 0 8px 8px;margin-top:-2px;padding:8px 10px}
+.tit-proto-btn{padding:6px 12px;border-radius:6px;border:1.5px solid var(--border);background:#fff;color:var(--text);font:600 12px var(--sans);cursor:pointer;transition:all .12s}
+.tit-proto-btn:hover{border-color:var(--primary);background:var(--primary-bg);color:var(--primary)}
+.tit-proto-btn.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.tit-proto-rm{padding:6px 11px;border-radius:6px;border:1.5px solid var(--red);background:#fff;color:var(--red);font:600 11px var(--sans);cursor:pointer;margin-left:auto}
+.tit-proto-rm:hover{background:var(--red-bg)}
 .tit-pb{background:#fafbfc;border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;text-align:left;width:100%;transition:all .13s;cursor:pointer;font-family:var(--sans)}
 .tit-pb:hover{border-color:var(--primary);background:var(--primary-bg)}
 .tit-pb.on{background:var(--primary);border-color:var(--primary);color:#fff}
@@ -370,7 +389,7 @@ select.inp{appearance:none}
 
 <div class="topbar">
   <div class="tb-row">
-    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v6.4</span></span>
+    <span class="topbar-title">ADHD <span style="font-size:9px;font-weight:600;color:#64748b;letter-spacing:normal;text-transform:none;margin-left:2px">v6.5</span></span>
     <input class="ti" id="drName" placeholder="Psychiatrist name" oninput="save();refresh()" style="flex:1 1 130px;min-width:100px">
     <input class="ti" id="drQuals" placeholder="FRANZCP / RANZCP" oninput="save();refresh()" style="flex:0 1 130px;min-width:80px">
     <input class="ti" id="ptDate" type="date" style="flex:0 0 120px" oninput="save();refresh()">
@@ -1013,25 +1032,8 @@ select.inp{appearance:none}
     <div class="cb" style="padding:0">
       <!-- Protocol Picker -->
       <div style="padding:10px 13px 6px">
-        <div class="fl" style="margin-top:0">Choose protocol <span style="font-weight:400;font-size:10px;text-transform:none;letter-spacing:0;color:var(--muted)">— tap to load, can combine</span></div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:7px 0 4px">Stimulants</div>
-        <div class="tit-pgrid" id="tit-preset-grid">
-          <button class="tit-pb" onclick="titLoadMed('dex',this)"><span class="tit-pn">Dexamphetamine IR</span><span class="tit-ps">5mg tabs · start low</span></button>
-          <button class="tit-pb" onclick="titLoadMed('ritalinIR',this)"><span class="tit-pn">Ritalin IR</span><span class="tit-ps">10mg tabs · standard</span></button>
-          <button class="tit-pb" onclick="titLoadMed('ritalinLA',this)"><span class="tit-pn">Ritalin LA</span><span class="tit-ps">Capsules 10→40mg</span></button>
-          <button class="tit-pb" onclick="titLoadMed('concerta',this)"><span class="tit-pn">Concerta</span><span class="tit-ps">18→54mg · Dx &lt;18</span></button>
-          <button class="tit-pb" onclick="titLoadMed('vyvanse2030',this)"><span class="tit-pn">Vyvanse 20+30mg</span><span class="tit-ps">Two-cap micro-titration</span></button>
-          <button class="tit-pb" onclick="titLoadMed('vyvanse3050',this)"><span class="tit-pn">Vyvanse 30→50mg</span><span class="tit-ps">Simple 2-step</span></button>
-          <button class="tit-pb" onclick="titLoadMed('vyvanseWater',this)"><span class="tit-pn">Vyvanse water method</span><span class="tit-ps">1mg/mL · 30→70mg</span></button>
-        </div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:8px 0 4px">Non-Stimulants</div>
-        <div class="tit-pgrid">
-          <button class="tit-pb" onclick="titLoadMed('strattera',this)"><span class="tit-pn">Atomoxetine</span><span class="tit-ps">40→80mg · 4–12wk onset</span></button>
-          <button class="tit-pb" onclick="titLoadMed('intuniv',this)"><span class="tit-pn">Guanfacine XR</span><span class="tit-ps">1→4mg nightly</span></button>
-          <button class="tit-pb" onclick="titLoadMed('catnanight',this)"><span class="tit-pn">Clonidine (sleep)</span><span class="tit-ps">50→200mcg nocte</span></button>
-          <button class="tit-pb" onclick="titLoadMed('catnaday',this)"><span class="tit-pn">Clonidine (day)</span><span class="tit-ps">BD dosing titration</span></button>
-          <button class="tit-pb" onclick="titLoadMed('other',this)"><span class="tit-pn">Other / Custom</span><span class="tit-ps">Blank editable</span></button>
-        </div>
+        <div class="fl" style="margin-top:0">Choose medication <span style="font-weight:400;font-size:10px;text-transform:none;letter-spacing:0;color:var(--muted)">— tap a med to see its titration options</span></div>
+        <div id="tit-picker"></div>
       </div>
       <!-- Medication plan list -->
       <div style="padding:0 13px 10px">
@@ -1523,6 +1525,88 @@ const SCRIPT_DEFAULTS={
   other:{tabs:30,repeats:5,interval:20,form:'tab',unit:''}
 };
 
+// Helpers to build dose entries for protocol step lists
+function _d(t,s,q){var fmt=q===0.25?'¼':q===0.5?'½':q===1?'1':q===1.5?'1½':q===2?'2':q===2.5?'2½':q===3?'3':String(q);
+  var f=q===1||q===0.5||q===0.25?'tab':'tabs';
+  return {t:t,type:'str',s:s,q:q,l:fmt+' '+f+' ('+(Math.round(q*s*100)/100)+'mg)'};}
+function _bd(s,q,note){return {label:'',dur:7,unit:'days',ongoing:false,note:note||'',doses:[_d('morning',s,q),_d('midday',s,q)]};}
+function _bdAsym(s,qm,qd,note){return {label:'',dur:7,unit:'days',ongoing:false,note:note||'',doses:[_d('morning',s,qm),_d('midday',s,qd)]};}
+function _tds(s,qm,qd,qa,note,dur,ongoing){return {label:'',dur:dur||7,unit:'days',ongoing:!!ongoing,note:note||'',doses:[_d('morning',s,qm),_d('midday',s,qd),_d('afternoon',s,qa)]};}
+
+function _bdProtocolSteps(s,name){
+  // Reusable BD-style step builders
+  return {
+    bd_normal:[
+      {label:'Days 1-2',dur:2,unit:'days',ongoing:false,note:'Start low. Take on waking.',doses:[_d('morning',s,0.5),_d('midday',s,0.5)]},
+      {label:'Days 3-9',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,1),_d('midday',s,1)]},
+      {label:'Days 10-16',dur:7,unit:'days',ongoing:false,note:'Good tolerability required.',doses:[_d('morning',s,2),_d('midday',s,1)]},
+      {label:'Ongoing',dur:0,unit:'days',ongoing:true,note:'Continue until next review.',doses:[_d('morning',s,2),_d('midday',s,2)]}
+    ],
+    bd_fast:[
+      {label:'Week 1',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,1),_d('midday',s,1)]},
+      {label:'Ongoing',dur:0,unit:'days',ongoing:true,note:'',doses:[_d('morning',s,2),_d('midday',s,2)]}
+    ],
+    bd_slow:[
+      {label:'Week 1',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,0.5),_d('midday',s,0.5)]},
+      {label:'Week 2',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,1),_d('midday',s,1)]},
+      {label:'Week 3',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,1.5),_d('midday',s,1.5)]},
+      {label:'Ongoing',dur:0,unit:'days',ongoing:true,note:'',doses:[_d('morning',s,2),_d('midday',s,2)]}
+    ],
+    bd_to_tds:[
+      {label:'Days 1-2',dur:2,unit:'days',ongoing:false,note:'Start low.',doses:[_d('morning',s,0.5),_d('midday',s,0.5)]},
+      {label:'Days 3-9',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,1),_d('midday',s,1)]},
+      {label:'Days 10-16',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,2),_d('midday',s,2)]},
+      {label:'Days 17-23',dur:7,unit:'days',ongoing:false,note:'Add afternoon dose.',doses:[_d('morning',s,2),_d('midday',s,2),_d('afternoon',s,1)]},
+      {label:'Ongoing',dur:0,unit:'days',ongoing:true,note:'Increase afternoon dose if needed.',doses:[_d('morning',s,2),_d('midday',s,2),_d('afternoon',s,2)]}
+    ],
+    tds_normal:[
+      {label:'Week 1',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,0.5),_d('midday',s,0.5),_d('afternoon',s,0.5)]},
+      {label:'Week 2',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,1),_d('midday',s,1),_d('afternoon',s,1)]},
+      {label:'Week 3',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,2),_d('midday',s,1),_d('afternoon',s,1)]},
+      {label:'Week 4',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,2),_d('midday',s,2),_d('afternoon',s,1)]},
+      {label:'Ongoing',dur:0,unit:'days',ongoing:true,note:'Increase afternoon dose if needed.',doses:[_d('morning',s,2),_d('midday',s,2),_d('afternoon',s,2)]}
+    ],
+    afternoon:[
+      {label:'Ongoing',dur:0,unit:'days',ongoing:true,note:'Take when Vyvanse / long-acting begins to wear off. Increase to 2 tabs if needed.',doses:[_d('afternoon',s,1)]}
+    ],
+    tds_fast:[
+      {label:'Week 1',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,1),_d('midday',s,1),_d('afternoon',s,1)]},
+      {label:'Week 2',dur:7,unit:'days',ongoing:false,note:'',doses:[_d('morning',s,2),_d('midday',s,2),_d('afternoon',s,1)]},
+      {label:'Ongoing',dur:0,unit:'days',ongoing:true,note:'Increase afternoon to 2 tabs if needed.',doses:[_d('morning',s,2),_d('midday',s,2),_d('afternoon',s,2)]}
+    ]
+  };
+}
+
+(function attachIRProtocols(){
+  // Dexamfetamine 5mg
+  var dexS=_bdProtocolSteps(5,'dex');
+  TIT_MEDS.dex.protocols=[
+    {key:'bd_normal',label:'BD normal',steps:dexS.bd_normal},
+    {key:'bd_fast',label:'BD fast',steps:dexS.bd_fast},
+    {key:'bd_slow',label:'BD slow',steps:dexS.bd_slow},
+    {key:'bd_to_tds',label:'BD → TDS',steps:dexS.bd_to_tds},
+    {key:'tds_normal',label:'TDS normal',steps:dexS.tds_normal},
+    {key:'afternoon',label:'Afternoon add-on',steps:dexS.afternoon}
+  ];
+  // Methylphenidate IR 10mg — same protocols + TDS fast
+  var ritS=_bdProtocolSteps(10,'ritalinIR');
+  TIT_MEDS.ritalinIR.protocols=[
+    {key:'bd_normal',label:'BD normal',steps:ritS.bd_normal},
+    {key:'bd_fast',label:'BD fast',steps:ritS.bd_fast},
+    {key:'bd_slow',label:'BD slow',steps:ritS.bd_slow},
+    {key:'bd_to_tds',label:'BD → TDS',steps:ritS.bd_to_tds},
+    {key:'tds_normal',label:'TDS normal',steps:ritS.tds_normal},
+    {key:'tds_fast',label:'TDS fast',steps:ritS.tds_fast},
+    {key:'afternoon',label:'Afternoon add-on',steps:ritS.afternoon}
+  ];
+})();
+
+function getProtocols(key){
+  var def=TIT_MEDS[key];if(!def)return[];
+  if(def.protocols&&def.protocols.length)return def.protocols;
+  return [{key:'default',label:'Standard',steps:def.steps}];
+}
+
 const TIT_MED_INFO={
   dex:{genericName:'Dexamphetamine sulfate',formulation:'Immediate-release tablet (5mg)',onset:'20-30 minutes',peak:'1-2 hours',duration:'3-5 hours',schedule:'Schedule 8 (controlled drug)',sideEffects:'Common: reduced appetite, dry mouth, difficulty sleeping (take last dose before 1pm), headache, increased heart rate and BP, irritability as dose wears off. Less common: weight loss, stomach upset, anxiety.',dietary:'Avoid acidic drinks (juice, vitamin C) within 1 hour of your dose - they reduce absorption significantly.',excipients:'Contains lactose.',storage:'Store below 25 degrees, away from moisture. Keep out of reach of children.',stopping:'Can be stopped abruptly, but discuss with your psychiatrist first.',important:'Do not give to someone else. Report chest pain, palpitations, or significant mood changes immediately.'},
   ritalinIR:{genericName:'Methylphenidate hydrochloride',formulation:'Immediate-release tablet (10mg)',onset:'20-30 minutes',peak:'1-2 hours',duration:'3-5 hours',schedule:'Schedule 8 (controlled drug)',sideEffects:'Common: reduced appetite, difficulty sleeping (take last dose before 1pm), headache, dry mouth, increased heart rate and BP. Less common: rebound mood changes as dose wears off, weight loss.',dietary:'Avoid acidic drinks within 1 hour of dose. Taking with food reduces stomach upset.',excipients:'Contains lactose. Free from gluten and gelatin.',storage:'Store below 25 degrees. Keep out of reach of children.',stopping:'Can be stopped without tapering, but discuss with your psychiatrist first.',important:'Do not give to someone else. Report chest pain, palpitations, or significant mood changes immediately.'},
@@ -1701,12 +1785,77 @@ function titAutoLabel(steps,si){
 }
 var TIT_TIMES=['morning','midday','afternoon','evening','night','6am','7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','8pm','10pm','bedtime'];
 
+var titSelectedMed=null;
+function selectTitMed(key){
+  if(titSelectedMed===key){titSelectedMed=null;}
+  else{titSelectedMed=key;}
+  renderTitPicker();
+}
+function loadTitProtocol(key,protoKey){
+  var def=TIT_MEDS[key];if(!def)return;
+  var protos=getProtocols(key);
+  var proto=protos.filter(function(p){return p.key===protoKey;})[0];
+  if(!proto)return;
+  var idx=titMeds.findIndex(function(m){return m.key===key;});
+  var entry={key:key,def:def,customName:key==='other'?'':'',steps:JSON.parse(JSON.stringify(proto.steps)),proto:protoKey};
+  if(idx>=0)titMeds[idx]=entry;
+  else titMeds.push(entry);
+  renderTitMeds();
+}
 function titLoadMed(key,btn){
+  // Legacy: toggle med in list (not used by new picker but kept for safety)
   var def=TIT_MEDS[key];if(!def)return;
   var idx=titMeds.findIndex(function(m){return m.key===key;});
-  if(idx>=0){titMeds.splice(idx,1);btn.classList.remove('on');renderTitMeds();return;}
-  titMeds.push({key:key,def:def,steps:JSON.parse(JSON.stringify(def.steps))});
-  btn.classList.add('on');renderTitMeds();
+  if(idx>=0){titMeds.splice(idx,1);if(btn)btn.classList.remove('on');renderTitMeds();return;}
+  var protos=getProtocols(key);
+  titMeds.push({key:key,def:def,steps:JSON.parse(JSON.stringify(protos[0].steps)),proto:protos[0].key});
+  if(btn)btn.classList.add('on');renderTitMeds();
+}
+function renderTitPicker(){
+  var el=$('tit-picker');if(!el)return;
+  var groups=[
+    {label:'Stimulants',keys:['dex','ritalinIR','ritalinLA','concerta','vyvanse2030','vyvanse3050','vyvanseWater']},
+    {label:'Non-stimulants',keys:['strattera','intuniv','catnanight','catnaday']},
+    {label:'Other',keys:['other']}
+  ];
+  var html='';
+  groups.forEach(function(g){
+    html+='<div class="tit-grp-label">'+g.label+'</div>';
+    html+='<div class="tit-med-list">';
+    g.keys.forEach(function(k){
+      var def=TIT_MEDS[k];if(!def)return;
+      var added=titMeds.some(function(m){return m.key===k;});
+      var isSel=titSelectedMed===k;
+      var dim=titSelectedMed&&!isSel;
+      html+='<div class="tit-med-item'+(isSel?' on':'')+(dim?' dim':'')+(added?' added':'')+'">';
+      html+='<button class="tit-med-name" onclick="selectTitMed(\''+k+'\')">'
+        +esc(def.name)
+        +(added?'<span class="tit-med-check">✓</span>':'')
+        +'<span class="tit-med-arrow">'+(isSel?'▾':'▸')+'</span>'
+        +'</button>';
+      if(isSel){
+        var protos=getProtocols(k);
+        var current=titMeds.filter(function(m){return m.key===k;})[0];
+        var curProto=current&&current.proto;
+        html+='<div class="tit-proto-row">';
+        protos.forEach(function(p){
+          var on=curProto===p.key;
+          html+='<button class="tit-proto-btn'+(on?' on':'')+'" onclick="loadTitProtocol(\''+k+'\',\''+p.key+'\')">'+esc(p.label)+'</button>';
+        });
+        if(added){
+          html+='<button class="tit-proto-rm" onclick="titRemoveByKey(\''+k+'\')">Remove</button>';
+        }
+        html+='</div>';
+      }
+      html+='</div>';
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+function titRemoveByKey(key){
+  var idx=titMeds.findIndex(function(m){return m.key===key;});
+  if(idx>=0){titMeds.splice(idx,1);renderTitMeds();}
 }
 function titSwitchMed(mi,key){
   var def=TIT_MEDS[key];if(!def)return;
@@ -2153,8 +2302,9 @@ function buildScriptLines(){
 }
 
 function renderTitMeds(){
+  renderTitPicker();
   var el=$('tit-med-plan-list');if(!el)return;
-  if(!titMeds.length){el.innerHTML='<div class="tit-empty">No medication selected yet. Choose a protocol above or <button onclick="titAddBlank()" style="background:none;border:none;color:var(--primary);font:600 12px var(--sans);cursor:pointer;text-decoration:underline;padding:0;">add manually</button>.</div>';renderScripts();return;}
+  if(!titMeds.length){el.innerHTML='<div class="tit-empty">No medication selected yet. Pick one above or <button onclick="titAddBlank()" style="background:none;border:none;color:var(--primary);font:600 12px var(--sans);cursor:pointer;text-decoration:underline;padding:0;">add manually</button>.</div>';renderScripts();return;}
   el.innerHTML=titMeds.map(function(m,mi){return renderTitMedBlock(m,mi);}).join('');
   renderScripts();
 }
