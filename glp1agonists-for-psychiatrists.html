@@ -9,45 +9,49 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;min-height:100vh}
 .topbar{background:var(--navy);padding:10px 14px;border-bottom:3px solid var(--glp);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.topbar-title{font-size:13px;font-weight:800;color:#bae6fd;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
-.topbar-sub{font-size:11px;font-weight:600;color:#94a3b8;letter-spacing:.03em;margin-left:auto}
+.topbar-title{font-size:16px;font-weight:700;color:#bae6fd;white-space:nowrap;flex-shrink:0}
+.topbar-sub{font-size:12.5px;font-weight:500;color:#94a3b8;margin-left:auto}
 .content{max-width:1000px;margin:0 auto;padding:14px 12px 40px}
-.intro{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:14px;font-size:13px;line-height:1.6;color:#374151}
-.intro strong{color:var(--glp-dark)}
-.intro .disclaimer{margin-top:10px;padding:8px 12px;background:#fef3c7;border-left:3px solid #b45309;border-radius:4px;font-size:12px;color:#78350f}
+.intro{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px;font-size:14.5px;line-height:1.6;color:#374151}
+.intro h2{font-size:15px;color:var(--glp-dark);margin:0 0 10px;font-weight:700}
+.intro ul{margin:0 0 12px 18px;padding:0}
+.intro li{margin-bottom:6px}
+.intro .disclaimer{margin-top:14px;padding:10px 14px;background:#fef3c7;border-left:4px solid #b45309;border-radius:6px;font-size:13px;color:#78350f;line-height:1.55}
 .condition-block{margin-bottom:14px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
-.condition-header{padding:10px 14px;font:700 12px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:10px;background:var(--glp-dark)}
+.condition-header{padding:13px 16px;font:700 15px var(--sans);color:#fff;display:flex;align-items:center;gap:10px;background:var(--glp-dark)}
 .cond-sel-btns{margin-left:auto;display:flex;gap:5px;flex-shrink:0}
 .cond-sel-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;font:600 11px var(--sans);padding:3px 10px;border-radius:5px;cursor:pointer;transition:background .1s}
 .cond-sel-btn:hover{background:rgba(255,255,255,.3)}
 .topic-list{background:#fff}
-.pe-group-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 14px 5px;background:#f8fafc;border-top:1px solid #f0f2f5}
+.pe-group-label{font-size:15px;font-weight:700;color:var(--glp-dark);padding:14px 14px 8px;background:#f0f9ff;border-top:1px solid #e0f2fe;border-bottom:2px solid var(--glp);letter-spacing:.005em}
 .pe-section{border-top:1px solid #f4f5f8}
 .pe-section:first-child{border-top:none}
-.pe-header{display:flex;align-items:center;gap:9px;padding:9px 14px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.pe-header{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;user-select:none;-webkit-user-select:none}
 .pe-header:hover{background:#f9fafb}
-.pe-num{font-size:11px;font-weight:700;color:var(--glp-mid);flex-shrink:0;min-width:24px;text-align:center;background:var(--glp-bg);padding:2px 5px;border-radius:4px;line-height:1.3}
-.pe-title{font-weight:600;font-size:13px;color:var(--text);flex:1;line-height:1.35}
-.pe-arrow{font-size:9px;color:var(--muted);flex-shrink:0;transition:transform .15s;margin-left:auto}
+.pe-num{font-size:12px;font-weight:700;color:var(--glp-mid);flex-shrink:0;min-width:26px;text-align:center;background:var(--glp-bg);padding:3px 6px;border-radius:5px;line-height:1.3}
+.pe-title{font-weight:600;font-size:14.5px;color:var(--text);flex:1;line-height:1.4}
+.pe-arrow{font-size:10px;color:var(--muted);flex-shrink:0;transition:transform .15s;margin-left:auto}
 .pe-section.pe-open .pe-arrow{transform:rotate(90deg)}
-.pe-body{display:none;padding:8px 14px 14px 46px;font-size:12.5px;line-height:1.65;color:#374151;border-top:1px solid #f4f5f8}
+.pe-body{display:none;padding:12px 18px 18px 50px;font-size:14px;line-height:1.65;color:#374151;border-top:1px solid #f4f5f8}
 .pe-section.pe-open .pe-body{display:block}
 .pe-body p{margin:0 0 7px}
 .pe-body p:last-child{margin:0}
 .pe-body ul{margin:4px 0 8px 16px}
 .pe-body li{margin-bottom:4px}
-.pe-body table{width:100%;border-collapse:collapse;font-size:11.5px;margin:6px 0 10px}
-.pe-body th{background:#e0f2fe;padding:5px 8px;text-align:left;border:1px solid var(--border);font-size:11px}
-.pe-body td{padding:4px 8px;border:1px solid var(--border);vertical-align:top}
+.pe-body table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0 12px}
+.pe-body th{background:#e0f2fe;padding:7px 10px;text-align:left;border:1px solid var(--border);font-size:12.5px;font-weight:700;color:var(--glp-dark)}
+.pe-body td{padding:6px 10px;border:1px solid var(--border);vertical-align:top}
 .pe-body a{color:var(--glp-mid)}
-.pe-body .callout{background:#fef3c7;border-left:3px solid #b45309;padding:8px 12px;margin:8px 0;border-radius:4px;color:#78350f;font-size:12px}
-.pe-body .callout-danger{background:#fee2e2;border-left:3px solid #b91c1c;padding:8px 12px;margin:8px 0;border-radius:4px;color:#7f1d1d;font-size:12px}
-.pe-body .callout-info{background:#e0f2fe;border-left:3px solid #0369a1;padding:8px 12px;margin:8px 0;border-radius:4px;color:#0c4a6e;font-size:12px}
-.pe-body .callout-tip{background:#dcfce7;border-left:3px solid #15803d;padding:8px 12px;margin:8px 0;border-radius:4px;color:#14532d;font-size:12px}
+.pe-body .callout{background:#fef3c7;border-left:4px solid #b45309;padding:10px 14px;margin:10px 0;border-radius:6px;color:#78350f;font-size:13.5px;line-height:1.55}
+.pe-body .callout-danger{background:#fee2e2;border-left:4px solid #b91c1c;padding:10px 14px;margin:10px 0;border-radius:6px;color:#7f1d1d;font-size:13.5px;line-height:1.55}
+.pe-body .callout-info{background:#e0f2fe;border-left:4px solid #0369a1;padding:10px 14px;margin:10px 0;border-radius:6px;color:#0c4a6e;font-size:13.5px;line-height:1.55}
+.pe-body .callout-tip{background:#dcfce7;border-left:4px solid #15803d;padding:10px 14px;margin:10px 0;border-radius:6px;color:#14532d;font-size:13.5px;line-height:1.55}
 .footer-note{margin-top:18px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-radius:10px;font-size:11.5px;color:var(--muted);line-height:1.55}
 .footer-note strong{color:var(--text)}
 @media (max-width:600px){
-  .pe-body{padding:8px 12px 14px 14px;font-size:12.5px}
+  .pe-body{padding:12px 14px 16px 16px;font-size:14px}
+  .pe-title{font-size:14px}
+  .pe-group-label{font-size:14px}
   .topbar-sub{display:none}
 }
 </style>
@@ -60,9 +64,15 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 <div class="content">
 
   <div class="intro">
-    <p><strong>Purpose.</strong> A practical, evidence-based reference for Australian psychiatrists prescribing GLP-1 receptor agonists (semaglutide, liraglutide) and dual GLP-1/GIP receptor agonists (tirzepatide). Covers pharmacology, eligibility, safety review, prescribing protocols, the "click method" for selecting agents, expected weight loss, and the emerging mental-health evidence (addiction, depression, antipsychotic-induced weight gain, cognition).</p>
-    <p><strong>Why psychiatrists.</strong> Patients with severe mental illness die 15–25 years earlier than the general population, predominantly from cardiometabolic disease. Antipsychotics, mood stabilisers and many antidepressants drive weight gain. GLP-1 agonists are now the most effective non-surgical intervention for obesity and are reshaping practice. Beyond weight, signals are emerging across alcohol use disorder, substance use, depression, and neurodegeneration. Psychiatrists need to be confident readers, prescribers, and stewards of these agents.</p>
-    <div class="disclaimer"><strong>Disclaimer.</strong> Not medical advice. Clinical decisions are the prescriber's responsibility. Verify dosing, PBS listing, and TGA-approved indications against current sources (TGA, PBS, eTG, the relevant product information) before prescribing. Information accurate to publication date; this is a rapidly evolving field.</div>
+    <h2>Why this matters for psychiatry</h2>
+    <ul>
+      <li>People with severe mental illness die 15-25 years early, mostly from cardiometabolic disease.</li>
+      <li>Antipsychotics, mood stabilisers and several antidepressants drive weight gain.</li>
+      <li>GLP-1 agonists are now the most effective non-surgical treatment for obesity.</li>
+      <li>Emerging signals: alcohol and substance use, depression, neurodegeneration.</li>
+      <li>Psychiatrists are well-placed to prescribe, monitor and steward these agents.</li>
+    </ul>
+    <div class="disclaimer"><strong>Disclaimer.</strong> Not medical advice. Verify dosing, PBS listing and TGA-approved indications against current sources (TGA, PBS, eTG, product information) before prescribing. This is a rapidly evolving field.</div>
   </div>
 
   <div class="condition-block">
