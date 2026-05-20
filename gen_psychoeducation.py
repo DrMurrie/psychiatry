@@ -578,6 +578,12 @@ function styleBody(s){
     .replace(/<td>/g,'<td style="padding:3px 7px;border:1px solid #ccc;vertical-align:top">')
     .replace(/<td /g,'<td style="padding:3px 7px;border:1px solid #ccc;vertical-align:top" ');
 }
+function spaceBody(s){
+  return s
+    .replace(/<\/p>/gi,'</p><br>')
+    .replace(/<\/ul>/gi,'</ul><br>')
+    .replace(/<\/ol>/gi,'</ol><br>');
+}
 
 /* Build Word-compatible HTML directly — no div backgrounds, table-per-topic for reliable spacing */
 function buildDocxHtml(){
@@ -712,8 +718,9 @@ function buildPasteHtml(){
           h+=sp;
         }
         h+='<div style="border:1px solid #ccc;padding:7px 10px">';
-        h+='<p style="font-weight:bold;margin:0 0 4px;padding-bottom:4px;border-bottom:1px solid #e0e0e0"><b>'+esc(item.title)+'</b></p>';
-        h+='<div style="font-size:10pt;line-height:1.6">'+styleBody(item.body)+'</div>';
+        h+='<p style="font-weight:bold;margin:0;padding-bottom:4px;border-bottom:1px solid #e0e0e0"><b>'+esc(item.title)+'</b></p>';
+        h+='<br>';
+        h+='<div style="font-size:10pt;line-height:1.6">'+spaceBody(styleBody(item.body))+'</div>';
         h+='</div>';
         h+=sp; h+=sp;
       });

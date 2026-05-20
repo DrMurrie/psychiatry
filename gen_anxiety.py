@@ -524,6 +524,7 @@ var sel={};
 function $(id){return document.getElementById(id);}
 function f(id){var el=$(id);return el?el.value.trim():\'\';}
 function esc(s){if(!s)return \'\';return String(s).replace(/&/g,\'&amp;\').replace(/</g,\'&lt;\').replace(/>/g,\'&gt;\').replace(/"/g,\'&quot;\');}
+function spaceBody(s){return s.replace(/<\/p>/gi,\'</p><br>\').replace(/<\/ul>/gi,\'</ul><br>\').replace(/<\/ol>/gi,\'</ol><br>\');}
 
 ''' + groups_js + r'''
 
@@ -659,8 +660,9 @@ function buildPasteHtml(){
         h+=sp;
       }
       h+='<div style="border:1px solid #ccc;padding:7px 10px">';
-      h+='<p style="font-weight:bold;margin:0 0 4px;padding-bottom:4px;border-bottom:1px solid #e0e0e0"><b>'+esc(item.title)+'</b></p>';
-      h+=item.body;
+      h+='<p style="font-weight:bold;margin:0;padding-bottom:4px;border-bottom:1px solid #e0e0e0"><b>'+esc(item.title)+'</b></p>';
+      h+='<br>';
+      h+=spaceBody(item.body);
       h+='</div>';
       h+=sp; h+=sp;
     });
